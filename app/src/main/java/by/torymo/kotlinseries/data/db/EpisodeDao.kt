@@ -12,17 +12,28 @@ interface EpisodeDao {
     @Query("SELECT * FROM episodes order by date asc")
     fun getAll(): LiveData<List<Episode>>
 
+    @Query("SELECT distinct date FROM episodes order by date asc")
+    fun getAllDates(): LiveData<List<Long>>
+
     @Query("SELECT * FROM episodes WHERE series like :series order by date asc")
     fun getEpisodesBySeries(series: String): LiveData<List<Episode>>
 
     @Query("SELECT * FROM episodes WHERE series like :series and ep_number = :epNumber and s_number = :sNumber order by date asc")
     fun getEpisodesBySeriesAndNumber(series: String, epNumber: Int, sNumber: Int): LiveData<List<Episode>>
 
-    @Query("SELECT * FROM episodes WHERE date between :date1 and :date2 order by date asc")
+    //@Query("SELECT * FROM episodes WHERE date between :date1 and :date2 order by date asc")
+    @Query("select episodes.*, series.name as series_name from episodes inner join series on series.imdb_id=episodes.series where episodes.date between :date1 and :date2 order by episodes.date asc")
     fun getEpisodesBetweenDates(date1: Long, date2: Long): LiveData<List<Episode>>
 
-    @Query("SELECT * FROM episodes WHERE (seen = 0) and (date between :date1 and :date2) order by date asc")
+    //@Query("SELECT * FROM episodes WHERE (seen = 0) and (date between :date1 and :date2) order by date asc")
+    @Query("select episodes.*, series.name as series_name from episodes inner join series on series.imdb_id=episodes.series where (episodes.seen = 0) and (episodes.date between :date1 and :date2) order by episodes.date asc")
     fun getNotSeenEpisodesBetweenDates(date1: Long, date2: Long): LiveData<List<Episode>>
+
+    @Query("SELECT date FROM episodes WHERE date between :date1 and :date2 order by date asc")
+    fun getEpisodeDatesBetweenDates(date1: Long, date2: Long): LiveData<List<Long>>
+
+    @Query("SELECT date FROM episodes WHERE (seen = 0) and (date between :date1 and :date2) order by date asc")
+    fun getNotSeenEpisodeDatesBetweenDates(date1: Long, date2: Long): LiveData<List<Long>>
 
 //    @Query("SELECT * FROM episodes WHERE date = :date")
 //    fun getEpisodesForDate(date: Long): List<Episode>
@@ -47,4 +58,5 @@ interface EpisodeDao {
 
     @Query("Delete from episodes where series like :series")
     fun delete(series: String)
+
 }

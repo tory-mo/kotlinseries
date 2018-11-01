@@ -64,6 +64,10 @@ class SeriesDbRepository(application: Application) {
         return episodeDao.getAll()
     }
 
+    fun getAllDates(): LiveData<List<Long>>{
+        return episodeDao.getAllDates()
+    }
+
     fun getEpisodesBySeries(series: String): LiveData<List<Episode>>{
         return episodeDao.getEpisodesBySeries(series)
     }
@@ -78,6 +82,14 @@ class SeriesDbRepository(application: Application) {
 
     fun getNotSeenEpisodesBetweenDates(date1: Long, date2: Long): LiveData<List<Episode>>{
         return episodeDao.getNotSeenEpisodesBetweenDates(date1, date2)
+    }
+
+    fun getEpisodeDatesBetweenDates(date1: Long, date2: Long): LiveData<List<Long>>{
+        return episodeDao.getEpisodeDatesBetweenDates(date1, date2)
+    }
+
+    fun getNotSeenEpisodeDatesBetweenDates(date1: Long, date2: Long): LiveData<List<Long>>{
+        return episodeDao.getNotSeenEpisodeDatesBetweenDates(date1, date2)
     }
 
     fun getEpisodesForSeriesAndDate(series: String, date: Long): LiveData<List<Episode>>{

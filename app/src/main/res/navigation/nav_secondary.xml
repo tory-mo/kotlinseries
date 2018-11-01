@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_secondary"
+    app:startDestination="@id/bottomCalendar">
+
+    <fragment
+        android:id="@+id/bottomCalendar"
+        android:name="by.torymo.kotlinseries.CalendarFragment"
+        tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/bottomSeries"
+        android:name="by.torymo.kotlinseries.SeriesFragment"
+        tools:layout="@layout/fragment_series" />
+</navigation>

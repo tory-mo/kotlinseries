@@ -1,3 +1,63 @@
 <resources>
     <string name="app_name">KotlinSeries</string>
+    <string name="bottom_calendar_title">Календарь</string>
+    <string name="bottom_series_title">Сериалы</string>
+
+    <string name="app_caption">Series Calendar</string>
+    <string name="watchlist">Watchlist</string>
+    <string name="calendar">Calendar</string>
+    <string name="series">Series</string>
+    <string name="episodes">Episodes</string>
+    <string name="overview">Overview</string>
+
+    <string name="action_make_backup">Make backup</string>
+    <string name="action_restore">Restore</string>
+    <string name="action_update_series">Update Series List</string>
+    <string name="action_update_episodes">Update Episodes</string>
+    <string name="action_only_seen">Unseen Episodes</string>
+    <string name="action_all">All Episodes</string>
+    <string name="today">Today</string>
+
+    <string name="action_search">Search</string>
+    <string name="slist_updated">Series list is updated</string>
+    <string name="episodes_deleted">Episodes are deleted</string>
+    <string name="are_updated">%1$d episodes are updated. %2$d out of %3$d series updated</string>
+    <string name="are_updated_short">%1$d episodes are updated</string>
+
+    <string name="DELETE">Delete</string>
+    <string name="OK">Ok</string>
+    <string name="NAME" translatable="false">Name</string>
+    <string name="ADD">Add</string>
+    <string name="add_series_title">Add series</string>
+    <string name="delete_series_title">Delete series</string>
+    <string name="add_episode_title">Add episode</string>
+
+    <string name="format_episode_number" translatable="true">episode %1$d, season %2$d</string>
+
+    <string name="format_first_date" translatable="true">First date:</string>
+    <string name="format_seasons" translatable="true">Seasons:</string>
+    <string name="episode_time_label" translatable="true">Episode time:</string>
+    <string name="format_episode_time" translatable="true">%1$s min.</string>
+    <string name="format_homepage" translatable="true">Homepage:</string>
+    <string name="format_overview" translatable="true">Overview:</string>
+    <string name="format_ongoing" translatable="true">Show status:</string>
+    <string name="format_genres" translatable="true">Genres:</string>
+    <string name="format_original_name" translatable="true">Original name:</string>
+
+    <string name="format_ongoing_true" translatable="true">Ongoing</string>
+    <string name="format_ongoing_false" translatable="true">Finished</string>
+
+    <string-array name="weekDays">
+        <item>M</item>
+        <item>T</item>
+        <item>W</item>
+        <item>T</item>
+        <item>F</item>
+        <item>S</item>
+        <item>S</item>
+    </string-array>
+
+
+    <string name="extra_key_series_id">series_id</string>
+
 </resources>
