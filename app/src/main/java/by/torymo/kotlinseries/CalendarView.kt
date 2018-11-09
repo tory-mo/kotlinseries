@@ -7,26 +7,31 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.widget.ArrayAdapter
 import android.widget.AdapterView
-import android.widget.GridView
 import android.util.AttributeSet
 import android.view.View
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import java.text.SimpleDateFormat
 import java.util.*
+import by.torymo.kotlinseries.R
+import kotlinx.android.synthetic.main.calendar_view.view.*
 
 
-class CalendarView : LinearLayout {
-
-    private var tvPrevious: TextView? = null
-    private var tvNext: TextView? = null
-    private var tvMonth: TextView? = null
-    private var gvCalendar: GridView? = null
+class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : LinearLayout(context, attrs, defStyleAttr){
 
     private var eventHandler: EventHandler? = null
 
     // current displayed month
     private var currentDate = DateTime.now(DateTimeZone.UTC).withMillisOfDay(0)
+
+    init {
+        initControl(context)
+    }
+
+    companion object {
+        private const val MONTH_TITLE_FORMAT = "MMMM yyyy"
+        internal const val FIRST_DAY_OF_WEEK = 1 // Sunday = 0, Monday = 1
+    }
 
     val currentMonthStartEnd: Array<Long>
         get() {
@@ -38,47 +43,27 @@ class CalendarView : LinearLayout {
             return arrayOf(startDate, endDate)
         }
 
-    constructor(context: Context) : super(context)
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        initControl(context)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        initControl(context)
-    }
 
     private fun initControl(context: Context) {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         inflater.inflate(R.layout.calendar_view, this)
 
-        tvPrevious = findViewById(R.id.tvPrevious)
-        tvNext = findViewById(R.id.tvNext)
-        tvMonth = findViewById(R.id.tvMonth)
-        val gvHeader = findViewById<GridView>(R.id.gvHeader)
-        gvCalendar = findViewById(R.id.gvCalendar)
-
         gvHeader.adapter = ArrayAdapter(context, R.layout.day_name, R.id.name_day, resources.getStringArray(R.array.weekDays))
+        tvNext?.setOnClickListener{changeMonth(1)}
+        tvPrevious?.setOnClickListener{changeMonth(-1)}
+        gvCalendar?.setOnItemClickListener {parent, _, position, _ -> calendarItemClick(parent, position)}
 
-        assignClickHandlers()
         updateCalendar()
     }
 
 
-
-
-    private fun nextClick(){
-        currentDate = currentDate.plusMonths(1)
-        updateCalendar()
-        if (eventHandler != null) {
-            val startEnd = currentMonthStartEnd
-            eventHandler!!.onMonthChanged(startEnd[0], startEnd[1])
+    private fun changeMonth(to: Int){
+        currentDate = when{
+            to > 0 -> currentDate.plusMonths(1)
+            else -> currentDate.minusMonths(1)
         }
-    }
 
-    private fun previousClick(){
-        currentDate = currentDate.minusMonths(1)
         updateCalendar()
         if (eventHandler != null) {
             val startEnd = currentMonthStartEnd
@@ -86,22 +71,10 @@ class CalendarView : LinearLayout {
         }
     }
 
-    private fun assignClickHandlers() {
-        tvNext?.setOnClickListener{nextClick()}
-
-        tvPrevious?.setOnClickListener{previousClick()}
-
-        gvCalendar?.onItemClickListener = object : AdapterView.OnItemClickListener {
-
-            override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                // handle long-press
-                if (eventHandler == null)
-                    return
-
-                val date = parent.getItemAtPosition(position) as Long
-                eventHandler!!.onDayPress(date)
-            }
-        }
+    private fun calendarItemClick(parent: AdapterView<*>, position: Int){
+        val date = parent.getItemAtPosition(position) as Long?
+        if(date != null)
+            eventHandler?.onDayPress(date)
     }
 
     @JvmOverloads
@@ -130,15 +103,14 @@ class CalendarView : LinearLayout {
         gvCalendar?.adapter = CalendarAdapter(context, cells, events)
 
         // update title
-        val sdf = SimpleDateFormat(MONTH_TITLE_FORMAT)
+        val sdf = SimpleDateFormat(MONTH_TITLE_FORMAT, Locale.UK)
         tvMonth?.text = sdf.format(currentDate.millis)
-        if (eventHandler != null) {
-            val now = DateTime.now(DateTimeZone.UTC).withMillisOfDay(0)
-            eventHandler!!.onDayPress(now.millis)
-        }
+
+        val now = DateTime.now(DateTimeZone.UTC).withMillisOfDay(0)
+        eventHandler?.onDayPress(now.millis)
     }
 
-    private inner class CalendarAdapter internal constructor(private val mContext: Context, days: MutableList<Long?>, // days with events
+    private inner class CalendarAdapter internal constructor(mContext: Context, days: MutableList<Long?>, // days with events
                                                              private val eventDays: List<Long>) : ArrayAdapter<Long>(mContext, R.layout.day, days) {
 
         // for view inflation
@@ -148,41 +120,53 @@ class CalendarView : LinearLayout {
             val view = v ?: inflater.inflate(R.layout.day, parent, false)
 
             val date = getItem(position)
-
             val dayView = view!!.findViewById<TextView>(R.id.date)
-            val today = Calendar.getInstance()
+            val today = DateTime.now(DateTimeZone.UTC)
+            val dayLabel = today.withMillis(date ?: today.millis).dayOfMonth.toString()
+
             when{
                 date == null ->{
-                    dayView.isClickable = false
-                    dayView.isFocusable = false
-                    dayView.text = ""
+                    dayView.notResponsive()
                 }
                 eventDays.contains(date) ->{
-                    if (today.timeInMillis == date) {
-                        dayView.setTextColor(mContext.resources.getColor(R.color.light_bg))
-                        dayView.setBackgroundResource(R.drawable.today_episode_day)
+                    if (today.millis == date) {
+                        dayView.todayWithEvent(dayLabel)
                     } else {
-                        // mark this day for event
-                        dayView.setBackgroundResource(R.drawable.episode_day)
+                        dayView.eventDay(dayLabel)
                     }
-                    val d = Calendar.getInstance()
-                    d.timeInMillis = date
-                    dayView.text = d.get(Calendar.DAY_OF_MONTH).toString()
                 }
                 else -> {
-                    if (today.timeInMillis == date) {
-                        dayView.setBackgroundResource(R.drawable.today_day)
+                    if (today.millis == date) {
+                        dayView.today(dayLabel)
                     } else {
-                        dayView.isClickable = false
-                        dayView.isFocusable = false
+                        dayView.notResponsive(dayLabel)
                     }
-                    val d = Calendar.getInstance()
-                    d.timeInMillis = date
-                    dayView.text = d.get(Calendar.DAY_OF_MONTH).toString()
                 }
             }
 
             return view
+        }
+
+        private fun TextView.notResponsive(txt: String = ""){
+            isClickable = false
+            isFocusable = false
+            text = txt
+        }
+
+        private fun TextView.todayWithEvent(txt: String){
+            setTextColor(resources.getColor(R.color.light_bg))
+            setBackgroundResource(R.drawable.today_episode_day)
+            text = txt
+        }
+
+        private fun TextView.eventDay(txt: String){
+            setBackgroundResource(R.drawable.episode_day)
+            text = txt
+        }
+
+        private fun TextView.today(txt: String = ""){
+            setBackgroundResource(R.drawable.today_day)
+            text = txt
         }
     }
 
@@ -194,12 +178,4 @@ class CalendarView : LinearLayout {
         fun onDayPress(date: Long)
         fun onMonthChanged(start: Long, end: Long)
     }
-
-    companion object {
-
-        private const val MONTH_TITLE_FORMAT = "MMMM yyyy"
-
-        internal const val FIRST_DAY_OF_WEEK = 1 // Sunday = 0, Monday = 1
-    }
-
 }
