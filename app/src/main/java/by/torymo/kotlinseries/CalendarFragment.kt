@@ -69,21 +69,17 @@ class CalendarFragment: Fragment(),  CalendarView.EventHandler, EpisodesForDateA
         changeSeenTitle(menu?.findItem(R.id.action_only_seen))
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.action_update_episodes -> {
+    override fun onOptionsItemSelected(item: MenuItem?) = when(item?.itemId){
+        R.id.action_update_episodes -> consume{
 
-                return true
-            }
-            R.id.action_only_seen -> {
-                Utility().changeSeenParam(activity)
-                changeSeenTitle(item)
-                val startend = calendar_view.currentMonthStartEnd
-                getEpisodesForMonth(startend[0], startend[1])
-                return true
-            }
         }
-        return super.onOptionsItemSelected(item)
+        R.id.action_only_seen -> consume{
+            Utility().changeSeenParam(activity)
+            changeSeenTitle(item)
+            val startend = calendar_view.currentMonthStartEnd
+            getEpisodesForMonth(startend[0], startend[1])
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     private fun showEpisodesForDay(date: Long){
@@ -102,5 +98,10 @@ class CalendarFragment: Fragment(),  CalendarView.EventHandler, EpisodesForDateA
 
     private fun populateEpisodes(episodeList: List<Episode>){
         lvEpisodesForDay.adapter = EpisodesForDateAdapter(episodeList, this)
+    }
+
+    private inline fun consume(f: () -> Unit): Boolean {
+        f()
+        return true
     }
 }
