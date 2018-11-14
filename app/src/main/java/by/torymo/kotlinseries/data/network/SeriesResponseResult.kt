@@ -1,4 +1,4 @@
-package by.torymo.kotlinseries.domain
+package by.torymo.kotlinseries.data.network
 
 import java.util.*
 

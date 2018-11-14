@@ -1,15 +1,15 @@
-package by.torymo.kotlinseries.adapters
+package by.torymo.kotlinseries.ui.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import by.torymo.kotlinseries.domain.Series
+import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.R
 import kotlinx.android.synthetic.main.series_item.view.*
 
 class SeriesListAdapter(private val items: List<Series>,
-                        private val clickListener: SeriesListAdapter.OnItemClickListener):
+                        private val clickListener: OnItemClickListener):
 RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     interface OnItemClickListener{
@@ -32,7 +32,7 @@ RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(series: Series, listener: SeriesListAdapter.OnItemClickListener) = with(itemView) {
+        fun bind(series: Series, listener: OnItemClickListener) = with(itemView) {
             tvName.text = series.name
             // RecyclerView on item click
             setOnClickListener {

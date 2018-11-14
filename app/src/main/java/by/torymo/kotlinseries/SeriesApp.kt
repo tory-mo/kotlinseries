@@ -1,8 +1,8 @@
 package by.torymo.kotlinseries
 
 import android.app.Application
-import by.torymo.kotlinseries.data.SeriesDbRepository
+import by.torymo.kotlinseries.data.SeriesRepository
 
 class SeriesApp: Application() {
-    fun getSeriesRepository() = SeriesDbRepository(this)
+    fun getSeriesRepository() = SeriesRepository(this)
 }

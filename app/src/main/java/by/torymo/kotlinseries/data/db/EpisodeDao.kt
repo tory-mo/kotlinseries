@@ -2,7 +2,6 @@ package by.torymo.kotlinseries.data.db
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
-import by.torymo.kotlinseries.domain.Episode
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query

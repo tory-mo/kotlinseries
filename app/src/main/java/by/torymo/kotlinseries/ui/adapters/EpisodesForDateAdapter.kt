@@ -1,15 +1,15 @@
-package by.torymo.kotlinseries.adapters
+package by.torymo.kotlinseries.ui.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import by.torymo.kotlinseries.R
-import by.torymo.kotlinseries.domain.Episode
+import by.torymo.kotlinseries.data.db.Episode
 import kotlinx.android.synthetic.main.episode_list_item.view.*
 
 class EpisodesForDateAdapter(private val items: List<Episode>,
-                             private val clickListener: EpisodesForDateAdapter.OnItemClickListener):
+                             private val clickListener: OnItemClickListener):
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface OnItemClickListener{
@@ -32,7 +32,7 @@ class EpisodesForDateAdapter(private val items: List<Episode>,
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(episode: Episode, listener: EpisodesForDateAdapter.OnItemClickListener) = with(itemView) {
+        fun bind(episode: Episode, listener: OnItemClickListener) = with(itemView) {
             tvName.text = episode.name
             tvDate.text = resources.getString(R.string.format_episode_number, episode.episodeNumber, episode.seasonNumber)
             tvEpisodeInfo.text = episode.seriesName

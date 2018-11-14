@@ -1,4 +1,4 @@
-package by.torymo.kotlinseries.domain
+package by.torymo.kotlinseries.data.db
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity

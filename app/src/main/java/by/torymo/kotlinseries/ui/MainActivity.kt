@@ -1,7 +1,8 @@
-package by.torymo.kotlinseries
+package by.torymo.kotlinseries.ui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import by.torymo.kotlinseries.R
 
 class MainActivity : AppCompatActivity() {
 

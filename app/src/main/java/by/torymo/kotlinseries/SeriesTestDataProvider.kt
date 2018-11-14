@@ -1,7 +1,7 @@
 package by.torymo.kotlinseries
 
-import by.torymo.kotlinseries.domain.Episode
-import by.torymo.kotlinseries.domain.Series
+import by.torymo.kotlinseries.data.db.Episode
+import by.torymo.kotlinseries.data.db.Series
 
 class SeriesTestDataProvider {
     companion object {

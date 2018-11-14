@@ -1,43 +1,53 @@
 package by.torymo.kotlinseries.data
 
-import by.torymo.kotlinseries.domain.Series
+import android.app.Application
+import android.arch.lifecycle.LiveData
+import by.torymo.kotlinseries.data.db.Episode
+import by.torymo.kotlinseries.data.db.Series
+import by.torymo.kotlinseries.data.network.Requester
+import retrofit2.Callback
 
-class SeriesRepository(private val seriesPersistenceSource: SeriesPersistenceSource,
-                       private val natworkSeriesSource: NetworkSeriesSource){
-    fun getSavedSeries(): List<Series> = seriesPersistenceSource.getPersistedSeries()
-    fun getSavedSeries(id: String): Series = seriesPersistenceSource.getPersistedSeries(id)
+class SeriesRepository(application: Application){
 
-    fun requestSeriesById(id: String): Series {
-        val newLocation = natworkSeriesSource.getSeriesById(id)
-        seriesPersistenceSource.saveSeries(newLocation)
-        return getSavedSeries(id)
+    private val seriesDbRepository = SeriesDbRepository(application)
+    companion object {
+        enum class EpisodeStatus {
+            SEEN, NOT_SEEN, ALL
+        }
     }
 
-    fun requestSeriesByName(name: String): List<Series> {
-        val newLocation = natworkSeriesSource.getSeriesByName(name)
-        seriesPersistenceSource.saveSeries(newLocation)
-        return getSavedSeries()
+    fun getEpisodesForDay(date: Long, flag: EpisodeStatus = EpisodeStatus.ALL): LiveData<List<Episode>>{
+        return getEpisodesBetweenDates(date, date, flag)
     }
 
-    fun requestSeriesDetails(id: String): Series {
-        val newLocation = natworkSeriesSource.getSeriesDetail(id)
-        seriesPersistenceSource.saveSeries(newLocation)
-        return getSavedSeries(id)
+    fun getEpisodesBetweenDates(dateFrom: Long, dateTo: Long, flag: EpisodeStatus = EpisodeStatus.ALL): LiveData<List<Episode>>{
+        return when(flag){
+            EpisodeStatus.NOT_SEEN -> seriesDbRepository.getNotSeenEpisodesBetweenDates(dateFrom, dateTo)
+            else -> seriesDbRepository.getEpisodesBetweenDates(dateFrom, dateTo)
+        }
     }
-}
 
+    fun getEpisodeDatesBetweenDates(dateFrom: Long, dateTo: Long, flag: EpisodeStatus = EpisodeStatus.ALL): LiveData<List<Long>>{
+        return when(flag){
+            EpisodeStatus.NOT_SEEN -> seriesDbRepository.getNotSeenEpisodeDatesBetweenDates(dateFrom, dateTo)
+            else -> seriesDbRepository.getEpisodeDatesBetweenDates(dateFrom, dateTo)
+        }
+    }
 
-interface SeriesPersistenceSource {
-    fun getPersistedSeries(): List<Series>
-    fun getPersistedSeries(id: String): Series
-    fun saveSeries(series: Series)
-    fun saveSeries(series: List<Series>)
+    fun getEpisodesForSeries(series: String): LiveData<List<Episode>>{
+        return seriesDbRepository.getEpisodesBySeries(series)
+    }
 
-}
+    fun changeEpisodeSeen(id: Long?, seen: EpisodeStatus = EpisodeStatus.NOT_SEEN){
+        if(id != null)
+            seriesDbRepository.setSeen(id, (seen == EpisodeStatus.NOT_SEEN))
+    }
 
-interface NetworkSeriesSource {
-    fun getSeriesDetail(id: String): Series
-    fun getSeriesById(id: String): Series
-    fun getSeriesByName(name: String): List<Series>
+    fun updateEpisodes(series: String, callback: Callback<List<Episode>>){
+        Requester().updateEpisodes(series, callback)
+    }
 
+    fun getSeriesList(): LiveData<List<Series>>{
+        return seriesDbRepository.getAllSeries()
+    }
 }

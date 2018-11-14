@@ -1,4 +1,4 @@
-package by.torymo.kotlinseries
+package by.torymo.kotlinseries.ui
 
 import android.content.Context
 import android.widget.LinearLayout

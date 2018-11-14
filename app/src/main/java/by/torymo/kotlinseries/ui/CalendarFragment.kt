@@ -1,4 +1,4 @@
-package by.torymo.kotlinseries
+package by.torymo.kotlinseries.ui
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.*
-import by.torymo.kotlinseries.adapters.EpisodesForDateAdapter
-import by.torymo.kotlinseries.domain.Episode
-import by.torymo.kotlinseries.domain.MdbSearchResponse
-import by.torymo.kotlinseries.domain.Series
-import by.torymo.kotlinseries.ui.EpisodeCalendarViewModel
+import by.torymo.kotlinseries.R
+import by.torymo.kotlinseries.Utility
+import by.torymo.kotlinseries.data.SeriesRepository.Companion.EpisodeStatus
+import by.torymo.kotlinseries.ui.adapters.EpisodesForDateAdapter
+import by.torymo.kotlinseries.data.db.Episode
+import by.torymo.kotlinseries.data.network.MdbSearchResponse
+import by.torymo.kotlinseries.data.network.Requester
+import by.torymo.kotlinseries.ui.model.EpisodeCalendarViewModel
 import kotlinx.android.synthetic.main.fragment_calendar.*
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -19,7 +22,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 
-class CalendarFragment: Fragment(),  CalendarView.EventHandler, EpisodesForDateAdapter.OnItemClickListener{
+class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAdapter.OnItemClickListener{
 
     private lateinit var viewModel: EpisodeCalendarViewModel
     private val requester = Requester()
@@ -47,7 +50,9 @@ class CalendarFragment: Fragment(),  CalendarView.EventHandler, EpisodesForDateA
     }
 
     override fun onItemClick(episode: Episode, item: View) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        episode.id?.let {
+            viewModel.changeEpisodeSeen(episode.id, if(episode.seen) EpisodeStatus.NOT_SEEN else EpisodeStatus.NOT_SEEN)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +88,7 @@ class CalendarFragment: Fragment(),  CalendarView.EventHandler, EpisodesForDateA
 
     private fun changeSeenTitle(menuItem: MenuItem?){
 
-        val seenTitle = if(Utility().getSeenParam(activity))R.string.action_all else R.string.action_only_seen
+        val seenTitle = if(Utility().getSeenParam(activity)) R.string.action_all else R.string.action_only_seen
         menuItem?.title = resources.getString(seenTitle)
     }
 
@@ -95,7 +100,7 @@ class CalendarFragment: Fragment(),  CalendarView.EventHandler, EpisodesForDateA
 
     override fun onOptionsItemSelected(item: MenuItem?) = when(item?.itemId){
         R.id.action_update_episodes -> consume{
-            viewModel.updateEpisodes()
+            //viewModel.updateEpisodes()
         }
         R.id.action_only_seen -> consume{
             Utility().changeSeenParam(activity)

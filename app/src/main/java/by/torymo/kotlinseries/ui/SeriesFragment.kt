@@ -1,4 +1,4 @@
-package by.torymo.kotlinseries
+package by.torymo.kotlinseries.ui
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -8,9 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
-import by.torymo.kotlinseries.adapters.SeriesListAdapter
-import by.torymo.kotlinseries.domain.Series
-import by.torymo.kotlinseries.ui.SeriesListViewModel
+import by.torymo.kotlinseries.R
+import by.torymo.kotlinseries.ui.adapters.SeriesListAdapter
+import by.torymo.kotlinseries.data.db.Series
+import by.torymo.kotlinseries.ui.model.SeriesListViewModel
 import kotlinx.android.synthetic.main.fragment_series.*
 
 class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener {

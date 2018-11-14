@@ -1,4 +1,4 @@
-package by.torymo.kotlinseries.domain
+package by.torymo.kotlinseries.data.db
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey

@@ -6,9 +6,9 @@ import by.torymo.kotlinseries.data.db.EpisodeDao
 import by.torymo.kotlinseries.data.db.SeasonDao
 import by.torymo.kotlinseries.data.db.SeriesDao
 import by.torymo.kotlinseries.data.db.SeriesDatabase
-import by.torymo.kotlinseries.domain.Episode
-import by.torymo.kotlinseries.domain.Season
-import by.torymo.kotlinseries.domain.Series
+import by.torymo.kotlinseries.data.db.Episode
+import by.torymo.kotlinseries.data.db.Season
+import by.torymo.kotlinseries.data.db.Series
 
 class SeriesDbRepository(application: Application) {
     private val seriesDao: SeriesDao

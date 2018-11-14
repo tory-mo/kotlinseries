@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/current_day"
-    tools:context=".EpisodesFragment">
+    tools:context=".ui.EpisodesFragment">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/lvEpisodes"
         android:layout_width="match_parent"

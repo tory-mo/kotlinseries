@@ -7,9 +7,6 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.os.AsyncTask
 import by.torymo.kotlinseries.SeriesTestDataProvider
-import by.torymo.kotlinseries.domain.Episode
-import by.torymo.kotlinseries.domain.Season
-import by.torymo.kotlinseries.domain.Series
 
 @Database(entities = [Episode::class, Series::class, Season::class], version = 1)
 abstract class SeriesDatabase : RoomDatabase(){

@@ -1,10 +1,9 @@
-package by.torymo.kotlinseries
+package by.torymo.kotlinseries.data.network
 
-import by.torymo.kotlinseries.Requester.Companion.APPKEY_PARAM
-import by.torymo.kotlinseries.domain.MdbEpisodesResponse
-import by.torymo.kotlinseries.domain.MdbSearchResponse
-import by.torymo.kotlinseries.domain.Series
-import by.torymo.kotlinseries.domain.SeriesResponseResult
+import by.torymo.kotlinseries.BuildConfig
+import by.torymo.kotlinseries.data.db.Episode
+import by.torymo.kotlinseries.data.network.Requester.Companion.APPKEY_PARAM
+import by.torymo.kotlinseries.data.db.Series
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -81,6 +80,10 @@ class Requester {
     fun getTopRated(map: Map<String, String>, callback: Callback<List<Series>>){
         val call = service.getTopRated(map)
         call.enqueue(callback)
+    }
+
+    fun updateEpisodes(series: String, callback: Callback<List<Episode>>){
+
     }
 }
 
