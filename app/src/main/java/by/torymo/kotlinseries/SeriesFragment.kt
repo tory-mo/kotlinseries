@@ -42,7 +42,7 @@ class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getSeriesList().observe(this, Observer<List<Series>>{ series ->
+        viewModel.getSeriesList().observe(viewLifecycleOwner, Observer<List<Series>>{ series ->
             series?.let { refreshSeriesList(series) }
         })
     }

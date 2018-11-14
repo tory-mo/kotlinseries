@@ -4,18 +4,39 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.*
 import by.torymo.kotlinseries.adapters.EpisodesForDateAdapter
 import by.torymo.kotlinseries.domain.Episode
+import by.torymo.kotlinseries.domain.MdbSearchResponse
+import by.torymo.kotlinseries.domain.Series
 import by.torymo.kotlinseries.ui.EpisodeCalendarViewModel
 import kotlinx.android.synthetic.main.fragment_calendar.*
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import retrofit2.Callback
+import retrofit2.Call
+import retrofit2.Response
 
 
 class CalendarFragment: Fragment(),  CalendarView.EventHandler, EpisodesForDateAdapter.OnItemClickListener{
 
     private lateinit var viewModel: EpisodeCalendarViewModel
+    private val requester = Requester()
+
+    private val callback = object : Callback<MdbSearchResponse> {
+        override fun onFailure(call: Call<MdbSearchResponse>?, t: Throwable?) {
+            Log.e("MainActivity", "Problem calling Github API", t)
+        }
+
+        override fun onResponse(call: Call<MdbSearchResponse>?, response: Response<MdbSearchResponse>?) {
+            response?.isSuccessful.let {
+                val resultList = response?.body()
+                var i = 0
+                i++
+            }
+        }
+    }
 
     override fun onDayPress(date: Long) {
         showEpisodesForDay(date)
@@ -48,13 +69,16 @@ class CalendarFragment: Fragment(),  CalendarView.EventHandler, EpisodesForDateA
         val startend = calendar_view.currentMonthStartEnd
         getEpisodesForMonth(startend[0], startend[1])
 
-        viewModel.episodeDates.observe(this, Observer<List<Long>>{
+        viewModel.episodeDates.observe(viewLifecycleOwner, Observer<List<Long>>{
             dates -> dates?.let{ calendar_view.updateCalendar(dates)}
         })
 
-        viewModel.episodeList.observe(this, Observer<List<Episode>>{
+        viewModel.episodeList.observe(viewLifecycleOwner, Observer<List<Episode>>{
             episodes -> episodes?.let { populateEpisodes(episodes) }
         })
+
+        requester.getAiringToday(callback)
+
     }
 
     private fun changeSeenTitle(menuItem: MenuItem?){
@@ -71,7 +95,7 @@ class CalendarFragment: Fragment(),  CalendarView.EventHandler, EpisodesForDateA
 
     override fun onOptionsItemSelected(item: MenuItem?) = when(item?.itemId){
         R.id.action_update_episodes -> consume{
-
+            viewModel.updateEpisodes()
         }
         R.id.action_only_seen -> consume{
             Utility().changeSeenParam(activity)
@@ -104,4 +128,7 @@ class CalendarFragment: Fragment(),  CalendarView.EventHandler, EpisodesForDateA
         f()
         return true
     }
+
+
+
 }

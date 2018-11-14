@@ -54,7 +54,7 @@ interface MDBService {
        http://api.themoviedb.org/tv/airing_today?api_key=6ad01c833dba757c5132002b79e99751&language=ru-en&page=1
      */
     @GET("/3/tv/airing_today")
-    fun getAiringToday(@QueryMap map: Map<String, String>): Call<List<Series>>
+    fun getAiringToday(@QueryMap map: Map<String, String>): Call<MdbSearchResponse>
 
     /*
        Get the most newly created TV show. This is a live response and will continuously change

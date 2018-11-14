@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat
 
 
 class Utility {
-    val BASE_URL = "http://api.themoviedb.org/"
     val POSTER_PATH = "http://image.tmdb.org/t/p/w300/"
     val EXTERNAL_IDS_PARAM = "external_ids"
     val APPKEY_PARAM = "api_key"

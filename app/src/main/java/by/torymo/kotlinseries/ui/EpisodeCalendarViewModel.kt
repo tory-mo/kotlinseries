@@ -4,6 +4,7 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import by.torymo.kotlinseries.Requester
 import by.torymo.kotlinseries.SeriesApp
 import by.torymo.kotlinseries.domain.Episode
 
@@ -38,5 +39,9 @@ class EpisodeCalendarViewModel(application: Application): AndroidViewModel(appli
                 episodes->episodeList.postValue(episodes)
             }
         }
+    }
+
+    fun updateEpisodes(){
+        val
     }
 }
