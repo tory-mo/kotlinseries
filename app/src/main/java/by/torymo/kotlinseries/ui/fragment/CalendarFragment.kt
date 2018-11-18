@@ -1,4 +1,4 @@
-package by.torymo.kotlinseries.ui
+package by.torymo.kotlinseries.ui.fragment
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -13,6 +13,7 @@ import by.torymo.kotlinseries.ui.adapters.EpisodesForDateAdapter
 import by.torymo.kotlinseries.data.db.Episode
 import by.torymo.kotlinseries.data.network.MdbSearchResponse
 import by.torymo.kotlinseries.data.network.Requester
+import by.torymo.kotlinseries.ui.CalendarView
 import by.torymo.kotlinseries.ui.model.EpisodeCalendarViewModel
 import kotlinx.android.synthetic.main.fragment_calendar.*
 import org.joda.time.DateTime

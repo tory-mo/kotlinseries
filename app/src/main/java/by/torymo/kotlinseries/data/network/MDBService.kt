@@ -1,13 +1,12 @@
 package by.torymo.kotlinseries.data.network
 
-import by.torymo.kotlinseries.data.network.MdbEpisodesResponse
-import by.torymo.kotlinseries.data.network.MdbSearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
-import retrofit2.Call
 import by.torymo.kotlinseries.data.db.Series
-import by.torymo.kotlinseries.data.network.SeriesResponseResult
+import kotlinx.coroutines.Deferred
+import retrofit2.Call
+import retrofit2.Response
 
 
 interface MDBService {

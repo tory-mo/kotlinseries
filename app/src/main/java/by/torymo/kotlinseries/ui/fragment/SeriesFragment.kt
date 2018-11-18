@@ -1,4 +1,4 @@
-package by.torymo.kotlinseries.ui
+package by.torymo.kotlinseries.ui.fragment
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders

@@ -7,10 +7,10 @@
 
     <fragment
         android:id="@+id/bottomCalendar"
-        android:name="by.torymo.kotlinseries.ui.CalendarFragment"
+        android:name="by.torymo.kotlinseries.ui.fragment.CalendarFragment"
         tools:layout="@layout/fragment_calendar" />
     <fragment
         android:id="@+id/bottomSeries"
-        android:name="by.torymo.kotlinseries.ui.SeriesFragment"
+        android:name="by.torymo.kotlinseries.ui.fragment.SeriesFragment"
         tools:layout="@layout/fragment_series" />
 </navigation>

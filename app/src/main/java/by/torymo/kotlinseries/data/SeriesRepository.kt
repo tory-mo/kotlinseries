@@ -43,8 +43,8 @@ class SeriesRepository(application: Application){
             seriesDbRepository.setSeen(id, (seen == EpisodeStatus.NOT_SEEN))
     }
 
-    fun updateEpisodes(series: String, callback: Callback<List<Episode>>){
-        Requester().updateEpisodes(series, callback)
+    fun updateEpisodes(series: String, season_number: Long){
+        Requester().updateEpisodes(series, season_number)
     }
 
     fun getSeriesList(): LiveData<List<Series>>{

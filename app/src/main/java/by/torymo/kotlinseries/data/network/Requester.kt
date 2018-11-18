@@ -1,7 +1,7 @@
 package by.torymo.kotlinseries.data.network
 
+import android.util.Log
 import by.torymo.kotlinseries.BuildConfig
-import by.torymo.kotlinseries.data.db.Episode
 import by.torymo.kotlinseries.data.network.Requester.Companion.APPKEY_PARAM
 import by.torymo.kotlinseries.data.db.Series
 import com.google.gson.GsonBuilder
@@ -12,7 +12,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
@@ -28,14 +27,14 @@ class Requester {
     }
 
     init {
-        val logginInterceptor = HttpLoggingInterceptor()
-        logginInterceptor.level = HttpLoggingInterceptor.Level.BODY
-
         val gson = GsonBuilder()
                 .registerTypeAdapter(Date::class.java, DateTypeDeserializer())
                 .create()
-        val client = OkHttpClient.Builder()
-                .addInterceptor(logginInterceptor)
+        val client = OkHttpClient().newBuilder()
+                .addInterceptor(HttpLoggingInterceptor().apply {
+                    level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+                })
+                .addInterceptor(ErrorInterceptor())
                 .addInterceptor(ApiKeyInterceptor())
                 .build()
         val retrofit = Retrofit.Builder()
@@ -46,43 +45,46 @@ class Requester {
         service = retrofit.create(MDBService::class.java)
     }
 
-    fun getAiringToday(callback: Callback<MdbSearchResponse>){
+    fun getAiringToday(): MdbSearchResponse?{
         val map = mutableMapOf<String, String>()
         val call = service.getAiringToday(map)
-        call.enqueue(callback)
+        return call.execute().body()
+
     }
 
-    fun getSeries(mdbId: String, map: Map<String, String>, callback: Callback<SeriesResponseResult>){
+    fun getSeries(mdbId: String, map: Map<String, String>): SeriesResponseResult?{
         val call = service.getSeries(mdbId, map)
-        call.enqueue(callback)
+        return call.execute().body()
     }
 
-    fun getSeriesDetails(mdbId: String, map: Map<String, String>, callback: Callback<SeriesResponseResult>){
+    fun getSeriesDetails(mdbId: String, map: Map<String, String>): SeriesResponseResult?{
         val call = service.getSeriesDetails(mdbId, map)
-        call.enqueue(callback)
+        return call.execute().body()
     }
 
-    fun getEpisodes(mdbId: String, season_number: Long, map: Map<String, String>, callback: Callback<MdbEpisodesResponse>){
+    fun getEpisodes(mdbId: String, season_number: Long, map: Map<String, String>): MdbEpisodesResponse?{
         val call = service.getEpisodes(mdbId, season_number, map)
-        call.enqueue(callback)
+        return call.execute().body()
     }
 
-    fun search(map: Map<String, String>, callback: Callback<MdbSearchResponse>){
+    fun search(map: Map<String, String>): MdbSearchResponse?{
         val call = service.search(map)
-        call.enqueue(callback)
+        return call.execute().body()
     }
 
-    fun getLatestShows(map: Map<String, String>, callback: Callback<List<Series>>){
+    fun getLatestShows(map: Map<String, String>): List<Series>?{
         val call = service.getLatestShows(map)
-        call.enqueue(callback)
+        return call.execute().body()
     }
 
-    fun getTopRated(map: Map<String, String>, callback: Callback<List<Series>>){
+    fun getTopRated(map: Map<String, String>): List<Series>?{
         val call = service.getTopRated(map)
-        call.enqueue(callback)
+        return call.execute().body()
     }
 
-    fun updateEpisodes(series: String, callback: Callback<List<Episode>>){
+    fun updateEpisodes(series: String, season_number: Long): MdbEpisodesResponse?{
+        val call = service.getEpisodes(series, season_number, mapOf())
+        return call.execute().body()
 
     }
 }
@@ -136,4 +138,17 @@ class ApiKeyInterceptor: Interceptor{
         return chain.proceed(requestBuilder)
     }
 
+}
+
+class ErrorInterceptor: Interceptor{
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val originalR = chain.request()
+        val response = chain.proceed(originalR)
+        return if (response.code() == 200) response
+        else{
+            Log.e(javaClass.name, response.code().toString())
+
+            response
+        }
+    }
 }

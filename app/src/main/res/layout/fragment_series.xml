@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/current_day"
     android:padding="@dimen/fragment_padding"
-    tools:context=".ui.SeriesFragment">
+    tools:context=".ui.fragment.SeriesFragment">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/lvSeries"
         app:layout_constraintTop_toTopOf="parent"

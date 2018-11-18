@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/current_day"
     android:id="@+id/layoutCalendar"
-    tools:context=".ui.CalendarFragment">
+    tools:context=".ui.fragment.CalendarFragment">
     <by.torymo.kotlinseries.ui.CalendarView
         android:id="@+id/calendar_view"
         android:layout_width="match_parent"

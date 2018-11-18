@@ -1,4 +1,4 @@
-package by.torymo.kotlinseries.ui
+package by.torymo.kotlinseries.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
