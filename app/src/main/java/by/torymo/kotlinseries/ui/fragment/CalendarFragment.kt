@@ -1,21 +1,23 @@
 package by.torymo.kotlinseries.ui.fragment
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.*
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import by.torymo.kotlinseries.R
 import by.torymo.kotlinseries.Utility
 import by.torymo.kotlinseries.data.SeriesRepository.Companion.EpisodeStatus
-import by.torymo.kotlinseries.ui.adapters.EpisodesForDateAdapter
 import by.torymo.kotlinseries.data.db.Episode
 import by.torymo.kotlinseries.data.network.MdbSearchResponse
 import by.torymo.kotlinseries.data.network.Requester
 import by.torymo.kotlinseries.ui.CalendarView
+import by.torymo.kotlinseries.ui.adapters.EpisodesForDateAdapter
 import by.torymo.kotlinseries.ui.model.EpisodeCalendarViewModel
 import kotlinx.android.synthetic.main.fragment_calendar.*
+
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import retrofit2.Callback
@@ -83,7 +85,7 @@ class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAd
             episodes -> episodes?.let { populateEpisodes(episodes) }
         })
 
-        requester.getAiringToday(callback)
+        requester.getAiringToday()
 
     }
 

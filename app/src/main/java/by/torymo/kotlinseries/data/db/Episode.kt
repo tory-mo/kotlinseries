@@ -1,6 +1,7 @@
 package by.torymo.kotlinseries.data.db
 
-import android.arch.persistence.room.*
+import androidx.room.*
+
 
 @Entity(tableName = "episodes", foreignKeys = [ForeignKey(entity = Series::class,
         parentColumns = ["imdb_id"],

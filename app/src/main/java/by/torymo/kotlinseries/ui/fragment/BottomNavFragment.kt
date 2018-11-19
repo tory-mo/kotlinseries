@@ -1,14 +1,14 @@
 package by.torymo.kotlinseries.ui.fragment
 
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.ui.NavigationUI
 import by.torymo.kotlinseries.R
-import kotlinx.android.synthetic.main.fragment_bottom_nav.*
 
 
 class BottomNavFragment: Fragment() {
@@ -22,6 +22,7 @@ class BottomNavFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navController = Navigation.findNavController(requireActivity(), R.id.bottomNavFragment)
-        bottomNavigation.setupWithNavController(navController)
+        val bottomNavigation = view.findViewById<BottomNavigationView>(R.id.bottomNavigation)
+        NavigationUI.setupWithNavController(bottomNavigation, navController)
     }
 }

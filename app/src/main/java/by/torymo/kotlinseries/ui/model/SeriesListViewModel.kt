@@ -1,9 +1,10 @@
 package by.torymo.kotlinseries.ui.model
 
+
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import by.torymo.kotlinseries.SeriesApp
 import by.torymo.kotlinseries.data.db.Series
 

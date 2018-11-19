@@ -1,7 +1,8 @@
 package by.torymo.kotlinseries.data
 
 import android.app.Application
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
+
 import by.torymo.kotlinseries.data.db.EpisodeDao
 import by.torymo.kotlinseries.data.db.SeasonDao
 import by.torymo.kotlinseries.data.db.SeriesDao

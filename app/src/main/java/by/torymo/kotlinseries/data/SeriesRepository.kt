@@ -1,11 +1,11 @@
 package by.torymo.kotlinseries.data
 
+
 import android.app.Application
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import by.torymo.kotlinseries.data.db.Episode
 import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.data.network.Requester
-import retrofit2.Callback
 
 class SeriesRepository(application: Application){
 
@@ -16,7 +16,7 @@ class SeriesRepository(application: Application){
         }
     }
 
-    fun getEpisodesForDay(date: Long, flag: EpisodeStatus = EpisodeStatus.ALL): LiveData<List<Episode>>{
+    fun getEpisodesForDay(date: Long, flag: EpisodeStatus = EpisodeStatus.ALL): LiveData<List<Episode>> {
         return getEpisodesBetweenDates(date, date, flag)
     }
 
