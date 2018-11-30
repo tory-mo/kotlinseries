@@ -11,7 +11,7 @@ import by.torymo.kotlinseries.R
 import by.torymo.kotlinseries.Utility
 import by.torymo.kotlinseries.data.SeriesRepository.Companion.EpisodeStatus
 import by.torymo.kotlinseries.data.db.Episode
-import by.torymo.kotlinseries.data.network.MdbSearchResponse
+import by.torymo.kotlinseries.data.network.SearchResponse
 import by.torymo.kotlinseries.data.network.Requester
 import by.torymo.kotlinseries.ui.CalendarView
 import by.torymo.kotlinseries.ui.adapters.EpisodesForDateAdapter
@@ -30,12 +30,12 @@ class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAd
     private lateinit var viewModel: EpisodeCalendarViewModel
     private val requester = Requester()
 
-    private val callback = object : Callback<MdbSearchResponse> {
-        override fun onFailure(call: Call<MdbSearchResponse>?, t: Throwable?) {
+    private val callback = object : Callback<SearchResponse> {
+        override fun onFailure(call: Call<SearchResponse>?, t: Throwable?) {
             Log.e("MainActivity", "Problem calling Github API", t)
         }
 
-        override fun onResponse(call: Call<MdbSearchResponse>?, response: Response<MdbSearchResponse>?) {
+        override fun onResponse(call: Call<SearchResponse>?, response: Response<SearchResponse>?) {
             response?.isSuccessful.let {
                 val resultList = response?.body()
                 var i = 0

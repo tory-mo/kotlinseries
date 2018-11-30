@@ -28,6 +28,18 @@ class SeriesDbRepository(application: Application) {
         return seriesDao.getAll()
     }
 
+    fun getSearchResultSeries(): LiveData<List<Series>> {
+        return seriesDao.getTemporary()
+    }
+
+    fun startFollowingSeries(mdbId: String){
+        seriesDao.changeToPersistent(mdbId)
+    }
+
+    fun updateSeriesDetails(mdbId: String, genres: String, homepage: String, number_of_seasons: Int, status: String){
+        seriesDao.updateDetails(mdbId, genres, homepage, number_of_seasons, status)
+    }
+
     fun getWatchlist(): LiveData<List<Series>>{
         return seriesDao.getWatchlist()
     }
@@ -73,7 +85,7 @@ class SeriesDbRepository(application: Application) {
         return episodeDao.getEpisodesBySeries(series)
     }
 
-    fun getEpisodeBySeriesAndNumber(series: String, epNumber: Int, sNumber: Int): LiveData<List<Episode>>{
+    fun getEpisodeBySeriesAndNumber(series: String, epNumber: Int, sNumber: Int): List<Episode>{
         return episodeDao.getEpisodesBySeriesAndNumber(series, epNumber, sNumber)
     }
 
@@ -109,7 +121,7 @@ class SeriesDbRepository(application: Application) {
         episodeDao.insert(episodes)
     }
 
-    fun update(id: Long, name: String, epNumber: Long, sNumber: Long, date: Long, mPoster: String, mOverview: String){
+    fun update(id: Long, name: String, epNumber: Int, sNumber: Int, date: Long, mPoster: String, mOverview: String){
         episodeDao.update(id, name, epNumber, sNumber, date, mPoster, mOverview)
     }
 

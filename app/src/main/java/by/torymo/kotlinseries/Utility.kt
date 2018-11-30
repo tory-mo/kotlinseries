@@ -8,12 +8,6 @@ import java.text.SimpleDateFormat
 
 class Utility {
     val POSTER_PATH = "http://image.tmdb.org/t/p/w300/"
-    val EXTERNAL_IDS_PARAM = "external_ids"
-    val APPKEY_PARAM = "api_key"
-    val LANGUAGE_PARAM = "language"
-    val LANGUAGE_EN = "en"
-    val QUERY = "query"
-    val APPEND_TO_RESPONSE = "append_to_response"
 
     private val PREF_SEEN = "pref_seen"
     val dateToStrFormat = SimpleDateFormat("dd MMMM yyyy")

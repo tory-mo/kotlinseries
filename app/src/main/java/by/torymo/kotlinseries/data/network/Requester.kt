@@ -3,7 +3,6 @@ package by.torymo.kotlinseries.data.network
 import android.util.Log
 import by.torymo.kotlinseries.BuildConfig
 import by.torymo.kotlinseries.data.network.Requester.Companion.APPKEY_PARAM
-import by.torymo.kotlinseries.data.db.Series
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -24,6 +23,13 @@ class Requester {
     companion object {
         const val BASE_URL = "http://api.themoviedb.org"
         const val APPKEY_PARAM = "api_key"
+        const val LANGUAGE_PARAM = "language"
+        const val QUERY_PARAM = "query"
+        const val APPEND_TO_RESPONSE_PARAM = "append_to_response"
+        const val PAGE_PARAM = "page"
+        const val YEAR_PARAM = "first_air_date_year"
+
+        const val LANGUAGE_EN = "en"
     }
 
     init {
@@ -45,51 +51,44 @@ class Requester {
         service = retrofit.create(MDBService::class.java)
     }
 
-    fun getAiringToday(): MdbSearchResponse?{
+    fun getAiringToday(): SearchResponse?{
         val map = mutableMapOf<String, String>()
         val call = service.getAiringToday(map)
         return call.execute().body()
 
     }
 
-    fun getSeries(mdbId: String, map: Map<String, String>): SeriesResponseResult?{
-        val call = service.getSeries(mdbId, map)
-        return call.execute().body()
-    }
+    fun getSeriesDetails(mdbId: String): SeriesDetailsResponse?{
+        val map = mutableMapOf<String, String>()
+        map[LANGUAGE_PARAM] = "en-US"
+        map[APPEND_TO_RESPONSE_PARAM] = ""
 
-    fun getSeriesDetails(mdbId: String, map: Map<String, String>): SeriesResponseResult?{
         val call = service.getSeriesDetails(mdbId, map)
         return call.execute().body()
     }
 
-    fun getEpisodes(mdbId: String, season_number: Long, map: Map<String, String>): MdbEpisodesResponse?{
-        val call = service.getEpisodes(mdbId, season_number, map)
+    fun getSeasonDetails(mdbId: String, season_number: Int): SeasonDetailsResponse?{
+        val map = mutableMapOf<String, String>()
+        map[LANGUAGE_PARAM] = "en-US"
+        map[APPEND_TO_RESPONSE_PARAM] = ""
+
+        val call = service.getSeasonDetails(mdbId, season_number, map)
         return call.execute().body()
     }
 
-    fun search(map: Map<String, String>): MdbSearchResponse?{
+    fun search(query: String, page: Int): SearchResponse?{
+        val map = mutableMapOf<String, String>()
+        map[PAGE_PARAM] = page.toString()
+        map[QUERY_PARAM] = query
+        map[LANGUAGE_PARAM] = "en-US"
+        map[YEAR_PARAM] = 0.toString()
+
         val call = service.search(map)
         return call.execute().body()
     }
-
-    fun getLatestShows(map: Map<String, String>): List<Series>?{
-        val call = service.getLatestShows(map)
-        return call.execute().body()
-    }
-
-    fun getTopRated(map: Map<String, String>): List<Series>?{
-        val call = service.getTopRated(map)
-        return call.execute().body()
-    }
-
-    fun updateEpisodes(series: String, season_number: Long): MdbEpisodesResponse?{
-        val call = service.getEpisodes(series, season_number, mapOf())
-        return call.execute().body()
-
-    }
 }
 
-class DateTypeDeserializer : JsonDeserializer<Date>{
+class DateTypeDeserializer : JsonDeserializer<Long?>{
     private val datePatterns = arrayOf(
         "\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])",
         "\\d{4}.(0[1-9]|1[0-2]).(0[1-9]|[12]\\d|3[01])",
@@ -114,13 +113,13 @@ class DateTypeDeserializer : JsonDeserializer<Date>{
         "dd MMM. yyyy",
         "dd MMMM yyyy")
 
-    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Date? {
+    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Long? {
         json?.asString?.let {
             for(i in 0..dateFormats.size){
                 val regex = datePatterns[i].toRegex()
                 val format = SimpleDateFormat(dateFormats[i], Locale.UK)
 
-                if(regex.matches(it)) return format.parse(it)
+                if(regex.matches(it)) return format.parse(it).time
             }
         }
 		return null

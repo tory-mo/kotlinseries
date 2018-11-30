@@ -19,7 +19,7 @@ interface EpisodeDao {
     fun getEpisodesBySeries(series: String): LiveData<List<Episode>>
 
     @Query("SELECT * FROM episodes WHERE series like :series and ep_number = :epNumber and s_number = :sNumber order by date asc")
-    fun getEpisodesBySeriesAndNumber(series: String, epNumber: Int, sNumber: Int): LiveData<List<Episode>>
+    fun getEpisodesBySeriesAndNumber(series: String, epNumber: Int, sNumber: Int): List<Episode>
 
     //@Query("SELECT * FROM episodes WHERE date between :date1 and :date2 order by date asc")
     @Query("select episodes.*, series.name as series_name from episodes inner join series on series.imdb_id=episodes.series where episodes.date between :date1 and :date2 order by episodes.date asc")
@@ -54,7 +54,7 @@ interface EpisodeDao {
     fun insert(episodes: List<Episode>)
 
     @Query("Update episodes set name = :name, ep_number = :epNumber, s_number = :sNumber, date = :date, poster = :mPoster, overview = :mOverview where id = :id")
-    fun update(id: Long, name: String, epNumber: Long, sNumber: Long, date: Long, mPoster: String, mOverview: String)
+    fun update(id: Long, name: String, epNumber: Int, sNumber: Int, date: Long, mPoster: String, mOverview: String)
 
     @Query("Delete from episodes where series like :series")
     fun delete(series: String)

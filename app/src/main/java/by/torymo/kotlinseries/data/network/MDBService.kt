@@ -4,42 +4,103 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 import by.torymo.kotlinseries.data.db.Series
-import kotlinx.coroutines.Deferred
 import retrofit2.Call
-import retrofit2.Response
 
 
 interface MDBService {
 
     /*
-        http://api.themoviedb.org/3/tv/57243?api_key=6ad01c833dba757c5132002b79e99751&append_to_response=external_ids
-        http://api.themoviedb.org/3/tv/57243?api_key=6ad01c833dba757c5132002b79e99751&language=ru-en&append_to_response=external_ids
-        http://api.themoviedb.org/3/tv/34307?api_key=6ad01c833dba757c5132002b79e99751&language=ru-en&append_to_response=external_ids
-        http://api.themoviedb.org/3/tv/1403?api_key=6ad01c833dba757c5132002b79e99751 - to get season number
+        https://developers.themoviedb.org/3/tv/get-tv-details
+
+        http://api.themoviedb.org/3/tv/<<tv_id>>?api_key=<<api_key>>&language={en-US}&append_to_response={ff}
+        {
+            id: integer,
+            name: string,
+            original_name: string,
+            overview: string,
+            first_air_date: string,
+            origin_country: array[string],
+            original_language: string,
+            poster_path: string/null,
+            backdrop_path: string/null,
+            popularity: number,
+            vote_average: number,
+            vote_count: integer,
+
+            genres: [{ id: integer, name: string}],
+            homepage: string,
+            in_production: boolean,
+            last_air_date: string,
+            networks:[{id: integer, name: string, logo_path: string, origin_country: string}],
+            number_of_seasons: integer,
+            production_companies:[{id: integer, name: string, logo_path: string, origin_country: string}],
+            seasons:[{id: integer, name: string, air_date: string, season_number: integer, episode_count: integer, overview: string, poster_path: string}],
+            status: string,
+        }
      */
     @GET("/3/tv/{mdbId}")
-    fun getSeries(@Path("mdbId") mdbId: String, @QueryMap map: Map<String, String>): Call<SeriesResponseResult>
+    fun getSeriesDetails(@Path("mdbId") mdbId: String, @QueryMap map: Map<String, String>): Call<SeriesDetailsResponse>
+
+
 
     /*
-        http://api.themoviedb.org/3/tv/57243?api_key=6ad01c833dba757c5132002b79e99751&append_to_response=external_ids
-        http://api.themoviedb.org/3/tv/57243?api_key=6ad01c833dba757c5132002b79e99751&language=ru-en&append_to_response=external_ids
-        http://api.themoviedb.org/3/tv/34307?api_key=6ad01c833dba757c5132002b79e99751&language=ru-en&append_to_response=external_ids
-        http://api.themoviedb.org/3/tv/1403?api_key=6ad01c833dba757c5132002b79e99751 - to get season number
-     */
-    @GET("/3/tv/{mdbId}")
-    fun getSeriesDetails(@Path("mdbId") mdbId: String, @QueryMap map: Map<String, String>): Call<SeriesResponseResult>
+        https://developers.themoviedb.org/3/tv-episodes/get-tv-episode-details
 
-    /*
-        http://api.themoviedb.org/3/tv/1403/season/5?api_key=6ad01c833dba757c5132002b79e99751&language=ru-en - episodes for a season
+        http://api.themoviedb.org/3/tv/<<tv_id>>/season/<<season_number>>?api_key=<<api_key>>&language={en-US}&append_to_response={ff}
+        {
+            _id: string,
+            id: integer,
+            name: string,
+            air_date: string,
+            season_number: integer,
+            overview: string,
+            poster_path: string,
+            episodes:[{
+                id: integer,
+                name: string,
+                air_date: string,
+                episode_number: integer,
+                season_number: integer,
+                overview: string,
+                still_path: string/null,
+            }]
+
+        }
     */
     @GET("/3/tv/{mdbId}/season/{season_number}")
-    fun getEpisodes(@Path("mdbId") mdbId: String, @Path("season_number") season_number: Long, @QueryMap map: Map<String, String>): Call<MdbEpisodesResponse>
+    fun getSeasonDetails(@Path("mdbId") mdbId: String, @Path("season_number") season_number: Int, @QueryMap map: Map<String, String>): Call<SeasonDetailsResponse>
 
     /*
-        http://api.themoviedb.org/3/search/tv?query=%D0%B4%D0%BE%D0%BA%D1%82%D0%BE%D1%80&api_key=6ad01c833dba757c5132002b79e99751&language=ru-en
+        https://developers.themoviedb.org/3/search/search-tv-shows
+
+        http://api.themoviedb.org/3/search/tv?api_key=<<api_key>>&query=<<doctor>>&language={en-US}&page={1}&first_air_date_year={2000}
+        {
+            page: integer,
+            total_results: integer,
+            total_pages: integer,
+            details: [{
+                id: integer,
+                name: string,
+                original_name: string,
+                overview: string,
+                first_air_date: string,
+                origin_country: array[string],
+                original_language: string,
+                poster_path: string/null,
+                backdrop_path: string/null,
+                popularity: number,
+                vote_average: number,
+                vote_count: integer,
+
+                genre_ids: array[integer]
+            }]
+        }
      */
     @GET("/3/search/tv")
-    fun search(@QueryMap map: Map<String, String>): Call<MdbSearchResponse>
+    fun search(@QueryMap map: Map<String, String>): Call<SearchResponse>
+
+
+
 
     /*
        Get the most newly created TV show. This is a live response and will continuously change
@@ -53,7 +114,7 @@ interface MDBService {
        http://api.themoviedb.org/tv/airing_today?api_key=6ad01c833dba757c5132002b79e99751&language=ru-en&page=1
      */
     @GET("/3/tv/airing_today")
-    fun getAiringToday(@QueryMap map: Map<String, String>): Call<MdbSearchResponse>
+    fun getAiringToday(@QueryMap map: Map<String, String>): Call<SearchResponse>
 
     /*
        Get the most newly created TV show. This is a live response and will continuously change

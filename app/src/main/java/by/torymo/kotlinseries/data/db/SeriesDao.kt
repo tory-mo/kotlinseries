@@ -9,8 +9,17 @@ import androidx.room.Query
 
 @Dao
 interface SeriesDao {
-    @Query("select * from series order by name asc")
+    @Query("select * from series where 'temporary' = 0 order by name asc")
     fun getAll(): LiveData<List<Series>>
+
+    @Query("select * from series where 'temporary' = 1 order by name asc")
+    fun getTemporary(): LiveData<List<Series>>
+
+    @Query("UPDATE series set 'temporary' = 1 where mdb_id = :mdbId")
+    fun changeToPersistent(mdbId: String)
+
+    @Query("update series set genres = :genres, homepage = :homepage, seasons = :number_of_seasons, status = :status")
+    fun updateDetails(mdbId: String, genres: String, homepage: String, number_of_seasons: Int, status: String)
 
     @Query("select * from series where watchlist = 1 order by name asc")
     fun getWatchlist(): LiveData<List<Series>>
