@@ -84,4 +84,8 @@ class SeriesRepository(application: Application){
     fun getSeriesList(): LiveData<List<Series>>{
         return seriesDbRepository.getAllSeries()
     }
+
+    fun clearSearchResult(){
+        seriesDbRepository.clearTemporary()
+    }
 }

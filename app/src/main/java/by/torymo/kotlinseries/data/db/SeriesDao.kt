@@ -45,4 +45,7 @@ interface SeriesDao {
     @Query("delete from series where mdb_id like :mdbId")
     fun deleteByMdbId(mdbId: String)
 
+    @Query("delete from series where 'temporary' = 1")
+    fun deleteTemporary()
+
 }

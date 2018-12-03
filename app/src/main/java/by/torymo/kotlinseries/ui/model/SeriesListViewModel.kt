@@ -25,4 +25,12 @@ class SeriesListViewModel(application: Application): AndroidViewModel(applicatio
     fun getSeriesList(): LiveData<List<Series>> {
         return seriesList
     }
+
+    fun searchSeries(query: String){
+        seriesRepository.search(query, 1)
+    }
+
+    fun clearSearch(){
+        seriesRepository.clearSearchResult()
+    }
 }

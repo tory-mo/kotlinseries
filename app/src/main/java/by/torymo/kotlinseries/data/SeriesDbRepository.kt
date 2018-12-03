@@ -32,6 +32,10 @@ class SeriesDbRepository(application: Application) {
         return seriesDao.getTemporary()
     }
 
+    fun clearTemporary(){
+        seriesDao.deleteTemporary()
+    }
+
     fun startFollowingSeries(mdbId: String){
         seriesDao.changeToPersistent(mdbId)
     }
