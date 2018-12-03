@@ -1,9 +1,9 @@
 package by.torymo.kotlinseries.ui.adapters
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import by.torymo.kotlinseries.R
 import by.torymo.kotlinseries.data.db.Episode
 import kotlinx.android.synthetic.main.episode_list_item.view.*

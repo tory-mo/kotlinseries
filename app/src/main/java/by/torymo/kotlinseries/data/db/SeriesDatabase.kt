@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import by.torymo.kotlinseries.SeriesTestDataProvider
 
-@Database(entities = [Episode::class, Series::class, Season::class], version = 1)
+@Database(entities = [Episode::class, Series::class, Season::class], version = 1, exportSchema = false)
 abstract class SeriesDatabase : RoomDatabase(){
     abstract fun episodeDao(): EpisodeDao
     abstract fun seriesDao(): SeriesDao

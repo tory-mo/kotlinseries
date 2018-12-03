@@ -1,14 +1,15 @@
 package by.torymo.kotlinseries.ui.fragment
 
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import by.torymo.kotlinseries.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class BottomNavFragment: Fragment() {

@@ -51,13 +51,6 @@ class Requester {
         service = retrofit.create(MDBService::class.java)
     }
 
-    fun getAiringToday(): SearchResponse?{
-        val map = mutableMapOf<String, String>()
-        val call = service.getAiringToday(map)
-        return call.execute().body()
-
-    }
-
     fun getSeriesDetails(mdbId: String): SeriesDetailsResponse?{
         val map = mutableMapOf<String, String>()
         map[LANGUAGE_PARAM] = "en-US"

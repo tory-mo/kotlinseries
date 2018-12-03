@@ -36,7 +36,7 @@ class EpisodeCalendarViewModel(application: Application): AndroidViewModel(appli
         seriesRepository.changeEpisodeSeen(id, seen)
     }
 
-    fun updateEpisodes(series: String, season_number: Long){
+    fun updateEpisodes(series: String, season_number: Int){
         seriesRepository.updateEpisodes(series, season_number)
     }
 }

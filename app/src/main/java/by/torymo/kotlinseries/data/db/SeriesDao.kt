@@ -18,7 +18,7 @@ interface SeriesDao {
     @Query("UPDATE series set 'temporary' = 1 where mdb_id = :mdbId")
     fun changeToPersistent(mdbId: String)
 
-    @Query("update series set genres = :genres, homepage = :homepage, seasons = :number_of_seasons, status = :status")
+    @Query("update series set genres = :genres, homepage = :homepage, seasons = :number_of_seasons, status = :status where mdb_id = :mdbId")
     fun updateDetails(mdbId: String, genres: String, homepage: String, number_of_seasons: Int, status: String)
 
     @Query("select * from series where watchlist = 1 order by name asc")

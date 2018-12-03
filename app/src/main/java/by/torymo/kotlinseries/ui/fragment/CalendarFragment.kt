@@ -2,7 +2,6 @@ package by.torymo.kotlinseries.ui.fragment
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -11,8 +10,6 @@ import by.torymo.kotlinseries.R
 import by.torymo.kotlinseries.Utility
 import by.torymo.kotlinseries.data.SeriesRepository.Companion.EpisodeStatus
 import by.torymo.kotlinseries.data.db.Episode
-import by.torymo.kotlinseries.data.network.SearchResponse
-import by.torymo.kotlinseries.data.network.Requester
 import by.torymo.kotlinseries.ui.CalendarView
 import by.torymo.kotlinseries.ui.adapters.EpisodesForDateAdapter
 import by.torymo.kotlinseries.ui.model.EpisodeCalendarViewModel
@@ -20,29 +17,11 @@ import kotlinx.android.synthetic.main.fragment_calendar.*
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import retrofit2.Callback
-import retrofit2.Call
-import retrofit2.Response
 
 
 class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAdapter.OnItemClickListener{
 
     private lateinit var viewModel: EpisodeCalendarViewModel
-    private val requester = Requester()
-
-    private val callback = object : Callback<SearchResponse> {
-        override fun onFailure(call: Call<SearchResponse>?, t: Throwable?) {
-            Log.e("MainActivity", "Problem calling Github API", t)
-        }
-
-        override fun onResponse(call: Call<SearchResponse>?, response: Response<SearchResponse>?) {
-            response?.isSuccessful.let {
-                val resultList = response?.body()
-                var i = 0
-                i++
-            }
-        }
-    }
 
     override fun onDayPress(date: Long) {
         showEpisodesForDay(date)
@@ -61,6 +40,7 @@ class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAd
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
         viewModel = ViewModelProviders.of(this).get(EpisodeCalendarViewModel::class.java)
     }
 
@@ -84,9 +64,6 @@ class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAd
         viewModel.episodeList.observe(viewLifecycleOwner, Observer<List<Episode>>{
             episodes -> episodes?.let { populateEpisodes(episodes) }
         })
-
-        requester.getAiringToday()
-
     }
 
     private fun changeSeenTitle(menuItem: MenuItem?){

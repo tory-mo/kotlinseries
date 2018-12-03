@@ -35,9 +35,9 @@ dependencies {
     def roomVersion = "2.1.0-alpha02"
     implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
-    def lifecycleVersion = "1.1.1"
-    implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
-    implementation "android.arch.lifecycle:viewmodel:$lifecycleVersion"
+    def lifecycleVersion = "2.0.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    //implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion"
 
     implementation "com.google.android.material:material:1.1.0-alpha01"
 
