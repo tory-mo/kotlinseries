@@ -113,7 +113,4 @@ class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAd
         f()
         return true
     }
-
-
-
 }

@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 
 
 class Utility {
-    val POSTER_PATH = "http://image.tmdb.org/t/p/w300/"
+
 
     private val PREF_SEEN = "pref_seen"
     val dateToStrFormat = SimpleDateFormat("dd MMMM yyyy")

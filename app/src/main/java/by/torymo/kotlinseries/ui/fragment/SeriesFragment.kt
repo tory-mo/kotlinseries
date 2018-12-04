@@ -4,6 +4,7 @@ package by.torymo.kotlinseries.ui.fragment
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -24,13 +25,13 @@ class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
     private lateinit var searchView: SearchView
 
     override fun onItemClick(series: Series, item: View) {
-        val seriesBundle = Bundle().apply {
-            putString(getString(R.string.extra_key_series_id), series.mdbId)
-        }
-        view?.findNavController()
-                ?.navigate(R.id.action_bottomNavFragment2_to_fragmentEpisodes, seriesBundle)
-    }
 
+        val action = SeriesFragmentDirections.actionBottomSeriesToDetailActivity()
+        action.setSeriesId(series.mdbId)
+        val navController = view?.findNavController()
+        navController?.navigate(action)
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +49,7 @@ class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getSeriesList().observe(viewLifecycleOwner, Observer<List<Series>>{ series ->
+        viewModel.seriesList.observe(viewLifecycleOwner, Observer<List<Series>>{ series ->
             series?.let { refreshSeriesList(series) }
         })
     }
@@ -68,18 +69,31 @@ class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
 
     override fun onClose(): Boolean {
         viewModel.clearSearch()
-        viewModel.getAllSeries()
         searchView.onActionViewCollapsed()
         return true
     }
 
-
     override fun onQueryTextChange(newText: String?): Boolean = true
 
+    //TODO: paging
     override fun onQueryTextSubmit(query: String?): Boolean {
         query?.let {
-            viewModel.searchSeries(query)
+            viewModel.searchSeries(query, 1, object : SearchCallback{
+                override fun onSuccess(series: List<Series>) {
+                    viewModel.getSearchResult()
+                }
+
+                override fun onError(message: String?) {
+                    Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
+                }
+            })
         }
         return true
+    }
+
+
+    interface SearchCallback{
+        fun onSuccess(series: List<Series>)
+        fun onError(message: String?)
     }
 }

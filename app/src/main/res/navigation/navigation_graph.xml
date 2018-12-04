@@ -4,17 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
     app:startDestination="@id/bottomNavFragment2">
+
     <fragment
         android:id="@+id/bottomNavFragment2"
         android:name="by.torymo.kotlinseries.ui.fragment.BottomNavFragment"
         android:label="fragment_bottom_nav"
-        tools:layout="@layout/fragment_bottom_nav" >
-        <action android:id="@+id/action_bottomNavFragment2_to_fragmentEpisodes" app:destination="@id/fragmentEpisodes"/>
-    </fragment>
-    <fragment
-        android:id="@+id/fragmentEpisodes"
-        android:name="by.torymo.kotlinseries.ui.fragment.EpisodesFragment"
-        tools:layout="@layout/fragment_episodes"/>
-
-    <include app:graph="@navigation/nav_secondary" />
+        tools:layout="@layout/fragment_bottom_nav" />
 </navigation>

@@ -9,13 +9,13 @@ import androidx.room.Query
 
 @Dao
 interface SeriesDao {
-    @Query("select * from series where 'temporary' = 0 order by name asc")
+    @Query("select * from series where temporary_row = 0 order by name asc")
     fun getAll(): LiveData<List<Series>>
 
-    @Query("select * from series where 'temporary' = 1 order by name asc")
+    @Query("select * from series where temporary_row = 1 order by popularity desc")
     fun getTemporary(): LiveData<List<Series>>
 
-    @Query("UPDATE series set 'temporary' = 1 where mdb_id = :mdbId")
+    @Query("UPDATE series set temporary_row = 1 where mdb_id = :mdbId")
     fun changeToPersistent(mdbId: String)
 
     @Query("update series set genres = :genres, homepage = :homepage, seasons = :number_of_seasons, status = :status where mdb_id = :mdbId")
@@ -45,7 +45,7 @@ interface SeriesDao {
     @Query("delete from series where mdb_id like :mdbId")
     fun deleteByMdbId(mdbId: String)
 
-    @Query("delete from series where 'temporary' = 1")
+    @Query("delete from series where temporary_row = 1")
     fun deleteTemporary()
 
 }

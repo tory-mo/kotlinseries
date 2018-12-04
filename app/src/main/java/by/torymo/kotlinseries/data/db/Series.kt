@@ -24,7 +24,7 @@ data class Series(@PrimaryKey(autoGenerate = true) var id: Long? = null,
                   @ColumnInfo(name = "homepage") var homepage: String = "",
                   @ColumnInfo(name = "networks") var networks: String = "",
                   @ColumnInfo(name = "followed_season") var followedSeason: Int = 0,
-                  @ColumnInfo(name = "temporary") var temporary: Boolean = false,
+                  @ColumnInfo(name = "temporary_row") var temporary: Boolean = false,
                   @ColumnInfo(name = "status") var status: String = ""
 
 )

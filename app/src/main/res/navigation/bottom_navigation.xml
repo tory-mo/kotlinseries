@@ -12,5 +12,20 @@
     <fragment
         android:id="@+id/bottomSeries"
         android:name="by.torymo.kotlinseries.ui.fragment.SeriesFragment"
-        tools:layout="@layout/fragment_series" />
+        tools:layout="@layout/fragment_series" >
+        <action
+            android:id="@+id/action_bottomSeries_to_detailActivity"
+            app:destination="@id/detailActivity"
+            app:popUpTo="@+id/bottomSeries" />
+    </fragment>
+    <activity
+        android:id="@+id/detailActivity"
+        android:name="by.torymo.kotlinseries.ui.DetailActivity"
+        android:label="activity_detail"
+        tools:layout="@layout/activity_detail" >
+        <argument
+            android:name="series_id"
+            android:defaultValue='""'
+            app:argType="string" />
+    </activity>
 </navigation>

@@ -11,6 +11,7 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
@@ -21,6 +22,8 @@ class Requester {
     private val service: MDBService
 
     companion object {
+        val POSTER_PATH = "http://image.tmdb.org/t/p/w300/"
+
         const val BASE_URL = "http://api.themoviedb.org"
         const val APPKEY_PARAM = "api_key"
         const val LANGUAGE_PARAM = "language"
@@ -34,7 +37,7 @@ class Requester {
 
     init {
         val gson = GsonBuilder()
-                .registerTypeAdapter(Date::class.java, DateTypeDeserializer())
+                .registerTypeAdapter(Long::class.java, DateTypeDeserializer())
                 .create()
         val client = OkHttpClient().newBuilder()
                 .addInterceptor(HttpLoggingInterceptor().apply {
@@ -69,19 +72,18 @@ class Requester {
         return call.execute().body()
     }
 
-    fun search(query: String, page: Int): SearchResponse?{
+    fun search(query: String, page: Int): Call<SearchResponse>{
         val map = mutableMapOf<String, String>()
         map[PAGE_PARAM] = page.toString()
         map[QUERY_PARAM] = query
         map[LANGUAGE_PARAM] = "en-US"
         map[YEAR_PARAM] = 0.toString()
 
-        val call = service.search(map)
-        return call.execute().body()
+        return service.search(map)
     }
 }
 
-class DateTypeDeserializer : JsonDeserializer<Long?>{
+class DateTypeDeserializer : JsonDeserializer<Long>{
     private val datePatterns = arrayOf(
         "\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])",
         "\\d{4}.(0[1-9]|1[0-2]).(0[1-9]|[12]\\d|3[01])",

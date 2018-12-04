@@ -28,7 +28,11 @@ class SeriesDbRepository(application: Application) {
         return seriesDao.getAll()
     }
 
-    fun getSearchResultSeries(): LiveData<List<Series>> {
+//    fun getSearchResultSeries(): List<Series> {
+//        return seriesDao.getTemporary()
+//    }
+
+    fun getSearchResult(): LiveData<List<Series>> {
         return seriesDao.getTemporary()
     }
 

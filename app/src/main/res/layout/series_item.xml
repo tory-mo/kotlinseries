@@ -1,19 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="128dp"
     android:padding="15dp"
     android:clickable="true"
     android:focusable="true"
     android:background="?attr/selectableItemBackground">
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivPoster"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvName"
-        android:maxLines="1"
-        android:ellipsize="end"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:textSize="18sp"
         android:textColor="@color/text_secondary"
+        android:layout_toEndOf="@+id/ivPoster"
         style="@style/OverviewTextViewStyle"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:ellipsize="end"
+        android:maxLines="4"
+        android:id="@+id/tvDate"
+        android:layout_toEndOf="@+id/ivPoster"
+        android:layout_below="@+id/tvName"
+        style="@style/OverviewTextViewStyle"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"/>
+</RelativeLayout>
 

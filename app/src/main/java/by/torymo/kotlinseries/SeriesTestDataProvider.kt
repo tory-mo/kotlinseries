@@ -2,6 +2,7 @@ package by.torymo.kotlinseries
 
 import by.torymo.kotlinseries.data.db.Episode
 import by.torymo.kotlinseries.data.db.Series
+import by.torymo.kotlinseries.data.network.Requester
 
 class SeriesTestDataProvider {
     companion object {
@@ -16,7 +17,7 @@ class SeriesTestDataProvider {
                     "Arrow",
                     "1412",
                     "1412",
-                    "/mo0FP1GxOFZT4UDde7RFDz5APXF.jpg",
+                    Requester.POSTER_PATH+"/mo0FP1GxOFZT4UDde7RFDz5APXF.jpg",
                     true,
                     "Crime",
                     1286668800000,
@@ -34,7 +35,7 @@ class SeriesTestDataProvider {
                     "Marvel's Daredevil",
                     "61889",
                     "61889",
-                    "/wVadC1BT2w3hDh5Vq0J0LFFTrLP.jpg",
+                    Requester.POSTER_PATH+"/wVadC1BT2w3hDh5Vq0J0LFFTrLP.jpg",
                     true,
                     "Action",
                     1428624000000,
@@ -52,7 +53,7 @@ class SeriesTestDataProvider {
                     "The Big Bang Theory",
                     "1418",
                     "1418",
-                    "/ooBGRQBdbGzBxAVfExiO8r7kloA.jpg",
+                    Requester.POSTER_PATH+"/ooBGRQBdbGzBxAVfExiO8r7kloA.jpg",
                     true,
                     "Comedy",
                     1190592000000,

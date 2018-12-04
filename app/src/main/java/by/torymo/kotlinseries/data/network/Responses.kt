@@ -6,7 +6,7 @@ import by.torymo.kotlinseries.data.db.Series
 data class SeasonDetailsResponse(
         val id: Int = 0,
         val name: String = "",
-        val air_date: Long? = null,
+        val air_date: Long = 0,
         val season_number: Int = 0,
         val overview: String = "",
         val poster_path: String = "",
@@ -16,14 +16,14 @@ data class SeasonDetailsResponse(
 data class EpisodeResponse(
         val id: Int = 0,
         val name: String = "",
-        val air_date: Long? = null,
+        val air_date: Long = 0,
         val episode_number: Int = 0,
         val season_number: Int = 0,
         val overview: String = "",
         val still_path: String = ""
 ){
     fun toEpisode(series: String, seriesName: String): Episode{
-        return Episode(null,name,air_date?:0,series,episode_number,season_number,false,overview,still_path,seriesName)
+        return Episode(null,name,air_date,series,episode_number,season_number,false,overview,Requester.POSTER_PATH+still_path,seriesName)
     }
 }
 
@@ -39,7 +39,7 @@ data class SeriesDetailsResponse(
         val name: String = "",
         val original_name: String = "",
         val overview: String = "",
-        val first_air_date: Long? = null,
+        val first_air_date: Long = 0,
         val original_language: String = "",
         val poster_path: String? = "",
         val backdrop_path: String? = "",
@@ -50,7 +50,7 @@ data class SeriesDetailsResponse(
         val genres: List<Genre> = mutableListOf(),
         val homepage: String = "",
         val in_production: Boolean = false,
-        val last_air_date: Long? = null,
+        val last_air_date: Long = 0,
         val networks: List<Network> = mutableListOf(),
         val number_of_seasons: Int = 0,
         val production_companies: List<Network> = mutableListOf(),
@@ -63,8 +63,8 @@ data class SeriesDetailsResponse(
                 originalName = original_name,
                 mdbId = id,
                 imdbId = id,
-                poster = poster_path?:backdrop_path?:"",
-                firstDate = first_air_date?:0,
+                poster = Requester.POSTER_PATH+(poster_path?:backdrop_path?:""),
+                firstDate = first_air_date,
                 overview = overview,
                 popularity = popularity,
                 temporary = true)

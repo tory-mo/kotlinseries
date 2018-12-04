@@ -6,6 +6,11 @@ import androidx.lifecycle.LiveData
 import by.torymo.kotlinseries.data.db.Episode
 import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.data.network.Requester
+import by.torymo.kotlinseries.data.network.SearchResponse
+import by.torymo.kotlinseries.ui.fragment.SeriesFragment
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SeriesRepository(application: Application){
 
@@ -44,12 +49,32 @@ class SeriesRepository(application: Application){
             seriesDbRepository.setSeen(id, (seen == EpisodeStatus.NOT_SEEN))
     }
 
-    fun search(query: String, page: Int): LiveData<List<Series>>{
-        val searchResult = seriesRequester.search(query, page)
-        searchResult?.results?.forEach { seriesDbRepository.insertSeries(it.toSeries()) }
+    fun search(query: String, page: Int, callback: SeriesFragment.SearchCallback){
+        val call = seriesRequester.search(query, page)
 
-        return seriesDbRepository.getSearchResultSeries()
+        call.enqueue(object : Callback<SearchResponse> {
+            override fun onResponse(call: Call<SearchResponse>?, response: Response<SearchResponse>?) {
+                if (response != null && response.isSuccessful) {
+                    seriesDbRepository.clearTemporary()
+                    val searchResult = response.body()
+                    searchResult?.results?.forEach { seriesDbRepository.insertSeries(it.toSeries()) }
+
+                    callback.onSuccess(listOf())
+                } else {
+                    callback.onError(response?.message())
+                }
+            }
+
+            override fun onFailure(call: Call<SearchResponse>?, t: Throwable?) {
+                callback.onError(t?.message)
+            }
+        })
     }
+
+    fun getSearchResult(): LiveData<List<Series>>{
+        return seriesDbRepository.getSearchResult()
+    }
+
 
     fun startFollowingSeries(mdbId: String){
         seriesDbRepository.startFollowingSeries(mdbId)
@@ -75,7 +100,7 @@ class SeriesRepository(application: Application){
             if(episode.size != 1){
                 seriesDbRepository.insert(it.toEpisode(seasonDetailsResult.id.toString(), seasonDetailsResult.name))
             }else if(episode[0].id != null){
-                seriesDbRepository.update(episode[0].id?:0, it.name,it.episode_number,it.season_number,it.air_date?:0,it.still_path,it.overview)
+                seriesDbRepository.update(episode[0].id?:0, it.name,it.episode_number,it.season_number,it.air_date,it.still_path,it.overview)
             }
         }
         return seasonDetailsResult?.episodes?.size?:0
@@ -87,5 +112,28 @@ class SeriesRepository(application: Application){
 
     fun clearSearchResult(){
         seriesDbRepository.clearTemporary()
+    }
+
+
+
+    fun<T> Call<T>.enqueue(callback: CallBackKt<T>.() -> Unit) {
+        val callBackKt = CallBackKt<T>()
+        callback.invoke(callBackKt)
+        this.enqueue(callBackKt)
+    }
+
+    class CallBackKt<T>: Callback<T> {
+
+        var onResponse: ((Response<T>) -> Unit)? = null
+        var onFailure: ((t: Throwable?) -> Unit)? = null
+
+        override fun onFailure(call: Call<T>, t: Throwable) {
+            onFailure?.invoke(t)
+        }
+
+        override fun onResponse(call: Call<T>, response: Response<T>) {
+            onResponse?.invoke(response)
+        }
+
     }
 }
