@@ -22,11 +22,11 @@ interface EpisodeDao {
     fun getEpisodesBySeriesAndNumber(series: String, epNumber: Int, sNumber: Int): List<Episode>
 
     //@Query("SELECT * FROM episodes WHERE date between :date1 and :date2 order by date asc")
-    @Query("select episodes.*, series.name as series_name from episodes inner join series on series.imdb_id=episodes.series where episodes.date between :date1 and :date2 order by episodes.date asc")
+    @Query("select episodes.*, series.name as series_name from episodes inner join series on series.mdb_id=episodes.series where episodes.date between :date1 and :date2 order by episodes.date asc")
     fun getEpisodesBetweenDates(date1: Long, date2: Long): LiveData<List<Episode>>
 
     //@Query("SELECT * FROM episodes WHERE (seen = 0) and (date between :date1 and :date2) order by date asc")
-    @Query("select episodes.*, series.name as series_name from episodes inner join series on series.imdb_id=episodes.series where (episodes.seen = 0) and (episodes.date between :date1 and :date2) order by episodes.date asc")
+    @Query("select episodes.*, series.name as series_name from episodes inner join series on series.mdb_id=episodes.series where (episodes.seen = 0) and (episodes.date between :date1 and :date2) order by episodes.date asc")
     fun getNotSeenEpisodesBetweenDates(date1: Long, date2: Long): LiveData<List<Episode>>
 
     @Query("SELECT date FROM episodes WHERE date between :date1 and :date2 order by date asc")

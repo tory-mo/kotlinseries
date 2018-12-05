@@ -22,7 +22,7 @@ class Requester {
     private val service: MDBService
 
     companion object {
-        val POSTER_PATH = "http://image.tmdb.org/t/p/w300/"
+        const val POSTER_PATH = "http://image.tmdb.org/t/p/w300/"
 
         const val BASE_URL = "http://api.themoviedb.org"
         const val APPKEY_PARAM = "api_key"

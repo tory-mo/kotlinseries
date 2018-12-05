@@ -26,7 +26,7 @@ class SeriesRepository(application: Application){
         return getEpisodesBetweenDates(date, date, flag)
     }
 
-    fun getEpisodesBetweenDates(dateFrom: Long, dateTo: Long, flag: EpisodeStatus = EpisodeStatus.ALL): LiveData<List<Episode>>{
+    private fun getEpisodesBetweenDates(dateFrom: Long, dateTo: Long, flag: EpisodeStatus = EpisodeStatus.ALL): LiveData<List<Episode>>{
         return when(flag){
             EpisodeStatus.NOT_SEEN -> seriesDbRepository.getNotSeenEpisodesBetweenDates(dateFrom, dateTo)
             else -> seriesDbRepository.getEpisodesBetweenDates(dateFrom, dateTo)
@@ -40,9 +40,7 @@ class SeriesRepository(application: Application){
         }
     }
 
-    fun getEpisodesForSeries(series: String): LiveData<List<Episode>>{
-        return seriesDbRepository.getEpisodesBySeries(series)
-    }
+    fun getEpisodesForSeries(series: String): LiveData<List<Episode>> = seriesDbRepository.getEpisodesBySeries(series)
 
     fun changeEpisodeSeen(id: Long?, seen: EpisodeStatus = EpisodeStatus.NOT_SEEN){
         if(id != null)
@@ -71,9 +69,7 @@ class SeriesRepository(application: Application){
         })
     }
 
-    fun getSearchResult(): LiveData<List<Series>>{
-        return seriesDbRepository.getSearchResult()
-    }
+    fun getSearchResult(): LiveData<List<Series>> = seriesDbRepository.getSearchResult()
 
 
     fun startFollowingSeries(mdbId: String){
@@ -84,13 +80,11 @@ class SeriesRepository(application: Application){
         val seriesDetailsResult = seriesRequester.getSeriesDetails(mdbId)
 
         seriesDetailsResult?.let {
-            seriesDbRepository.updateSeriesDetails(mdbId, it.genres.toString(),it.homepage,it.number_of_seasons, it.status)
+            seriesDbRepository.updateSeriesDetails(mdbId, it.genres.toString(),it.homepage,it.number_of_seasons, it.status, it.in_production, it.last_air_date, it.networks.toString())
         }
     }
 
-    fun getSeriesDetails(mdbId: String): LiveData<Series>{
-        return seriesDbRepository.getSeriesByMdbId(mdbId)
-    }
+    fun getSeriesDetails(mdbId: String): LiveData<Series> = seriesDbRepository.getSeries(mdbId)
 
     fun updateEpisodes(series: String, season_number: Int): Int{
         val seasonDetailsResult = seriesRequester.getSeasonDetails(series, season_number)
@@ -106,34 +100,7 @@ class SeriesRepository(application: Application){
         return seasonDetailsResult?.episodes?.size?:0
     }
 
-    fun getSeriesList(): LiveData<List<Series>>{
-        return seriesDbRepository.getAllSeries()
-    }
+    fun getSeriesList(): LiveData<List<Series>> = seriesDbRepository.getAllSeries()
 
-    fun clearSearchResult(){
-        seriesDbRepository.clearTemporary()
-    }
-
-
-
-    fun<T> Call<T>.enqueue(callback: CallBackKt<T>.() -> Unit) {
-        val callBackKt = CallBackKt<T>()
-        callback.invoke(callBackKt)
-        this.enqueue(callBackKt)
-    }
-
-    class CallBackKt<T>: Callback<T> {
-
-        var onResponse: ((Response<T>) -> Unit)? = null
-        var onFailure: ((t: Throwable?) -> Unit)? = null
-
-        override fun onFailure(call: Call<T>, t: Throwable) {
-            onFailure?.invoke(t)
-        }
-
-        override fun onResponse(call: Call<T>, response: Response<T>) {
-            onResponse?.invoke(response)
-        }
-
-    }
+    fun clearSearchResult() = seriesDbRepository.clearTemporary()
 }

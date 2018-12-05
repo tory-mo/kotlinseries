@@ -58,15 +58,17 @@ data class SeriesDetailsResponse(
         val status: String = ""
 ){
     fun toSeries(): Series{
-        return Series(id = null,
+        return Series(mdbId = id,
                 name = name,
                 originalName = original_name,
-                mdbId = id,
-                imdbId = id,
-                poster = Requester.POSTER_PATH+(poster_path?:backdrop_path?:""),
-                firstDate = first_air_date,
                 overview = overview,
+                firstAirDate = first_air_date,
+                originalLanguage = original_language,
+                poster = if (poster_path == null) "" else Requester.POSTER_PATH+poster_path,
+                backdrop = if (backdrop_path == null) "" else Requester.POSTER_PATH+backdrop_path,
                 popularity = popularity,
+                voteAverage = vote_average,
+                voteCount = vote_count,
                 temporary = true)
     }
 }

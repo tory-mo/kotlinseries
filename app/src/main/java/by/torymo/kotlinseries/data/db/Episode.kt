@@ -4,7 +4,7 @@ import androidx.room.*
 
 
 @Entity(tableName = "episodes", foreignKeys = [ForeignKey(entity = Series::class,
-        parentColumns = ["imdb_id"],
+        parentColumns = ["mdb_id"],
 childColumns = ["series"],
 onDelete = ForeignKey.CASCADE)],
 indices = [Index(value = ["series"])])

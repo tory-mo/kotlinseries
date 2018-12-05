@@ -1,6 +1,7 @@
 package by.torymo.kotlinseries.data
 
 import android.app.Application
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 
 import by.torymo.kotlinseries.data.db.EpisodeDao
@@ -24,129 +25,71 @@ class SeriesDbRepository(application: Application) {
     }
 
     //series
-    fun getAllSeries(): LiveData<List<Series>> {
-        return seriesDao.getAll()
+    fun getAllSeries(): LiveData<List<Series>> = seriesDao.getAll()
+
+    fun getSearchResult(): LiveData<List<Series>> = seriesDao.getTemporary()
+
+    fun clearTemporary() = seriesDao.deleteTemporary()
+
+    fun startFollowingSeries(mdbId: String) = seriesDao.changeToPersistent(mdbId)
+
+    fun updateSeriesDetails(mdbId: String, genres: String, homepage: String, number_of_seasons: Int, status: String, in_production:Boolean, lastAirDate:Long, networks: String){
+        seriesDao.updateDetails(mdbId, genres, homepage, number_of_seasons, status, in_production, lastAirDate, networks)
     }
 
-//    fun getSearchResultSeries(): List<Series> {
-//        return seriesDao.getTemporary()
-//    }
+    fun getWatchlist(): LiveData<List<Series>> = seriesDao.getWatchlist()
 
-    fun getSearchResult(): LiveData<List<Series>> {
-        return seriesDao.getTemporary()
-    }
 
-    fun clearTemporary(){
-        seriesDao.deleteTemporary()
-    }
+    fun getSeries(mdbId: String): LiveData<Series> = seriesDao.getSeries(mdbId)
 
-    fun startFollowingSeries(mdbId: String){
-        seriesDao.changeToPersistent(mdbId)
-    }
+    fun setWatchlist(imdbId: String, watchlist: Boolean) = seriesDao.setWatchlist(imdbId, watchlist)
 
-    fun updateSeriesDetails(mdbId: String, genres: String, homepage: String, number_of_seasons: Int, status: String){
-        seriesDao.updateDetails(mdbId, genres, homepage, number_of_seasons, status)
-    }
+    @WorkerThread
+    fun insertSeries(series: Series) = seriesDao.insert(series)
 
-    fun getWatchlist(): LiveData<List<Series>>{
-        return seriesDao.getWatchlist()
-    }
+    @WorkerThread
+    fun insertSeries(series: List<Series>) = seriesDao.insert(series)
 
-    fun getSeriesByImdbId(imdbId: String): LiveData<Series>{
-        return seriesDao.getSeriesByImdbId(imdbId)
-    }
-
-    fun getSeriesByMdbId(mdbId: String): LiveData<Series>{
-        return seriesDao.getSeriesByMdbId(mdbId)
-    }
-
-    fun setWatchlist(imdbId: String, watchlist: Boolean){
-        seriesDao.setWatchlist(imdbId, watchlist)
-    }
-
-    fun insertSeries(series: Series){
-        seriesDao.insert(series)
-    }
-
-    fun insertSeries(series: List<Series>){
-        seriesDao.insert(series)
-    }
-
-    fun deleteByImdbId(imdbId: String){
-        seriesDao.deleteByImdbId(imdbId)
-    }
-
-    fun deleteByMdbId(mdbId: String){
-        seriesDao.deleteByMdbId(mdbId)
-    }
+    fun deleteSeries(mdbId: String) = seriesDao.delete(mdbId)
 
     //episodes
-    fun getAllEpisodes(): LiveData<List<Episode>>{
-        return episodeDao.getAll()
-    }
+    fun getAllEpisodes(): LiveData<List<Episode>> = episodeDao.getAll()
 
-    fun getAllDates(): LiveData<List<Long>>{
-        return episodeDao.getAllDates()
-    }
+    fun getAllDates(): LiveData<List<Long>> = episodeDao.getAllDates()
 
-    fun getEpisodesBySeries(series: String): LiveData<List<Episode>>{
-        return episodeDao.getEpisodesBySeries(series)
-    }
+    fun getEpisodesBySeries(series: String): LiveData<List<Episode>> = episodeDao.getEpisodesBySeries(series)
 
-    fun getEpisodeBySeriesAndNumber(series: String, epNumber: Int, sNumber: Int): List<Episode>{
-        return episodeDao.getEpisodesBySeriesAndNumber(series, epNumber, sNumber)
-    }
+    fun getEpisodeBySeriesAndNumber(series: String, epNumber: Int, sNumber: Int): List<Episode> = episodeDao.getEpisodesBySeriesAndNumber(series, epNumber, sNumber)
 
-    fun getEpisodesBetweenDates(date1: Long, date2: Long): LiveData<List<Episode>>{
-        return episodeDao.getEpisodesBetweenDates(date1, date2)
-    }
+    fun getEpisodesBetweenDates(date1: Long, date2: Long): LiveData<List<Episode>> = episodeDao.getEpisodesBetweenDates(date1, date2)
 
-    fun getNotSeenEpisodesBetweenDates(date1: Long, date2: Long): LiveData<List<Episode>>{
-        return episodeDao.getNotSeenEpisodesBetweenDates(date1, date2)
-    }
+    fun getNotSeenEpisodesBetweenDates(date1: Long, date2: Long): LiveData<List<Episode>> = episodeDao.getNotSeenEpisodesBetweenDates(date1, date2)
 
-    fun getEpisodeDatesBetweenDates(date1: Long, date2: Long): LiveData<List<Long>>{
-        return episodeDao.getEpisodeDatesBetweenDates(date1, date2)
-    }
+    fun getEpisodeDatesBetweenDates(date1: Long, date2: Long): LiveData<List<Long>> = episodeDao.getEpisodeDatesBetweenDates(date1, date2)
 
-    fun getNotSeenEpisodeDatesBetweenDates(date1: Long, date2: Long): LiveData<List<Long>>{
-        return episodeDao.getNotSeenEpisodeDatesBetweenDates(date1, date2)
-    }
+    fun getNotSeenEpisodeDatesBetweenDates(date1: Long, date2: Long): LiveData<List<Long>> = episodeDao.getNotSeenEpisodeDatesBetweenDates(date1, date2)
 
-    fun getEpisodesForSeriesAndDate(series: String, date: Long): LiveData<List<Episode>>{
-        return episodeDao.getEpisodesForSeriesAndDate(series, date)
-    }
+    fun getEpisodesForSeriesAndDate(series: String, date: Long): LiveData<List<Episode>> = episodeDao.getEpisodesForSeriesAndDate(series, date)
 
-    fun setSeen(id: Long, seen: Boolean){
-        episodeDao.setSeen(id, seen)
-    }
+    fun setSeen(id: Long, seen: Boolean) = episodeDao.setSeen(id, seen)
 
-    fun insert(episode: Episode){
-        episodeDao.insert(episode)
-    }
+    @WorkerThread
+    fun insert(episode: Episode) = episodeDao.insert(episode)
 
-    fun insert(episodes: List<Episode>){
-        episodeDao.insert(episodes)
-    }
+    @WorkerThread
+    fun insert(episodes: List<Episode>) = episodeDao.insert(episodes)
 
     fun update(id: Long, name: String, epNumber: Int, sNumber: Int, date: Long, mPoster: String, mOverview: String){
         episodeDao.update(id, name, epNumber, sNumber, date, mPoster, mOverview)
     }
 
-    fun delete(series: String){
-        episodeDao.delete(series)
-    }
+    fun delete(series: String) = episodeDao.delete(series)
 
     //seasons
-    fun getAllSeasons(): LiveData<List<Season>>{
-        return seasonDao.getAll()
-    }
+    fun getAllSeasons(): LiveData<List<Season>> = seasonDao.getAll()
 
-    fun insertSeason(season: Season){
-        seasonDao.insert(season)
-    }
+    @WorkerThread
+    fun insertSeason(season: Season) = seasonDao.insert(season)
 
-    fun deleteSeason(imdbId: String){
-        seasonDao.deleteByImdbId(imdbId)
-    }
+    fun deleteSeason(mdbId: String) = seasonDao.delete(mdbId)
 }

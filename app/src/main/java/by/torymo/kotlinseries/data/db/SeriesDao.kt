@@ -15,23 +15,20 @@ interface SeriesDao {
     @Query("select * from series where temporary_row = 1 order by popularity desc")
     fun getTemporary(): LiveData<List<Series>>
 
-    @Query("UPDATE series set temporary_row = 1 where mdb_id = :mdbId")
+    @Query("UPDATE series set temporary_row = 1, watchlist = 1 where mdb_id = :mdbId")
     fun changeToPersistent(mdbId: String)
 
-    @Query("update series set genres = :genres, homepage = :homepage, seasons = :number_of_seasons, status = :status where mdb_id = :mdbId")
-    fun updateDetails(mdbId: String, genres: String, homepage: String, number_of_seasons: Int, status: String)
+    @Query("update series set genres = :genres, homepage = :homepage, seasons = :number_of_seasons, status = :status, in_production = :in_production, last_air_date = :lastAirDate, networks = :networks where mdb_id = :mdbId")
+    fun updateDetails(mdbId: String, genres: String, homepage: String, number_of_seasons: Int, status: String, in_production:Boolean, lastAirDate:Long, networks: String)
 
     @Query("select * from series where watchlist = 1 order by name asc")
     fun getWatchlist(): LiveData<List<Series>>
 
-    @Query("select * from series where imdb_id like :imdbId limit 1")
-    fun getSeriesByImdbId(imdbId: String): LiveData<Series>
+    @Query("select * from series where mdb_id like :mdbId limit 1")
+    fun getSeries(mdbId: String): LiveData<Series>
 
-    @Query("select * from series where imdb_id like :mdbId limit 1")
-    fun getSeriesByMdbId(mdbId: String): LiveData<Series>
-
-    @Query("update series set watchlist = :watchlist where imdb_id like :imdbId")
-    fun setWatchlist(imdbId: String, watchlist: Boolean)
+    @Query("update series set watchlist = :watchlist where mdb_id like :mdbId")
+    fun setWatchlist(mdbId: String, watchlist: Boolean)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(series: Series)
@@ -39,11 +36,8 @@ interface SeriesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(series: List<Series>)
 
-    @Query("delete from series where imdb_id like :imdbId")
-    fun deleteByImdbId(imdbId: String)
-
     @Query("delete from series where mdb_id like :mdbId")
-    fun deleteByMdbId(mdbId: String)
+    fun delete(mdbId: String)
 
     @Query("delete from series where temporary_row = 1")
     fun deleteTemporary()
