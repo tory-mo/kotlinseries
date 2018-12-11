@@ -15,6 +15,7 @@ import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.ui.model.SeriesListViewModel
 import kotlinx.android.synthetic.main.fragment_series.*
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.NavHostFragment
 
 
 class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
