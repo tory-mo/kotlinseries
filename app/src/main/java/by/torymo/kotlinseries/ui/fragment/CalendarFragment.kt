@@ -96,7 +96,7 @@ class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAd
         if (today.millis == date) {
             tvToday.text = resources.getString(R.string.today)
         } else {
-            tvToday.text = Utility().dateToStrFormat.format(date)
+            tvToday.text = Utility.dateToStrFormat.format(date)
         }
         viewModel.getEpisodesForDate(date)
     }

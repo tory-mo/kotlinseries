@@ -10,7 +10,6 @@ class Utility {
 
 
     private val PREF_SEEN = "pref_seen"
-    val dateToStrFormat = SimpleDateFormat("dd MMMM yyyy")
 
     fun getSeenParam(context: Context?): Boolean {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
@@ -23,5 +22,9 @@ class Utility {
         val editor = prefs.edit()
         editor.putBoolean(PREF_SEEN, !old)
         editor.apply()
+    }
+
+    companion object {
+        val dateToStrFormat = SimpleDateFormat("dd MMMM yyyy")
     }
 }
