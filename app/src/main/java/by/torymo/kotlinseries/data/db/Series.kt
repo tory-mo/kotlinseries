@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.io.Serializable
 import org.intellij.lang.annotations.Language
 
 
@@ -34,4 +35,4 @@ data class Series(@PrimaryKey @ColumnInfo(name = "mdb_id") var mdbId: String = "
                   @ColumnInfo(name = "temporary_row") var temporary: Boolean = false
 
 
-)
+): Serializable

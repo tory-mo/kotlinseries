@@ -34,7 +34,10 @@
 
     <string name="format_episode_number" translatable="true">episode %1$d, season %2$d</string>
 
+    <string name="format_original_lng" translatable="true">Original Language:</string>
+    <string name="format_networks" translatable="true">Networks:</string>
     <string name="format_first_date" translatable="true">First date:</string>
+    <string name="format_last_date" translatable="true">Last date:</string>
     <string name="format_seasons" translatable="true">Seasons:</string>
     <string name="episode_time_label" translatable="true">Episode time:</string>
     <string name="format_episode_time" translatable="true">%1$s min.</string>
@@ -42,7 +45,7 @@
     <string name="format_overview" translatable="true">Overview:</string>
     <string name="format_ongoing" translatable="true">Show status:</string>
     <string name="format_genres" translatable="true">Genres:</string>
-    <string name="format_original_name" translatable="true">Original name:</string>
+    <string name="format_status" translatable="true">Status:</string>
 
     <string name="format_ongoing_true" translatable="true">Ongoing</string>
     <string name="format_ongoing_false" translatable="true">Finished</string>
@@ -59,5 +62,4 @@
 
 
     <string name="extra_key_series_id">series_id</string>
-
 </resources>

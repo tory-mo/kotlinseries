@@ -23,6 +23,8 @@ class SeriesListViewModel(application: Application): AndroidViewModel(applicatio
 
     }
 
+
+
     fun getSearchResult(){
         seriesList.addSource(seriesRepository.getSearchResult()){
             series->seriesList.postValue(series)

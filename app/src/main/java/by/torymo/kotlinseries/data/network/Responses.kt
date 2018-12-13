@@ -75,4 +75,4 @@ data class SeriesDetailsResponse(
 
 data class Genre(val id: Int = 0, val name: String = "")
 data class Network(val id: Int = 0, val name: String = "", val logo_path: String = "", val origin_country: String = "")
-data class Season(val id: Int = 0, val name: String = "", val air_date: Long? = null, val season_number: Int = 0, val episode_count: Int = 0, val overview: String = "", val poster_path: String = "")
+data class Season(val id: Int = 0, val name: String = "", val air_date: Long = 0, val season_number: Int = 0, val episode_count: Int = 0, val overview: String = "", val poster_path: String = "")
