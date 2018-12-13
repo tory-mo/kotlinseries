@@ -54,13 +54,12 @@ class Requester {
         service = retrofit.create(MDBService::class.java)
     }
 
-    fun getSeriesDetails(mdbId: String): SeriesDetailsResponse?{
+    fun getSeriesDetails(mdbId: String): Call<SeriesDetailsResponse>{
         val map = mutableMapOf<String, String>()
         map[LANGUAGE_PARAM] = "en-US"
         map[APPEND_TO_RESPONSE_PARAM] = ""
 
-        val call = service.getSeriesDetails(mdbId, map)
-        return call.execute().body()
+        return service.getSeriesDetails(mdbId, map)
     }
 
     fun getSeasonDetails(mdbId: String, season_number: Int): SeasonDetailsResponse?{
@@ -108,16 +107,16 @@ class DateTypeDeserializer : JsonDeserializer<Long>{
         "dd MMM. yyyy",
         "dd MMMM yyyy")
 
-    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Long? {
+    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Long {
         json?.asString?.let {
-            for(i in 0..dateFormats.size){
+            for(i in 0..(dateFormats.size-1)){
                 val regex = datePatterns[i].toRegex()
                 val format = SimpleDateFormat(dateFormats[i], Locale.UK)
 
                 if(regex.matches(it)) return format.parse(it).time
             }
         }
-		return null
+		return 0
     }
 }
 
@@ -131,7 +130,6 @@ class ApiKeyInterceptor: Interceptor{
         val requestBuilder = originalR.newBuilder().url(url).build()
         return chain.proceed(requestBuilder)
     }
-
 }
 
 class ErrorInterceptor: Interceptor{
