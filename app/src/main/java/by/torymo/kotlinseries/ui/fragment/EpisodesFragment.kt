@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import by.torymo.kotlinseries.R
-import by.torymo.kotlinseries.ui.DetailActivityArgs
+import by.torymo.kotlinseries.data.db.Episode
 import by.torymo.kotlinseries.ui.model.EpisodeListViewModel
 
 
@@ -33,9 +33,28 @@ class EpisodesFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val seriesId = this.arguments?.getString(SERIES_ID_PARAM)
 
-        var i = 0
-        i++
+        seriesId?.let {
+            viewModel.getEpisodesByMdbId(seriesId).observe(viewLifecycleOwner, Observer<List<Episode>>{ episodes ->
+                episodes?.let { refreshEpisodeList(episodes) }
+            })
+        }
+
+    }
+
+    private fun refreshEpisodeList(episodes: List<Episode>){}
+
+    companion object {
+        val SERIES_ID_PARAM = "SERIES_ID_EXTRA"
+
+        fun newInstance(seriesId: String): Fragment{
+            val fragment = OverviewFragment()
+            val args = Bundle()
+            args.putString(SERIES_ID_PARAM, seriesId)
+            fragment.arguments = args
+            return fragment
+        }
     }
 
 }
