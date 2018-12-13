@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.R
-import com.squareup.picasso.Picasso
+import by.torymo.kotlinseries.picasso
 import kotlinx.android.synthetic.main.series_item.view.*
 
 class SeriesListAdapter(private val items: List<Series>,
@@ -37,7 +37,7 @@ RecyclerView.Adapter<RecyclerView.ViewHolder>(){
         fun bind(series: Series, listener: OnItemClickListener) = with(itemView) {
             tvName.text = series.name
             tvDate.text = if(series.overview.length > 140) series.overview.substring(0, 140) else series.overview
-            Picasso.get().load(series.poster).error(R.drawable.ic_no_photo).into(ivPoster)
+            ivPoster.picasso(series.poster)
 
             // RecyclerView on item click
             setOnClickListener {

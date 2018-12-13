@@ -1,8 +1,8 @@
 package by.torymo.kotlinseries
 
-import android.content.Context
+import android.widget.ImageView
 import com.squareup.picasso.Picasso
 
-
-public val Context.picasso: Picasso
-    get() = Picasso.get()
+fun ImageView.picasso(url: String){
+    Picasso.get().load(url).error(R.drawable.ic_no_photo).into(this)
+}
