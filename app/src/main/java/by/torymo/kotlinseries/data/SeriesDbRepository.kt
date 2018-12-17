@@ -25,9 +25,11 @@ class SeriesDbRepository(application: Application) {
     }
 
     //series
+    fun oneSeries(mdbId: String): Series? = seriesDao.getOneSeries(mdbId)
+
     fun getAllSeries(): LiveData<List<Series>> = seriesDao.getAll()
 
-    fun getSearchResult(): LiveData<List<Series>> = seriesDao.getTemporary()
+    fun getByName(name: String): LiveData<List<Series>> = if(name.isEmpty()) seriesDao.getAll() else seriesDao.getByName(name)
 
     fun clearTemporary() = seriesDao.deleteTemporary()
 
@@ -35,6 +37,10 @@ class SeriesDbRepository(application: Application) {
 
     fun updateSeriesDetails(mdbId: String, genres: String, homepage: String, number_of_seasons: Int, status: String, in_production:Boolean, lastAirDate:Long, networks: String){
         seriesDao.updateDetails(mdbId, genres, homepage, number_of_seasons, status, in_production, lastAirDate, networks)
+    }
+
+    fun updateSeriesMain(mdbId: String, name:String, originalName: String, overview: String, first_air_date: Long, original_language: String, poster_path: String, backdrop_path: String, popularity: Double, vote_average: Double, vote_count: Int){
+        seriesDao.updateMain(mdbId, name, originalName, overview, first_air_date, original_language, poster_path, backdrop_path, popularity, vote_average, vote_count)
     }
 
     fun getWatchlist(): LiveData<List<Series>> = seriesDao.getWatchlist()

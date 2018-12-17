@@ -15,7 +15,6 @@ import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.ui.model.SeriesListViewModel
 import kotlinx.android.synthetic.main.fragment_series.*
 import androidx.appcompat.widget.SearchView
-import androidx.navigation.fragment.NavHostFragment
 
 
 class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
@@ -26,12 +25,11 @@ class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
     private lateinit var searchView: SearchView
 
     override fun onItemClick(series: Series, item: View) {
-
+//        val action = SeriesFragmentDirections.actionBottomSeriesToDetailFragment2()
         val action = SeriesFragmentDirections.actionBottomSeriesToDetailActivity()
         action.setSeriesId(series.mdbId)
         val navController = view?.findNavController()
         navController?.navigate(action)
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +48,7 @@ class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.clearSearch()
         viewModel.seriesList.observe(viewLifecycleOwner, Observer<List<Series>>{ series ->
             series?.let { refreshSeriesList(series) }
         })
@@ -58,6 +57,7 @@ class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
     private fun refreshSeriesList(series: List<Series>){
         lvSeries.adapter = SeriesListAdapter(series, this)
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
@@ -69,6 +69,7 @@ class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
     }
 
     override fun onClose(): Boolean {
+
         viewModel.clearSearch()
         searchView.onActionViewCollapsed()
         return true
@@ -79,9 +80,10 @@ class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
     //TODO: paging
     override fun onQueryTextSubmit(query: String?): Boolean {
         query?.let {
+            viewModel.clearSearch()
             viewModel.searchSeries(query, 1, object : SearchCallback{
                 override fun onSuccess(series: List<Series>) {
-                    viewModel.getSearchResult()
+
                 }
 
                 override fun onError(message: String?) {
