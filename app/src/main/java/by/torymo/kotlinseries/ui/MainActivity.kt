@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import by.torymo.kotlinseries.R
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -19,16 +18,20 @@ class MainActivity : AppCompatActivity() {
 
         val navController = Navigation.findNavController(this, R.id.bottomNavFragment)
 
-//        if(savedInstanceState!=null && savedInstanceState.containsKey(SELECTED_KEY)){
-//            selectedTab = savedInstanceState.getInt(SELECTED_KEY)
-//            bottomNavigation.selectedItemId = selectedTab
-//        }
 
-        NavigationUI.setupWithNavController(findViewById<BottomNavigationView>(R.id.bottomNavigation),
+        if(savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)){
+            selectedTab = savedInstanceState.getInt(SELECTED_KEY)
+            bottomNavigation.selectedItemId = selectedTab
+        }
+        NavigationUI.setupWithNavController(bottomNavigation,
                 navController)
+
     }
 
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        outState.putInt(SELECTED_KEY, bottomNavigation?.selectedItemId)
-//    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        bottomNavigation?.selectedItemId?.let {
+            outState.putInt(SELECTED_KEY, bottomNavigation.selectedItemId)
+        }
+        super.onSaveInstanceState(outState)
+    }
 }
