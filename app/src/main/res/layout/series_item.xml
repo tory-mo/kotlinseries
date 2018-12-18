@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="128dp"
-    android:padding="5dp"
+    android:layout_height="@dimen/item_height"
+    android:padding="@dimen/item_padding"
     android:clickable="true"
     android:focusable="true"
     android:background="?attr/selectableItemBackground">
     <ImageView
-        android:layout_width="100dp"
+        android:id="@+id/ivPoster"
+        android:layout_width="@dimen/image_height"
         android:layout_height="wrap_content"
-        android:id="@+id/ivPoster"/>
+        tools:src="@drawable/ic_no_photo" />
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/tvName"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
-        android:textSize="18sp"
-        android:textColor="@color/text_secondary"
-        android:layout_toEndOf="@+id/ivPoster"
-        style="@style/OverviewTextViewStyle"/>
-    <TextView
+        style="@style/OverviewTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
-        android:ellipsize="end"
-        android:maxLines="4"
-        android:id="@+id/tvDate"
         android:layout_toEndOf="@+id/ivPoster"
-        android:layout_below="@+id/tvName"
+        android:paddingStart="@dimen/text_horizontalPadding"
+        android:paddingEnd="@dimen/text_horizontalPadding"
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/header_textSize"
+        tools:text="Header header header header header" />
+    <TextView
+        android:id="@+id/tvDate"
         style="@style/OverviewTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvName"
         android:layout_alignParentBottom="true"
-        android:gravity="bottom"/>
+        android:layout_toEndOf="@+id/ivPoster"
+        android:ellipsize="end"
+        android:gravity="bottom"
+        android:maxLines="4"
+        android:paddingStart="@dimen/text_horizontalPadding"
+        android:paddingEnd="@dimen/text_horizontalPadding"
+        android:textSize="@dimen/overview_textSize"
+        tools:text="overview bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla" />
 </RelativeLayout>
 

@@ -36,7 +36,8 @@ RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
         fun bind(series: Series, listener: OnItemClickListener) = with(itemView) {
             tvName.text = series.name
-            tvDate.text = if(series.overview.length > 140) series.overview.substring(0, 140) else series.overview
+            ivPoster.contentDescription = series.name
+            tvDate.text = series.overview
             ivPoster.picasso(series.poster)
 
             // RecyclerView on item click
