@@ -17,6 +17,8 @@ import kotlinx.android.synthetic.main.fragment_calendar.*
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAdapter.OnItemClickListener{
@@ -68,7 +70,7 @@ class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAd
 
     private fun changeSeenTitle(menuItem: MenuItem?){
 
-        val seenTitle = if(Utility().getSeenParam(activity)) R.string.action_all else R.string.action_only_seen
+        val seenTitle = if(Utility.getSeenParam(context)) R.string.action_all else R.string.action_only_seen
         menuItem?.title = resources.getString(seenTitle)
     }
 
@@ -83,7 +85,7 @@ class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAd
             //viewModel.updateEpisodes()
         }
         R.id.action_only_seen -> consume{
-            Utility().changeSeenParam(activity)
+            Utility.changeSeenParam(context)
             changeSeenTitle(item)
             val startend = calendar_view.currentMonthStartEnd
             getEpisodesForMonth(startend[0], startend[1])
@@ -96,7 +98,7 @@ class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAd
         if (today.millis == date) {
             tvToday.text = resources.getString(R.string.today)
         } else {
-            tvToday.text = Utility.dateToStrFormat.format(date)
+            tvToday.text = SimpleDateFormat(Utility.dateToStrFormat, Locale.getDefault()).format(date)
         }
         viewModel.getEpisodesForDate(date)
     }

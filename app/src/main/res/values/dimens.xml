@@ -3,10 +3,12 @@
     <dimen name="fragment_padding">5dp</dimen>
     <dimen name="month_controls_padding">10dp</dimen>
 
-    <dimen name="fab_size">56dp</dimen>
     <dimen name="button_elevation">2dp</dimen>
     <dimen name="button_press_elevation">4dp</dimen>
 
+
+    <!--series list-->
+    <dimen name="row_paddingBottom">10dp</dimen>
 
     <!--series_list_item-->
     <dimen name="item_padding">5dp</dimen>
@@ -15,4 +17,14 @@
     <dimen name="text_horizontalPadding">5dp</dimen>
     <dimen name="header_textSize">18sp</dimen>
     <dimen name="overview_textSize">14sp</dimen>
+
+    <!--activity_detail-->
+    <dimen name="appbar_height">300dp</dimen>
+    <dimen name="expandedTitle_marginBottom">35dp</dimen>
+    <dimen name="originalName_paddingBottom">10dp</dimen>
+    <dimen name="originalName_paddingHorizontal">32dp</dimen>
+    <dimen name="originalName_textSize">14dp</dimen>
+    <dimen name="tabLayout_elevation">5dp</dimen>
+    <dimen name="fab_margin">10dp</dimen>
+
 </resources>

@@ -105,7 +105,11 @@ class SeriesRepository(application: Application){
                 if (response.isSuccessful) {
                     val seriesDetailsResult = response.body()
                     seriesDetailsResult?.let {
-                        seriesDbRepository.updateSeriesDetails(mdbId, it.genres.map{it.name}.toString(),it.homepage,it.number_of_seasons, it.status, it.in_production, it.last_air_date, it.networks.map{it.name}.toString())
+                        var genres = it.genres.map { it.name }.toString()
+                        genres = if(genres.isEmpty()) genres else genres.substring(1, genres.length-1)
+                        var networks = it.networks.map { it.name }.toString()
+                        networks = if(networks.isEmpty()) networks else networks.substring(1, networks.length-1)
+                        seriesDbRepository.updateSeriesDetails(mdbId, genres,it.homepage,it.number_of_seasons, it.status, it.in_production, it.last_air_date, networks)
                     }
                 } else {
                     callback.onError(response.message())

@@ -9,7 +9,7 @@ interface SeriesDao {
     @Query("select * from series where temporary_row = 0 order by name asc")
     fun getAll(): LiveData<List<Series>>
 
-    @Query("select * from series where temporary_row = 1 or name like '%' || :name  || '%' order by popularity desc")
+    @Query("select * from series where temporary_row = 1 or name like '%' || :name  || '%' or original_name like '%' || :name  || '%' order by popularity desc")
     fun getByName(name: String): LiveData<List<Series>>
 
     @Query("select * from series where temporary_row = 1 order by popularity desc")

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">KotlinSeries</string>
-    <string name="bottom_calendar_title">Календарь</string>
-    <string name="bottom_series_title">Сериалы</string>
+    <string name="bottom_calendar_title" translatable="true">Calendar</string>
+    <string name="bottom_series_title" translatable="true">Series</string>
 
     <string name="app_caption">Series Calendar</string>
     <string name="watchlist">Watchlist</string>
@@ -10,13 +10,13 @@
     <string name="episodes">Episodes</string>
     <string name="overview">Overview</string>
 
-    <string name="action_make_backup">Make backup</string>
-    <string name="action_restore">Restore</string>
-    <string name="action_update_series">Update Series List</string>
-    <string name="action_update_episodes">Update Episodes</string>
-    <string name="action_only_seen">Unseen Episodes</string>
-    <string name="action_all">All Episodes</string>
-    <string name="today">Today</string>
+    <string name="action_make_backup" translatable="true">Backup</string>
+    <string name="action_restore" translatable="true">Restore</string>
+    <string name="action_update_series" translatable="true">Update Series List</string>
+    <string name="action_update_episodes" translatable="true">Update Episodes</string>
+    <string name="action_only_seen" translatable="true">Not Seen Episodes</string>
+    <string name="action_all" translatable="true">All Episodes</string>
+    <string name="today" translatable="true">Today</string>
 
     <string name="action_search">Search</string>
     <string name="slist_updated">Series list is updated</string>
@@ -34,23 +34,23 @@
 
     <string name="format_episode_number" translatable="true">episode %1$d, season %2$d</string>
 
-    <string name="format_original_lng" translatable="true">Original Language:</string>
-    <string name="format_networks" translatable="true">Networks:</string>
-    <string name="format_first_date" translatable="true">First date:</string>
-    <string name="format_last_date" translatable="true">Last date:</string>
-    <string name="format_seasons" translatable="true">Seasons:</string>
-    <string name="episode_time_label" translatable="true">Episode time:</string>
+    <string name="format_original_lng" translatable="true">Original Language</string>
+    <string name="format_networks" translatable="true">Networks</string>
+    <string name="format_first_date" translatable="true">First date</string>
+    <string name="format_last_date" translatable="true">Last date</string>
+    <string name="format_seasons" translatable="true">Seasons</string>
+    <string name="episode_time_label" translatable="true">Episode time</string>
     <string name="format_episode_time" translatable="true">%1$s min.</string>
-    <string name="format_homepage" translatable="true">Homepage:</string>
-    <string name="format_overview" translatable="true">Overview:</string>
-    <string name="format_ongoing" translatable="true">Show status:</string>
-    <string name="format_genres" translatable="true">Genres:</string>
-    <string name="format_status" translatable="true">Status:</string>
+    <string name="format_homepage" translatable="true">Homepage</string>
+    <string name="format_overview" translatable="true">Overview</string>
+    <string name="format_ongoing" translatable="true">Show status</string>
+    <string name="format_genres" translatable="true">Genres</string>
+    <string name="format_status" translatable="true">Status</string>
 
     <string name="format_ongoing_true" translatable="true">Ongoing</string>
     <string name="format_ongoing_false" translatable="true">Finished</string>
 
-    <string-array name="weekDays">
+    <string-array name="weekDays" translatable="true">
         <item>M</item>
         <item>T</item>
         <item>W</item>
@@ -58,6 +58,86 @@
         <item>F</item>
         <item>S</item>
         <item>S</item>
+    </string-array>
+
+    <string-array name="lang" translatable="true">
+        <item>{"name":\"Afrikaans\","code":"af"}</item>
+        <item>{"name":\"Arabic\","code":"ar"}</item>
+        <item>{"name":\"Azeri\","code":"az"}</item>
+        <item>{"name":\"Belarusian\","code":"be"}</item>
+        <item>{"name":\"Bulgarian\","code":"bg"}</item>
+        <item>{"name":\"Bosnian\","code":"bs"}</item>
+        <item>{"name":\"Catalan\","code":"ca"}</item>
+        <item>{"name":\"Czech\","code":"cs"}</item>
+        <item>{"name":\"Welsh\","code":"cy"}</item>
+        <item>{"name":\"Danish\","code":"da"}</item>
+        <item>{"name":\"German\","code":"de"}</item>
+        <item>{"name":\"Divehi\","code":"dv"}</item>
+        <item>{"name":\"Greek\","code":"el"}</item>
+        <item>{"name":\"English\","code":"en"}</item>
+        <item>{"name":\"Esperanto\","code":"eo"}</item>
+        <item>{"name":\"Spanish\","code":"es"}</item>
+        <item>{"name":\"Estonian\","code":"et"}</item>
+        <item>{"name":\"Basque\","code":"eu"}</item>
+        <item>{"name":\"Farsi\","code":"fa"}</item>
+        <item>{"name":\"Finnish\","code":"fi"}</item>
+        <item>{"name":\"Faroese\","code":"fo"}</item>
+        <item>{"name":\"French\","code":"fr"}</item>
+        <item>{"name":\"Galician\","code":"gl"}</item>
+        <item>{"name":\"Gujarati\","code":"gu"}</item>
+        <item>{"name":\"Hebrew\","code":"he"}</item>
+        <item>{"name":\"Hindi\","code":"hi"}</item>
+        <item>{"name":\"Croatian\","code":"hr"}</item>
+        <item>{"name":\"Hungarian\","code":"hu"}</item>
+        <item>{"name":\"Armenian\","code":"hy"}</item>
+        <item>{"name":\"Indonesian\","code":"id"}</item>
+        <item>{"name":\"Icelandic\","code":"is"}</item>
+        <item>{"name":\"Italian\","code":"it"}</item>
+        <item>{"name":\"Japanese\","code":"ja"}</item>
+        <item>{"name":\"Georgian\","code":"ka"}</item>
+        <item>{"name":\"Kazakh\","code":"kk"}</item>
+        <item>{"name":\"Kannada\","code":"kn"}</item>
+        <item>{"name":\"Korean\","code":"ko"}</item>
+        <item>{"name":\"Kyrgyz\","code":"ky"}</item>
+        <item>{"name":\"Lithuanian\","code":"lt"}</item>
+        <item>{"name":\"Latvian\","code":"lv"}</item>
+        <item>{"name":\"Maori\","code":"mi"}</item>
+        <item>{"name":\"FYRO Macedonian\","code":"mk"}</item>
+        <item>{"name":\"Mongolian\","code":"mn"}</item>
+        <item>{"name":\"Marathi\","code":"mr"}</item>
+        <item>{"name":\"Malay\","code":"ms"}</item>
+        <item>{"name":\"Maltese\","code":"mt"}</item>
+        <item>{"name":\"Dutch\","code":"nl"}</item>
+        <item>{"name":\"Norwegian\","code":"nn"}</item>
+        <item>{"name":\"Punjabi\","code":"pa"}</item>
+        <item>{"name":\"Polish\","code":"pl"}</item>
+        <item>{"name":\"Pashto\","code":"ps"}</item>
+        <item>{"name":\"Portuguese\","code":"pt"}</item>
+        <item>{"name":\"Quechua\","code":"qu"}</item>
+        <item>{"name":\"Romanian\","code":"ro"}</item>
+        <item>{"name":\"Russian\","code":"ru"}</item>
+        <item>{"name":\"Sanskrit\","code":"sa"}</item>
+        <item>{"name":\"Slovak\","code":"sk"}</item>
+        <item>{"name":\"Slovenian\","code":"sl"}</item>
+        <item>{"name":\"Albanian\","code":"sq"}</item>
+        <item>{"name":\"Serbian\","code":"sr"}</item>
+        <item>{"name":\"Swedish\","code":"sv"}</item>
+        <item>{"name":\"Swahili\","code":"sw"}</item>
+        <item>{"name":\"Tamil\","code":"ta"}</item>
+        <item>{"name":\"Telugu\","code":"te"}</item>
+        <item>{"name":\"Thai\","code":"th"}</item>
+        <item>{"name":\"Tagalog\","code":"tl"}</item>
+        <item>{"name":\"Tswana\","code":"tn"}</item>
+        <item>{"name":\"Turkish\","code":"tr"}</item>
+        <item>{"name":\"Tsonga\","code":"ts"}</item>
+        <item>{"name":\"Tatar\","code":"tt"}</item>
+        <item>{"name":\"Ukrainian\","code":"uk"}</item>
+        <item>{"name":\"Urdu\","code":"ur"}</item>
+        <item>{"name":\"Uzbek\","code":"uz"}</item>
+        <item>{"name":\"Vietnamese\","code":"vi"}</item>
+        <item>{"name":\"Xhosa\","code":"xh"}</item>
+        <item>{"name":\"Chinese\","code":"zh"}</item>
+        <item>{"name":\"Zulu\","code":"zu"}</item>
     </string-array>
 
 

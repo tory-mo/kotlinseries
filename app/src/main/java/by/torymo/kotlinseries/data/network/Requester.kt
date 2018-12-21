@@ -18,6 +18,8 @@ import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 import java.util.*
 
+
+
 class Requester {
     private val service: MDBService
 
@@ -56,7 +58,7 @@ class Requester {
 
     fun getSeriesDetails(mdbId: String): Call<SeriesDetailsResponse>{
         val map = mutableMapOf<String, String>()
-        map[LANGUAGE_PARAM] = "en-US"
+        map[LANGUAGE_PARAM] = getLanguage()
         map[APPEND_TO_RESPONSE_PARAM] = ""
 
         return service.getSeriesDetails(mdbId, map)
@@ -64,7 +66,7 @@ class Requester {
 
     fun getSeasonDetails(mdbId: String, season_number: Int): SeasonDetailsResponse?{
         val map = mutableMapOf<String, String>()
-        map[LANGUAGE_PARAM] = "en-US"
+        map[LANGUAGE_PARAM] = getLanguage()
         map[APPEND_TO_RESPONSE_PARAM] = ""
 
         val call = service.getSeasonDetails(mdbId, season_number, map)
@@ -75,10 +77,19 @@ class Requester {
         val map = mutableMapOf<String, String>()
         map[PAGE_PARAM] = page.toString()
         map[QUERY_PARAM] = query
-        map[LANGUAGE_PARAM] = "en-US"
+        map[LANGUAGE_PARAM] = getLanguage()
         map[YEAR_PARAM] = 0.toString()
 
         return service.search(map)
+    }
+
+    private fun getLanguage(): String{
+        val currLanguage = Locale.getDefault().language
+        var needLang = LANGUAGE_EN
+        if (currLanguage != needLang) {
+            needLang = "$currLanguage-$LANGUAGE_EN"
+        }
+        return needLang
     }
 }
 

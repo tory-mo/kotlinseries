@@ -2,6 +2,7 @@ package by.torymo.kotlinseries.ui.fragment
 
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -15,6 +16,8 @@ import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.ui.model.SeriesListViewModel
 import kotlinx.android.synthetic.main.fragment_series.*
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.Navigation
+import by.torymo.kotlinseries.ui.DetailActivity
 
 
 class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
@@ -26,10 +29,16 @@ class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
 
     override fun onItemClick(series: Series, item: View) {
 //        val action = SeriesFragmentDirections.actionBottomSeriesToDetailFragment2()
-        val action = SeriesFragmentDirections.actionBottomSeriesToDetailActivity()
+        val action = SeriesFragmentDirections.actionBottomSeriesToDetailActivity2()
+
+
         action.setSeriesId(series.mdbId)
         val navController = view?.findNavController()
         navController?.navigate(action)
+
+//        val intent = Intent(context, DetailActivity::class.java)
+//        intent.putExtra("tab", 1)
+//        startActivityForResult(intent, 100)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bottom_calendar_title" translatable="true">Календарь</string>
+    <string name="bottom_series_title" translatable="true">Сериалы</string>
+
+    <string name="episodes" translatable="true">Серии</string>
+    <string name="overview" translatable="true">Инфо</string>
+
+    <string name="today" translatable="true">Сегодня</string>
+
+    <string name="action_make_backup" translatable="true">Резервная копия</string>
+    <string name="action_restore" translatable="true">Восстановить</string>
+    <string name="action_update_episodes" translatable="true">Обновить серии</string>
+    <string name="action_only_seen" translatable="true">Несмотренные серии</string>
+    <string name="action_all" translatable="true">Все серии</string>
+
+    <string name="format_original_lng" translatable="true">Оригинальный язык</string>
+    <string name="format_networks" translatable="true">Networks</string>
+    <string name="format_first_date" translatable="true">Первый выпуск</string>
+    <string name="format_last_date" translatable="true">Последнии выпуск</string>
+    <string name="format_seasons" translatable="true">Сезонов</string>
+    <string name="episode_time_label" translatable="true">Продолжительность</string>
+    <string name="format_episode_time" translatable="true">%1$s мин.</string>
+    <string name="format_homepage" translatable="true">Домашняя страница</string>
+    <string name="format_overview" translatable="true">Описание</string>
+    <string name="format_ongoing" translatable="true">Статус</string>
+    <string name="format_genres" translatable="true">Жанры</string>
+    <string name="format_status" translatable="true">Status</string>
+
+    <string name="format_ongoing_true" translatable="true">Выходит</string>
+    <string name="format_ongoing_false" translatable="true">Завершен</string>
+
+    <string name="format_episode_number" translatable="true">серия %1$d, сезон %2$d</string>
+
+    <string-array name="weekDays" translatable="true">
+        <item>Пн</item>
+        <item>Вт</item>
+        <item>Ср</item>
+        <item>Чт</item>
+        <item>Пт</item>
+        <item>Сб</item>
+        <item>Вс</item>
+    </string-array>
+
+    <string-array name="lang">
+        <item>{"name":\"Африкаанс\","code":"af"}</item>
+        <item>{"name":\"Арабский\","code":"ar"}</item>
+        <item>{"name":\"Азербайджанский\","code":"az"}</item>
+        <item>{"name":\"Белорусский\","code":"be"}</item>
+        <item>{"name":\"Болгарский\","code":"bg"}</item>
+        <item>{"name":\"Боснийский\","code":"bs"}</item>
+        <item>{"name":\"Каталанский\","code":"ca"}</item>
+        <item>{"name":\"Чешский\","code":"cs"}</item>
+        <item>{"name":\"Валлийский\","code":"cy"}</item>
+        <item>{"name":\"Датский\","code":"da"}</item>
+        <item>{"name":\"Немецкий\","code":"de"}</item>
+        <item>{"name":\"Дивехи\","code":"dv"}</item>
+        <item>{"name":\"Греческий\","code":"el"}</item>
+        <item>{"name":\"Английский\","code":"en"}</item>
+        <item>{"name":\"Эсперанто\","code":"eo"}</item>
+        <item>{"name":\"Испанский\","code":"es"}</item>
+        <item>{"name":\"Эстонский\","code":"et"}</item>
+        <item>{"name":\"Баскский\","code":"eu"}</item>
+        <item>{"name":\"Персидский\","code":"fa"}</item>
+        <item>{"name":\"Финский\","code":"fi"}</item>
+        <item>{"name":\"Фарерский\","code":"fo"}</item>
+        <item>{"name":\"Французский\","code":"fr"}</item>
+        <item>{"name":\"Галисийский\","code":"gl"}</item>
+        <item>{"name":\"Гуджарати\","code":"gu"}</item>
+        <item>{"name":\"Иврит\","code":"he"}</item>
+        <item>{"name":\"Хинди\","code":"hi"}</item>
+        <item>{"name":\"Хорватский\","code":"hr"}</item>
+        <item>{"name":\"Венгерский\","code":"hu"}</item>
+        <item>{"name":\"Армянский\","code":"hy"}</item>
+        <item>{"name":\"Индонезийский\","code":"id"}</item>
+        <item>{"name":\"Исландский\","code":"is"}</item>
+        <item>{"name":\"Итальянский\","code":"it"}</item>
+        <item>{"name":\"Японский\","code":"ja"}</item>
+        <item>{"name":\"Грузинский\","code":"ka"}</item>
+        <item>{"name":\"Казахский\","code":"kk"}</item>
+        <item>{"name":\"Каннада\","code":"kn"}</item>
+        <item>{"name":\"Корейский\","code":"ko"}</item>
+        <item>{"name":\"Киргизский\","code":"ky"}</item>
+        <item>{"name":\"Литовский\","code":"lt"}</item>
+        <item>{"name":\"Латышский\","code":"lv"}</item>
+        <item>{"name":\"Маори\","code":"mi"}</item>
+        <item>{"name":\"Македонский\","code":"mk"}</item>
+        <item>{"name":\"Монгольский\","code":"mn"}</item>
+        <item>{"name":\"Маратхи\","code":"mr"}</item>
+        <item>{"name":\"Малайский\","code":"ms"}</item>
+        <item>{"name":\"Мальтийский\","code":"mt"}</item>
+        <item>{"name":\"Нидерландский\","code":"nl"}</item>
+        <item>{"name":\"Нюнорск (новонорвежский)\","code":"nn"}</item>
+        <item>{"name":\"Пенджабский\","code":"pa"}</item>
+        <item>{"name":\"Польский\","code":"pl"}</item>
+        <item>{"name":\"Пушту\","code":"ps"}</item>
+        <item>{"name":\"Португальский\","code":"pt"}</item>
+        <item>{"name":\"Кечуа\","code":"qu"}</item>
+        <item>{"name":\"Румынский\","code":"ro"}</item>
+        <item>{"name":\"Русский\","code":"ru"}</item>
+        <item>{"name":\"Санскрит\","code":"sa"}</item>
+        <item>{"name":\"Словацкий\","code":"sk"}</item>
+        <item>{"name":\"Словенский\","code":"sl"}</item>
+        <item>{"name":\"Албанский\","code":"sq"}</item>
+        <item>{"name":\"Сербский\","code":"sr"}</item>
+        <item>{"name":\"Шведский\","code":"sv"}</item>
+        <item>{"name":\"Суахили\","code":"sw"}</item>
+        <item>{"name":\"Тамильский\","code":"ta"}</item>
+        <item>{"name":\"Телугу\","code":"te"}</item>
+        <item>{"name":\"Тайский\","code":"th"}</item>
+        <item>{"name":\"Тагальский\","code":"tl"}</item>
+        <item>{"name":\"Тсвана\","code":"tn"}</item>
+        <item>{"name":\"Турецкий\","code":"tr"}</item>
+        <item>{"name":\"Тсонга\","code":"ts"}</item>
+        <item>{"name":\"Татарский\","code":"tt"}</item>
+        <item>{"name":\"Украинский\","code":"uk"}</item>
+        <item>{"name":\"Урду\","code":"ur"}</item>
+        <item>{"name":\"Узбекский\","code":"uz"}</item>
+        <item>{"name":\"Вьетнамский\","code":"vi"}</item>
+        <item>{"name":\"Коса\","code":"xh"}</item>
+        <item>{"name":\"Китайский\","code":"zh"}</item>
+        <item>{"name":\"Зулу\","code":"zu"}</item>
+    </string-array>
+</resources>

@@ -10,7 +10,10 @@ import by.torymo.kotlinseries.Utility
 import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.ui.DetailActivity
 import kotlinx.android.synthetic.main.fragment_overview.*
+import org.json.JSONObject
 import java.io.Serializable
+import java.text.SimpleDateFormat
+import java.util.*
 
 class OverviewFragment: Fragment()/*, DetailActivity.SeriesUpdatedCallback*/  {
 
@@ -42,15 +45,25 @@ class OverviewFragment: Fragment()/*, DetailActivity.SeriesUpdatedCallback*/  {
     private fun fillInData(series: Series){
         tvOngoing.text = getString(if(series.inProduction)R.string.format_ongoing_true else R.string.format_ongoing_false)
         tvSeasons.text = series.seasons.toString()
-        tvFirstDate.text = Utility.dateToStrFormat.format(series.firstAirDate)
+        tvFirstDate.text = SimpleDateFormat(Utility.dateToStrFormat, Locale.getDefault()).format(series.firstAirDate)
         tvGenres.text = series.genres
         tvHomepage.text = series.homepage
         if(series.lastAirDate > 0)
-            tvLastDate.text = Utility.dateToStrFormat.format(series.lastAirDate)
+            tvLastDate.text = SimpleDateFormat(Utility.dateToStrFormat, Locale.getDefault()).format(series.lastAirDate)
         tvNetworks.text = series.networks
-        tvOriginalLng.text = series.originalLanguage
+
+        val ln = activity?.resources?.getStringArray(R.array.lang)
+//        for(i in 0..ln.size){
+//            val json = JSONObject(ln[i])
+//            if(json.getString("code").equals(series.originalLanguage)){
+//                tvOriginalLng.text = json.getString("name")
+//            }
+//        }
+        val currLn = ln?.filter{
+            val json = JSONObject(it)
+            json.getString("code") == series.originalLanguage}
+        tvOriginalLng.text = if(currLn == null || currLn.isEmpty()) series.originalLanguage else JSONObject(currLn[0]).getString("name")
         //series.popularity
-        tvStatus.text = series.status
         //series.voteAverage
         //series.voteCount
 
@@ -59,7 +72,7 @@ class OverviewFragment: Fragment()/*, DetailActivity.SeriesUpdatedCallback*/  {
     }
 
     companion object {
-        val SERIES_PARAM = "SERIES_EXTRA"
+        const val SERIES_PARAM = "SERIES_EXTRA"
 
         fun newInstance(series: Series): Fragment{
             val fragment = OverviewFragment()
