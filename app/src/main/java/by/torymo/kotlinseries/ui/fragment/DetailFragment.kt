@@ -53,8 +53,8 @@ class DetailFragment : Fragment() {
     }
 
     private fun refreshSeries(series: Series){
-        if(activity != null) {
-            ep_view_pager.adapter = DetailsPagerAdapter(activity?.supportFragmentManager, if(series.temporary) 1 else 2, series, context)
+        activity?.supportFragmentManager?.let {
+            ep_view_pager.adapter = DetailsPagerAdapter(it, if (series.temporary) 1 else 2, series, context)
             tab_layout.setupWithViewPager(ep_view_pager)
         }
 
@@ -66,7 +66,7 @@ class DetailFragment : Fragment() {
         ivEpisodesHeader.picasso(series.backdrop)
     }
 
-    class DetailsPagerAdapter(fragmentManager: FragmentManager?, private val count: Int, private val series: Series, private val context: Context?): FragmentPagerAdapter(fragmentManager) {
+    class DetailsPagerAdapter(fragmentManager: FragmentManager, private val count: Int, private val series: Series, private val context: Context?): FragmentPagerAdapter(fragmentManager) {
 
         private val TITLES = arrayOf(R.string.overview, R.string.episodes)
 
@@ -74,16 +74,13 @@ class DetailFragment : Fragment() {
             return count
         }
 
-        override fun getItem(position: Int): Fragment? {
+        override fun getItem(position: Int): Fragment {
             return when(position){
-                0 -> OverviewFragment.newInstance(series)
                 1 -> {
                     val ef = EpisodesFragment()
                     ef
                 }
-                else -> {
-                    null
-                }
+                else -> OverviewFragment.newInstance(series)
             }
         }
 

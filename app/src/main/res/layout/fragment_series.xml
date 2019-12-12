@@ -5,14 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/fragment_padding"
-    android:background="@color/current_day"
-    tools:context=".ui.fragment.SeriesFragment">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/lvSeries"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/list_bg"
-        tools:listitem="@layout/series_item"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+    android:id="@+id/coordinator_layout">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lvSeries"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/list_bg"
+            tools:listitem="@layout/series_item"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 </LinearLayout>

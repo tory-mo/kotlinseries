@@ -4,12 +4,39 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'androidx.navigation.safeargs'
 
+ext {
+    // App dependencies
+    legacySupportVersion = '1.0.0'
+    appcompatVersion = '1.1.0'
+    constraintLayoutVersion = '2.0.0-beta3'
+    viewPager2Version = '1.0.0'
+    materialVersion = '1.2.0-alpha02'
+    navigationVersion = "1.0.0"
+    preferenceVersion = '1.1.0'
+    pagingVersion = "2.1.0"
+    roomVersion = "2.2.2"
+    lifecycleVersion = "2.1.0"
+    
+    junitVersion = '4.12'
+    espressoVersion = '3.2.0'
+
+    okhttpVersion = '3.12.5' //OkHttp 3.13+ requires minSdkVersion 21+
+    retrofitVersion = '2.4.0'
+    retrofitCourutineVersion = '0.9.2'
+    threetenabpVersion = "1.0.5"
+    picassoVersion = '2.71828'
+
+    coroutinesVersion = "1.1.1"
+
+    glideVersion = '3.7.0'
+}
+
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "by.torymo.kotlinseries"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -21,50 +48,49 @@ android {
         }
     }
     buildTypes.each {
-        it.buildConfigField 'String', 'MOVIE_DB_API_KEY', '"6ad01c833dba757c5132002b79e99751"'
+        it.buildConfigField 'String', 'MOVIE_DB_API_KEY', '"your_key_here"'
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.anko:anko-common:0.10.3"
 
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
-    implementation "androidx.legacy:legacy-support-v4:1.0.0"
-    implementation "androidx.appcompat:appcompat:1.0.2"
-    def roomVersion = "2.1.0-alpha03"
+    implementation "com.google.android.material:material:$materialVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    implementation "androidx.viewpager2:viewpager2:$viewPager2Version"
+
+    implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
+    implementation "androidx.appcompat:appcompat:$appcompatVersion"
+    implementation "androidx.preference:preference:$preferenceVersion"
+
     implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
-    def lifecycleVersion = "2.0.0"
+
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    //implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion"
 
-    implementation "com.google.android.material:material:1.1.0-alpha02"
+    implementation "androidx.paging:paging-runtime-ktx:$pagingVersion" // use -ktx for Kotlin
 
-    implementation 'joda-time:joda-time:2.10.1'
-
-    def navigationVersion = "1.0.0-alpha08"
     implementation "android.arch.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "android.arch.navigation:navigation-ui-ktx:$navigationVersion"
 
-    def okhttpVersion = '3.9.1'
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
 
-    implementation 'com.squareup.picasso:picasso:2.71828'
-
-    def paging_version = "2.1.0-rc01"
-    implementation "androidx.paging:paging-runtime-ktx:$paging_version" // use -ktx for Kotlin
-
-    def retrofitVersion = '2.4.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofitCourutineVersion"
+
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
+
+    //courutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+
+    // Date and time API for Java.
+    implementation "com.jakewharton.threetenabp:threetenabp:$threetenabpVersion"
 
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 }

@@ -2,6 +2,7 @@ package by.torymo.kotlinseries.data.network
 
 import android.util.Log
 import by.torymo.kotlinseries.BuildConfig
+import by.torymo.kotlinseries.DateTimeUtils
 import by.torymo.kotlinseries.data.network.Requester.Companion.APPKEY_PARAM
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
@@ -14,17 +15,15 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Exception
 import java.lang.reflect.Type
-import java.text.SimpleDateFormat
 import java.util.*
-
-
 
 class Requester {
     private val service: MDBService
 
     companion object {
-        const val POSTER_PATH = "http://image.tmdb.org/t/p/w300/"
+        const val POSTER_PATH = "http://image.tmdb.org/t/p/w500/"
 
         const val BASE_URL = "http://api.themoviedb.org"
         const val APPKEY_PARAM = "api_key"
@@ -33,6 +32,7 @@ class Requester {
         const val APPEND_TO_RESPONSE_PARAM = "append_to_response"
         const val PAGE_PARAM = "page"
         const val YEAR_PARAM = "first_air_date_year"
+        const val TIMEZONE_PARAM = "timezone"
 
         const val LANGUAGE_EN = "en"
     }
@@ -56,7 +56,7 @@ class Requester {
         service = retrofit.create(MDBService::class.java)
     }
 
-    fun getSeriesDetails(mdbId: String): Call<SeriesDetailsResponse>{
+    fun getSeriesDetails(mdbId: Long): Call<SeriesDetailsResponse>{
         val map = mutableMapOf<String, String>()
         map[LANGUAGE_PARAM] = getLanguage()
         map[APPEND_TO_RESPONSE_PARAM] = ""
@@ -64,7 +64,7 @@ class Requester {
         return service.getSeriesDetails(mdbId, map)
     }
 
-    fun getSeasonDetails(mdbId: String, season_number: Int): SeasonDetailsResponse?{
+    fun getSeasonDetails(mdbId: Long, season_number: Int): SeasonDetailsResponse?{
         val map = mutableMapOf<String, String>()
         map[LANGUAGE_PARAM] = getLanguage()
         map[APPEND_TO_RESPONSE_PARAM] = ""
@@ -81,6 +81,15 @@ class Requester {
         map[YEAR_PARAM] = 0.toString()
 
         return service.search(map)
+    }
+
+    fun airingToday(page: Int): Call<SearchResponse>{
+        val map = mutableMapOf<String, String>()
+        map[PAGE_PARAM] = page.toString()
+        map[LANGUAGE_PARAM] = getLanguage()
+        map[TIMEZONE_PARAM] = DateTimeUtils.timezone()
+
+        return service.getAiringToday(map)
     }
 
     private fun getLanguage(): String{
@@ -119,13 +128,17 @@ class DateTypeDeserializer : JsonDeserializer<Long>{
         "dd MMMM yyyy")
 
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Long {
-        json?.asString?.let {
-            for(i in 0..(dateFormats.size-1)){
-                val regex = datePatterns[i].toRegex()
-                val format = SimpleDateFormat(dateFormats[i], Locale.UK)
-
-                if(regex.matches(it)) return format.parse(it).time
+        try {
+            json?.asString?.let {
+                for (i in dateFormats.indices) {
+                    val regex = datePatterns[i].toRegex()
+                    if (regex.matches(it)) {
+                        return DateTimeUtils.toMilliseconds(it, dateFormats[i])
+                    }
+                }
             }
+        }catch (exception: Exception){
+            exception.printStackTrace()
         }
 		return 0
     }

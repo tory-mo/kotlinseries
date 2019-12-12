@@ -1,41 +1,65 @@
 package by.torymo.kotlinseries.ui.fragment
 
-
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import by.torymo.kotlinseries.DateTimeUtils
 import by.torymo.kotlinseries.R
-import by.torymo.kotlinseries.Utility
-import by.torymo.kotlinseries.data.SeriesRepository.Companion.EpisodeStatus
-import by.torymo.kotlinseries.data.db.Episode
-import by.torymo.kotlinseries.ui.CalendarView
+import by.torymo.kotlinseries.calendar.Event
+import by.torymo.kotlinseries.data.db.ExtendedEpisode
 import by.torymo.kotlinseries.ui.adapters.EpisodesForDateAdapter
-import by.torymo.kotlinseries.ui.model.EpisodeCalendarViewModel
+import by.torymo.kotlinseries.ui.model.CalendarViewModel
 import kotlinx.android.synthetic.main.fragment_calendar.*
 
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
-import java.text.SimpleDateFormat
-import java.util.*
+import org.threeten.bp.LocalDate
 
+class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener, by.torymo.kotlinseries.calendar.CalendarView.CalendarViewListener, CalendarViewModel.EpisodesCallback{
 
-class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAdapter.OnItemClickListener{
+    private var displayedMonth = DateTimeUtils.now()
+    private var dateClicked = DateTimeUtils.now()
+    private val currentYear = displayedMonth.year
+    private var episodesAdapter: EpisodesForDateAdapter? = null
 
-    private lateinit var viewModel: EpisodeCalendarViewModel
+    private lateinit var viewModel: CalendarViewModel
 
-    override fun onDayPress(date: Long) {
-        showEpisodesForDay(date)
+    override fun onDayClick(dateClicked: LocalDate) {
+        this.dateClicked = dateClicked
+        showEpisodesForDay(DateTimeUtils.toMilliseconds(dateClicked))
     }
 
-    override fun onMonthChanged(start: Long, end: Long) {
-        getEpisodesForMonth(start, end)
+    override fun onEpisodesBetweenDatesComplete(dates: List<Long>) {
+        val events = mutableListOf<Event>()
+        val color = resources.getColor(R.color.colorAccent)
+        dates.forEach{
+            events.add(Event(color, DateTimeUtils.toLocalDateTime(it)))
+        }
+
+        compactcalendar_view?.removeAllEvents()
+        compactcalendar_view?.addEvents(events)
     }
 
-    override fun onItemClick(episode: Episode, item: View) {
+    override fun onEpisodesForDateComplete(episodes: List<ExtendedEpisode>) {
+        populateEpisodes(episodes)
+    }
+
+    override fun onEpisodesUpdated() {
+        getEpisodesForMonth(displayedMonth)
+        showEpisodesForDay(DateTimeUtils.toMilliseconds(dateClicked))
+    }
+
+    override fun onMonthScroll(displayedMonth: LocalDate) {
+        toolbarTitle.text = getString(R.string.format_month_year, displayedMonth.month.name, if (displayedMonth.year != currentYear) displayedMonth.year else "")
+        this.displayedMonth = displayedMonth
+
+        getEpisodesForMonth(displayedMonth)
+    }
+
+    override fun onItemClick(episode: ExtendedEpisode, item: View) {
         episode.id?.let {
-            viewModel.changeEpisodeSeen(episode.id, if(episode.seen) EpisodeStatus.NOT_SEEN else EpisodeStatus.NOT_SEEN)
+            viewModel.changeEpisodeSeen(it, !episode.seen)
+            viewModel.getEpisodesForDate(episode.date)
         }
     }
 
@@ -43,7 +67,11 @@ class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAd
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        viewModel = ViewModelProviders.of(this).get(EpisodeCalendarViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(CalendarViewModel::class.java)
+        viewModel.setEpisodeListCallback(this)
+        viewModel.updateEpisodes()
+        viewModel.requestAiringToday()
+        episodesAdapter = EpisodesForDateAdapter(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -55,60 +83,69 @@ class CalendarFragment: Fragment(), CalendarView.EventHandler, EpisodesForDateAd
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        calendar_view.setEventHandler(this)
-        val startend = calendar_view.currentMonthStartEnd
-        getEpisodesForMonth(startend[0], startend[1])
+        toolbarTitle.text = DateTimeUtils.now().month.name
 
-        viewModel.episodeDates.observe(viewLifecycleOwner, Observer<List<Long>>{
-            dates -> dates?.let{ calendar_view.updateCalendar(dates)}
-        })
+        compactcalendar_view.invalidate()
+        compactcalendar_view.setListener(this)
 
-        viewModel.episodeList.observe(viewLifecycleOwner, Observer<List<Episode>>{
-            episodes -> episodes?.let { populateEpisodes(episodes) }
-        })
+        getEpisodesForMonth(compactcalendar_view.getCurrentMonth())
+
+        rlToolbarTitle.setOnClickListener {
+            if(compactcalendar_view.visibility == View.VISIBLE) {
+                compactcalendar_view.visibility = View.GONE
+                ivCalendarExpandedIcon.setImageResource(R.drawable.menu_down)
+            }
+            else {
+                compactcalendar_view.visibility = View.VISIBLE
+                ivCalendarExpandedIcon.setImageResource(R.drawable.menu_up)
+            }
+        }
+
+        lvEpisodesForDay.adapter = episodesAdapter
     }
 
     private fun changeSeenTitle(menuItem: MenuItem?){
 
-        val seenTitle = if(Utility.getSeenParam(context)) R.string.action_all else R.string.action_only_seen
+        val seenTitle = if(viewModel.getSeenParam()) R.string.action_all else R.string.action_only_seen
         menuItem?.title = resources.getString(seenTitle)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.calendar_menu, menu)
-        changeSeenTitle(menu?.findItem(R.id.action_only_seen))
+        inflater.inflate(R.menu.calendar_menu, menu)
+        changeSeenTitle(menu.findItem(R.id.action_only_seen))
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?) = when(item?.itemId){
+    override fun onOptionsItemSelected(item: MenuItem) = when(item.itemId){
         R.id.action_update_episodes -> consume{
             //viewModel.updateEpisodes()
         }
         R.id.action_only_seen -> consume{
-            Utility.changeSeenParam(context)
+            viewModel.changeSeenParam()
             changeSeenTitle(item)
-            val startend = calendar_view.currentMonthStartEnd
-            getEpisodesForMonth(startend[0], startend[1])
+            //getEpisodesForMonth(compactcalendar_view.getCurrentMonth())
         }
         else -> super.onOptionsItemSelected(item)
     }
 
     private fun showEpisodesForDay(date: Long){
-        val today = DateTime.now(DateTimeZone.UTC).withMillisOfDay(0)
-        if (today.millis == date) {
-            tvToday.text = resources.getString(R.string.today)
+        val today = DateTimeUtils.nowInMillis()
+        if (today == date) {
+            tvToday?.text = resources.getString(R.string.today)
         } else {
-            tvToday.text = SimpleDateFormat(Utility.dateToStrFormat, Locale.getDefault()).format(date)
+            tvToday?.text = DateTimeUtils.format(date)
         }
         viewModel.getEpisodesForDate(date)
     }
 
-    private fun getEpisodesForMonth(start: Long, end: Long){
-        viewModel.getEpisodeDatesBetweenDates(start, end)
+    private fun getEpisodesForMonth(date: LocalDate){
+        viewModel.getEpisodeDatesBetweenDates(DateTimeUtils.toMilliseconds(date.withDayOfMonth(1)),
+                DateTimeUtils.toMilliseconds(date.withDayOfMonth(date.lengthOfMonth())))
     }
 
-    private fun populateEpisodes(episodeList: List<Episode>){
-        lvEpisodesForDay.adapter = EpisodesForDateAdapter(episodeList, this)
+    private fun populateEpisodes(episodeList: List<ExtendedEpisode>){
+        episodesAdapter?.updateItems(episodeList)
+        Log.d("show 123456", episodeList.size.toString())
     }
 
     private inline fun consume(f: () -> Unit): Boolean {

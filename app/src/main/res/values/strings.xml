@@ -1,43 +1,38 @@
 <resources>
-    <string name="app_name">KotlinSeries</string>
+    <string name="app_name" translatable="false">TV Show Calendar</string>
     <string name="bottom_calendar_title" translatable="true">Calendar</string>
     <string name="bottom_series_title" translatable="true">Series</string>
 
-    <string name="app_caption">Series Calendar</string>
-    <string name="watchlist">Watchlist</string>
-    <string name="calendar">Calendar</string>
+    <string name="app_caption" translatable="false">Series Calendar</string>
     <string name="series">Series</string>
     <string name="episodes">Episodes</string>
     <string name="overview">Overview</string>
+    <string name="favourite">Favourite</string>
+    <string name="airing_today">Airing Today</string>
 
     <string name="action_make_backup" translatable="true">Backup</string>
     <string name="action_restore" translatable="true">Restore</string>
-    <string name="action_update_series" translatable="true">Update Series List</string>
     <string name="action_update_episodes" translatable="true">Update Episodes</string>
     <string name="action_only_seen" translatable="true">Not Seen Episodes</string>
     <string name="action_all" translatable="true">All Episodes</string>
     <string name="today" translatable="true">Today</string>
 
     <string name="action_search">Search</string>
-    <string name="slist_updated">Series list is updated</string>
-    <string name="episodes_deleted">Episodes are deleted</string>
-    <string name="are_updated">%1$d episodes are updated. %2$d out of %3$d series updated</string>
-    <string name="are_updated_short">%1$d episodes are updated</string>
 
-    <string name="DELETE">Delete</string>
-    <string name="OK">Ok</string>
-    <string name="NAME" translatable="false">Name</string>
-    <string name="ADD">Add</string>
-    <string name="add_series_title">Add series</string>
-    <string name="delete_series_title">Delete series</string>
-    <string name="add_episode_title">Add episode</string>
 
-    <string name="format_episode_number" translatable="true">episode %1$d, season %2$d</string>
+    <string name="format_month_year" translatable="false">%1$s %2$s</string>
+
+
+    <string name="format_one_episode" translatable="true">%1$d episode</string>
+    <string name="format_two_episodes" translatable="true">%1$d episodes</string>
+    <string name="format_many_episodes" translatable="true">%1$d episodes</string>
+
+    <string name="format_episode_season_number" translatable="true">episode %1$d, season %2$d</string>
 
     <string name="format_original_lng" translatable="true">Original Language</string>
     <string name="format_networks" translatable="true">Networks</string>
-    <string name="format_first_date" translatable="true">First date</string>
-    <string name="format_last_date" translatable="true">Last date</string>
+    <string name="format_first_date" translatable="true">First release</string>
+    <string name="format_last_date" translatable="true">Last release</string>
     <string name="format_seasons" translatable="true">Seasons</string>
     <string name="episode_time_label" translatable="true">Episode time</string>
     <string name="format_episode_time" translatable="true">%1$s min.</string>
@@ -109,6 +104,7 @@
         <item>{"name":\"Maltese\","code":"mt"}</item>
         <item>{"name":\"Dutch\","code":"nl"}</item>
         <item>{"name":\"Norwegian\","code":"nn"}</item>
+        <item>{"name":\"Norwegian\","code":"no"}</item>
         <item>{"name":\"Punjabi\","code":"pa"}</item>
         <item>{"name":\"Polish\","code":"pl"}</item>
         <item>{"name":\"Pashto\","code":"ps"}</item>
@@ -139,7 +135,4 @@
         <item>{"name":\"Chinese\","code":"zh"}</item>
         <item>{"name":\"Zulu\","code":"zu"}</item>
     </string-array>
-
-
-    <string name="extra_key_series_id">series_id</string>
 </resources>

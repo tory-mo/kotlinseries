@@ -2,15 +2,12 @@ package by.torymo.kotlinseries.data.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.io.Serializable
-import org.intellij.lang.annotations.Language
 
 
-@Entity(tableName = "series",
-        indices = [Index(value = ["mdb_id"], unique = true)])
-data class Series(@PrimaryKey @ColumnInfo(name = "mdb_id") var mdbId: String = "",
+@Entity(tableName = "series")
+data class Series(@PrimaryKey @ColumnInfo(name = "id") var id: Long = 0,
                   @ColumnInfo(name = "name") var name: String = "",
                   @ColumnInfo(name = "original_name") var originalName: String = "",
                   @ColumnInfo(name = "overview") var overview: String = "",
@@ -30,9 +27,6 @@ data class Series(@PrimaryKey @ColumnInfo(name = "mdb_id") var mdbId: String = "
                   @ColumnInfo(name = "seasons") var seasons: Int = 0,
                   @ColumnInfo(name = "status") var status: String = "",
 
-                  @ColumnInfo(name = "watchlist") var watchList: Boolean  = false,
-                  @ColumnInfo(name = "followed_season") var followedSeason: Int = 0,
+                  @ColumnInfo(name = "type") var type: Int  = 1, // watchlist - 0, search result - 1, airing today - 2
                   @ColumnInfo(name = "temporary_row") var temporary: Boolean = false
-
-
 ): Serializable

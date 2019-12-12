@@ -20,28 +20,28 @@ abstract class SeriesDatabase : RoomDatabase(){
         private var instance: SeriesDatabase? = null
 
         fun getInstance(application: Application): SeriesDatabase{
-            synchronized(SeriesDatabase.lock){
-                if(SeriesDatabase.instance == null){
-                    SeriesDatabase.instance = Room.databaseBuilder(application, SeriesDatabase::class.java, SeriesDatabase.DB_NAME)
+            synchronized(lock){
+                if(instance == null){
+                    instance = Room.databaseBuilder(application, SeriesDatabase::class.java, DB_NAME)
                             .allowMainThreadQueries()
                             .addCallback(object : RoomDatabase.Callback() {
                                 override fun onCreate(db: SupportSQLiteDatabase) {
                                     super.onCreate(db)
-                                    SeriesDatabase.instance?.let {
-                                        SeriesDatabase.prePopulate(it, SeriesTestDataProvider.seriesList, SeriesTestDataProvider.episodesList)
+                                    instance?.let {
+                                        prePopulate(it, SeriesTestDataProvider.seriesList, SeriesTestDataProvider.seasonList, SeriesTestDataProvider.episodesList)
                                     }
                                 }
                             })
                             .build()
                 }
-                return SeriesDatabase.instance!!
+                return instance!!
             }
         }
 
-        fun prePopulate(database: SeriesDatabase, seriesList: List<Series>, episodeList: List<Episode>) {
-            AsyncTask.execute { database.seriesDao().insert(seriesList)}
-            AsyncTask.execute { database.episodeDao().insert(episodeList)}
-
+        fun prePopulate(database: SeriesDatabase, seriesList: List<Series>, seasonsList: List<Season>, episodeList: List<Episode>) {
+            AsyncTask.execute { database.seriesDao().insert(seriesList)
+                database.seasonDao().insert(seasonsList)
+                database.episodeDao().insert(episodeList)}
         }
     }
 }

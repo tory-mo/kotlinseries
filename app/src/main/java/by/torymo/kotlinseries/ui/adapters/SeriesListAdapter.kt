@@ -10,12 +10,20 @@ import by.torymo.kotlinseries.R
 import by.torymo.kotlinseries.picasso
 import kotlinx.android.synthetic.main.series_item.view.*
 
-class SeriesListAdapter(private val items: List<Series>,
-                        private val clickListener: OnItemClickListener):
+class SeriesListAdapter(private val clickListener: OnItemClickListener):
 RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+
+    private var items: List<Series> = listOf()
 
     interface OnItemClickListener{
         fun onItemClick(series: Series, item: View)
+    }
+
+    fun setItems(newItems: List<Series>){
+        if(items != newItems){
+            items = newItems
+            notifyDataSetChanged()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

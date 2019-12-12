@@ -1,8 +1,5 @@
 package by.torymo.kotlinseries.ui.fragment
 
-
-
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -16,35 +13,25 @@ import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.ui.model.SeriesListViewModel
 import kotlinx.android.synthetic.main.fragment_series.*
 import androidx.appcompat.widget.SearchView
-import androidx.navigation.Navigation
-import by.torymo.kotlinseries.ui.DetailActivity
-
 
 class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
         SearchView.OnQueryTextListener,
-        SearchView.OnCloseListener {
+        SearchView.OnCloseListener{
 
     private lateinit var viewModel: SeriesListViewModel
-    private lateinit var searchView: SearchView
+    private var searchView: SearchView? = null
 
-    override fun onItemClick(series: Series, item: View) {
-//        val action = SeriesFragmentDirections.actionBottomSeriesToDetailFragment2()
-        val action = SeriesFragmentDirections.actionBottomSeriesToDetailActivity2()
+    private lateinit var seriesListAdapter: SeriesListAdapter
 
 
-        action.setSeriesId(series.mdbId)
-        val navController = view?.findNavController()
-        navController?.navigate(action)
-
-//        val intent = Intent(context, DetailActivity::class.java)
-//        intent.putExtra("tab", 1)
-//        startActivityForResult(intent, 100)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
         viewModel = ViewModelProviders.of(this).get(SeriesListViewModel::class.java)
+
+        seriesListAdapter = SeriesListAdapter(this)
     }
 
 
@@ -57,6 +44,10 @@ class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //(activity as AppCompatActivity).setSupportActionBar(toolbar)
+
+        lvSeries.adapter = seriesListAdapter
+
         viewModel.clearSearch()
         viewModel.seriesList.observe(viewLifecycleOwner, Observer<List<Series>>{ series ->
             series?.let { refreshSeriesList(series) }
@@ -64,23 +55,30 @@ class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
     }
 
     private fun refreshSeriesList(series: List<Series>){
-        lvSeries.adapter = SeriesListAdapter(series, this)
+         seriesListAdapter.setItems(series)
     }
 
+    override fun onItemClick(series: Series, item: View) {
+        val action = SeriesTabLayoutFragmentDirections.actionBottomSeriesToDetailActivity()
+        action.setSeriesId(series.id)
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.series_list_menu, menu)
+        val navController = view?.findNavController()
+        navController?.navigate(action)
+    }
 
-        searchView = menu?.findItem(R.id.action_search)?.actionView as SearchView
-        searchView.setOnQueryTextListener(this)
-        searchView.setOnCloseListener(this)
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        menu.clear()
+        activity?.menuInflater?.inflate(R.menu.series_list_menu, menu)
+
+        searchView = menu.findItem(R.id.action_search)?.actionView as SearchView
+        searchView?.setOnQueryTextListener(this)
+        searchView?.setOnCloseListener(this)
     }
 
     override fun onClose(): Boolean {
-
         viewModel.clearSearch()
-        searchView.onActionViewCollapsed()
+        searchView?.onActionViewCollapsed()
         return true
     }
 
@@ -102,7 +100,6 @@ class SeriesFragment: Fragment(), SeriesListAdapter.OnItemClickListener,
         }
         return true
     }
-
 
     interface SearchCallback{
         fun onSuccess(series: List<Series>)

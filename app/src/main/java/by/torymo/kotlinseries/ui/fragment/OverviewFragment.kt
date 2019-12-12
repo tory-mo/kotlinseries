@@ -5,28 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import by.torymo.kotlinseries.DateTimeUtils
 import by.torymo.kotlinseries.R
-import by.torymo.kotlinseries.Utility
+import by.torymo.kotlinseries.data.db.Season
 import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.ui.DetailActivity
+import by.torymo.kotlinseries.ui.adapters.SeasonsAdapter
 import kotlinx.android.synthetic.main.fragment_overview.*
 import org.json.JSONObject
 import java.io.Serializable
-import java.text.SimpleDateFormat
-import java.util.*
 
-class OverviewFragment: Fragment()/*, DetailActivity.SeriesUpdatedCallback*/  {
+class OverviewFragment: Fragment(){
 
-
-    /*override fun onUpdated(series: Series) {
-        fillInData(series)
-    }*/
+    private var seasonsAdapter: SeasonsAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
+        seasonsAdapter = SeasonsAdapter(activity as DetailActivity)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -36,39 +33,58 @@ class OverviewFragment: Fragment()/*, DetailActivity.SeriesUpdatedCallback*/  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val series = this.arguments?.getSerializable(SERIES_PARAM) as Series
-        fillInData(series)
-        //(activity as DetailActivity).setUpdatedCallback(this)
+        val series = this.arguments?.getSerializable(SERIES_PARAM) as Series?
+        series?.let {
+            fillInData(series)
+        }
 
+        rvSeasons.adapter = seasonsAdapter
     }
 
-    private fun fillInData(series: Series){
-        tvOngoing.text = getString(if(series.inProduction)R.string.format_ongoing_true else R.string.format_ongoing_false)
-        tvSeasons.text = series.seasons.toString()
-        tvFirstDate.text = SimpleDateFormat(Utility.dateToStrFormat, Locale.getDefault()).format(series.firstAirDate)
-        tvGenres.text = series.genres
-        tvHomepage.text = series.homepage
+    fun fillInData(series: Series){
+        tvOngoing?.text = getString(if(series.inProduction)R.string.format_ongoing_true else R.string.format_ongoing_false)
+        tvFirstDate?.text = DateTimeUtils.format(series.firstAirDate)
+        tvGenres?.text = series.genres
         if(series.lastAirDate > 0)
-            tvLastDate.text = SimpleDateFormat(Utility.dateToStrFormat, Locale.getDefault()).format(series.lastAirDate)
-        tvNetworks.text = series.networks
+            tvLastDate?.text = DateTimeUtils.format(series.lastAirDate)
+        tvNetworks?.text = series.networks
 
         val ln = activity?.resources?.getStringArray(R.array.lang)
-//        for(i in 0..ln.size){
-//            val json = JSONObject(ln[i])
-//            if(json.getString("code").equals(series.originalLanguage)){
-//                tvOriginalLng.text = json.getString("name")
-//            }
-//        }
         val currLn = ln?.filter{
             val json = JSONObject(it)
             json.getString("code") == series.originalLanguage}
-        tvOriginalLng.text = if(currLn == null || currLn.isEmpty()) series.originalLanguage else JSONObject(currLn[0]).getString("name")
+        tvOriginalLng?.text = if(currLn == null || currLn.isEmpty()) series.originalLanguage else JSONObject(currLn[0]).getString("name")
         //series.popularity
         //series.voteAverage
         //series.voteCount
 
+        if(series.homepage.isEmpty()){
+            tvHomepage?.visibility = View.GONE
+        }else {
+            tvHomepage?.visibility = View.VISIBLE
+            tvHomepage?.text = series.homepage
+        }
 
-        tvOverview.text = series.overview
+        if(series.overview.isEmpty()){
+            tvOverview?.visibility = View.GONE
+        }else {
+            tvOverview?.visibility = View.VISIBLE
+            tvOverview?.text = series.overview
+        }
+
+        if(series.homepage.isEmpty() && series.overview.isEmpty()){
+            vDivider2?.visibility = View.GONE
+        }else{
+            vDivider2?.visibility = View.VISIBLE
+        }
+    }
+
+    fun updateSeason(persistentSeries: Boolean){
+        seasonsAdapter?.setCheckbox(persistentSeries)
+    }
+
+    fun updateSeason(seasons: List<Season>, persistentSeries: Boolean){
+        seasonsAdapter?.setItems(seasons, persistentSeries)
     }
 
     companion object {

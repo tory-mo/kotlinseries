@@ -4,20 +4,17 @@
     <color name="colorPrimaryDark">#21232f</color>
     <color name="colorAccent">#f65d5f</color>
     <color name="colorAccentTranslucent">#80f65d5f</color>
+    <color name="colorOnPrimary">#ffffff</color>
 
-    <color name="white">#ffffff</color>
+    <color name="list_bg">@color/colorOnPrimary</color>
 
-    <color name="list_bg">@color/white</color>
-
-    <color name="current_day">#ececec</color>
-    <color name="ordinary_day">#ffffff</color>
-
-    <color name="dark_bg">#ececec</color>
-    <color name="light_bg">#ffffff</color>
+    <color name="eye_off">#ececec</color>
+    <color name="windowBg">#ffffff</color>
 
     <color name="text_primary">#ffffff</color>
     <color name="text_secondary">#2e2e2e</color>
-    <color name="navigation_bar">#252934</color>
 
-    <color name="checking">#ff0000</color>
+    <color name="calendarBackgroundColor">@color/colorOnPrimary</color>
+    <color name="calendarTextColor">@color/text_secondary</color>
+    <color name="calendarHeaderTextColor">@color/text_secondary</color>
 </resources>

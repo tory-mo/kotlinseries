@@ -39,9 +39,7 @@ interface MDBService {
         }
      */
     @GET("/3/tv/{mdbId}")
-    fun getSeriesDetails(@Path("mdbId") mdbId: String, @QueryMap map: Map<String, String>): Call<SeriesDetailsResponse>
-
-
+    fun getSeriesDetails(@Path("mdbId") mdbId: Long, @QueryMap map: Map<String, String>): Call<SeriesDetailsResponse>
 
     /*
         https://developers.themoviedb.org/3/tv-episodes/get-tv-episode-details
@@ -68,7 +66,7 @@ interface MDBService {
         }
     */
     @GET("/3/tv/{mdbId}/season/{season_number}")
-    fun getSeasonDetails(@Path("mdbId") mdbId: String, @Path("season_number") season_number: Int, @QueryMap map: Map<String, String>): Call<SeasonDetailsResponse>
+    fun getSeasonDetails(@Path("mdbId") mdbId: Long, @Path("season_number") season_number: Int, @QueryMap map: Map<String, String>): Call<SeasonDetailsResponse>
 
     /*
         https://developers.themoviedb.org/3/search/search-tv-shows
@@ -98,7 +96,6 @@ interface MDBService {
      */
     @GET("/3/search/tv")
     fun search(@QueryMap map: Map<String, String>): Call<SearchResponse>
-
 
 
 

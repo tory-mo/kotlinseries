@@ -3,10 +3,15 @@
     <string name="bottom_calendar_title" translatable="true">Календарь</string>
     <string name="bottom_series_title" translatable="true">Сериалы</string>
 
+    <string name="series">Сериалы</string>
     <string name="episodes" translatable="true">Серии</string>
     <string name="overview" translatable="true">Инфо</string>
+    <string name="favourite">Избранное</string>
+    <string name="airing_today">В эфире сегодня</string>
 
     <string name="today" translatable="true">Сегодня</string>
+
+    <string name="action_search">Поиск</string>
 
     <string name="action_make_backup" translatable="true">Резервная копия</string>
     <string name="action_restore" translatable="true">Восстановить</string>
@@ -14,8 +19,8 @@
     <string name="action_only_seen" translatable="true">Несмотренные серии</string>
     <string name="action_all" translatable="true">Все серии</string>
 
-    <string name="format_original_lng" translatable="true">Оригинальный язык</string>
-    <string name="format_networks" translatable="true">Networks</string>
+    <string name="format_original_lng" translatable="true">Язык оригинала</string>
+    <string name="format_networks" translatable="true">Телесеть</string>
     <string name="format_first_date" translatable="true">Первый выпуск</string>
     <string name="format_last_date" translatable="true">Последнии выпуск</string>
     <string name="format_seasons" translatable="true">Сезонов</string>
@@ -25,12 +30,15 @@
     <string name="format_overview" translatable="true">Описание</string>
     <string name="format_ongoing" translatable="true">Статус</string>
     <string name="format_genres" translatable="true">Жанры</string>
-    <string name="format_status" translatable="true">Status</string>
+    <string name="format_status" translatable="true">Статус</string>
 
     <string name="format_ongoing_true" translatable="true">Выходит</string>
     <string name="format_ongoing_false" translatable="true">Завершен</string>
 
-    <string name="format_episode_number" translatable="true">серия %1$d, сезон %2$d</string>
+    <string name="format_one_episode" translatable="true">%1$d серия</string>
+    <string name="format_two_episodes" translatable="true">%1$d серии</string>
+    <string name="format_many_episodes" translatable="true">%1$d серий</string>
+    <string name="format_episode_season_number" translatable="true">серия %1$d, сезон %2$d</string>
 
     <string-array name="weekDays" translatable="true">
         <item>Пн</item>
@@ -91,6 +99,7 @@
         <item>{"name":\"Мальтийский\","code":"mt"}</item>
         <item>{"name":\"Нидерландский\","code":"nl"}</item>
         <item>{"name":\"Нюнорск (новонорвежский)\","code":"nn"}</item>
+        <item>{"name":\"Норвежский\","code":"no"}</item>
         <item>{"name":\"Пенджабский\","code":"pa"}</item>
         <item>{"name":\"Польский\","code":"pl"}</item>
         <item>{"name":\"Пушту\","code":"ps"}</item>

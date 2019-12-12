@@ -1,122 +1,146 @@
 package by.torymo.kotlinseries.ui
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import by.torymo.kotlinseries.R
+import by.torymo.kotlinseries.data.db.Season
 import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.picasso
+import by.torymo.kotlinseries.ui.adapters.SeasonsAdapter
 import by.torymo.kotlinseries.ui.fragment.EpisodesFragment
 import by.torymo.kotlinseries.ui.fragment.OverviewFragment
 import by.torymo.kotlinseries.ui.model.SeriesDetailsViewModel
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import kotlinx.android.synthetic.main.activity_detail.*
-import android.content.res.ColorStateList
-import androidx.core.view.ViewCompat.setBackgroundTintList
+import com.google.android.material.tabs.TabLayoutMediator
 
-
-
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity(), SeasonsAdapter.OnItemClickListener {
 
     private lateinit var viewModel: SeriesDetailsViewModel
-    private lateinit var seriesUpdatedCallback: SeriesUpdatedCallback
-    private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
 
-    companion object {
-        public val SERIES_EXTRA = "series_extra"
-    }
+    private var seriesId: Long = 0
+    private var currSeries: Series? = null
 
-    public fun setUpdatedCallback(clbk: SeriesUpdatedCallback){
-        seriesUpdatedCallback = clbk
+    private var adapter: DetailsPagerAdapter? = null
+    private val titles = arrayOf(R.string.overview, R.string.episodes)
+
+
+    override fun onItemClick(season: Season, item: View) {
+        val tmpSeries = currSeries
+        viewModel.changeSeasonFollowing(season, if(tmpSeries == null) false else !tmpSeries.temporary)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        //NavigationUI.setupWithNavController(supportActionBar, navController)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val seriesId = DetailActivityArgs.fromBundle(intent.extras).seriesId
+        adapter = DetailsPagerAdapter(this)
+        detailsViewPager.adapter = adapter
+
+        TabLayoutMediator(tab_layout, detailsViewPager,
+                TabLayoutMediator.TabConfigurationStrategy { tab, position ->
+                    tab.text = getString(titles[position])
+                }).attach()
+
+
+        seriesId = DetailActivityArgs.fromBundle(intent.extras).seriesId
 
         viewModel = ViewModelProviders.of(this).get(SeriesDetailsViewModel::class.java)
-
         viewModel.getSeriesById(seriesId).observe(this, Observer<Series>{ series ->
-            series?.let { refreshSeries(series) }
+            series?.let {
+                refreshSeries(series)
+            }
         })
         viewModel.getSeriesDetails(seriesId, object : DetailCallback{
             override fun onError(message: String?) {
                 Toast.makeText(application, message, Toast.LENGTH_LONG).show()
             }
         })
+        viewModel.getSeasons(seriesId).observe(this, Observer<List<Season>> {
+            it?.let {
+                val tmpSeries = currSeries
+                adapter?.updateSeasonsInfo(it, if(tmpSeries != null) !tmpSeries.temporary else false)
+            }
+        })
 
-        setSupportActionBar(findViewById<Toolbar>(R.id.toolbar))
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        collapsingToolbarLayout = findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
+        fbFavourite.setOnClickListener{
+            favouriteStatusChanged()
+        }
     }
 
     private fun refreshSeries(series: Series){
-        ep_view_pager.adapter = DetailsPagerAdapter(supportFragmentManager, if(series.temporary) 1 else 2, series, this)
+        currSeries = series
 
-        tab_layout.setupWithViewPager(ep_view_pager)
+        adapter?.update(if(series.temporary) 1 else 2, series)
+
         fbFavourite.setImageDrawable(getDrawable(if(series.temporary) R.drawable.ic_not_favorite else R.drawable.ic_favorite))
 
-        collapsingToolbarLayout.title = series.name
+        collapsing_toolbar?.title = series.name
         title = series.name
         tvSeriesOriginalName.text = series.originalName
 
         ivEpisodesHeader.picasso(series.backdrop)
-        //seriesUpdatedCallback?.onUpdated(series)
     }
 
+    private fun favouriteStatusChanged(){
+        val series = currSeries ?: return
 
-    class DetailsPagerAdapter(fragmentManager: FragmentManager, private val count: Int, private val series: Series, private val context: Context): FragmentPagerAdapter(fragmentManager) {
+        viewModel.seriesFollowingStatusChanged(series)
+        adapter?.updateSeasonsInfo(series.temporary)
+        fbFavourite.setImageDrawable(getDrawable(if(!series.temporary) R.drawable.ic_not_favorite else R.drawable.ic_favorite))
+    }
 
-        private val TITLES = arrayOf(R.string.overview, R.string.episodes)
+    class DetailsPagerAdapter(fragmentManager: FragmentActivity): FragmentStateAdapter(fragmentManager) {
 
-        override fun getCount(): Int {
-            return count
+        private var count = 0
+        private val fragments: MutableList<Fragment> = mutableListOf()
+
+
+        fun update(count: Int, series: Series){
+            if(fragments.count() != count){
+                if(fragments.count() == 0)
+                    fragments.add(OverviewFragment.newInstance(series))
+                if(fragments.count() == 2 && count == 1)
+                    fragments.removeAt(1)
+                else if(count == 2)
+                    fragments.add(EpisodesFragment.newInstance(series.id))
+            }
+            this.count = count
+            (fragments[0] as OverviewFragment).fillInData(series)
+            notifyDataSetChanged()
         }
 
-        override fun getItem(position: Int): Fragment? {
-            return when(position){
-                0 -> OverviewFragment.newInstance(series)
-                1 -> {
-                    val ef = EpisodesFragment()
-                    ef
-                }
-                else -> {
-                    null
-                }
+        fun updateSeasonsInfo(seasons: List<Season>, persistentSeries: Boolean){
+            if(fragments.size > 0 && fragments[0] is OverviewFragment){
+                (fragments[0] as OverviewFragment).updateSeason(seasons, persistentSeries)
             }
         }
 
-        override fun getPageTitle(position: Int): CharSequence? {
-            return context.getString(TITLES[position])
+        fun updateSeasonsInfo(persistentSeries: Boolean){
+            if(fragments.size > 0 && fragments[0] is OverviewFragment){
+                (fragments[0] as OverviewFragment).updateSeason(persistentSeries)
+            }
+        }
+
+        override fun getItemCount(): Int {
+            return count
+        }
+
+        override fun createFragment(position: Int): Fragment {
+            return fragments[position]
         }
     }
 
     interface DetailCallback{
         fun onError(message: String?)
-    }
-
-    interface SeriesUpdatedCallback{
-        fun onUpdated(series: Series)
     }
 }

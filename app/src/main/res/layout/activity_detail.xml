@@ -41,19 +41,20 @@
                     android:scaleType="centerCrop"
                     android:background="@drawable/gradient_filter"
                     android:alpha="0.9"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/tvSeriesOriginalName"
-                        android:layout_gravity="bottom"
-                        android:paddingBottom="@dimen/originalName_paddingBottom"
-                        android:paddingStart="@dimen/originalName_paddingHorizontal"
-                        android:paddingEnd="@dimen/originalName_paddingHorizontal"
-                        android:textSize="@dimen/originalName_textSize"
-                        android:textColor="@color/light_bg"
-                        style="@style/OverviewTextViewStyle"
-                        tools:text="How to get away with murder"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvSeriesOriginalName"
+                    android:layout_gravity="bottom"
+                    android:paddingBottom="@dimen/originalName_paddingBottom"
+                    android:paddingStart="@dimen/originalName_paddingHorizontal"
+                    android:paddingEnd="@dimen/originalName_paddingHorizontal"
+                    android:textSize="@dimen/originalName_textSize"
+                    android:textColor="@color/text_primary"
+                    style="@style/OverviewTextViewStyle"
+                    tools:text="How to get away with murder"/>
             </FrameLayout>
+            <!--Toolbar must be here to be above other elements-->
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -61,34 +62,33 @@
                 app:layout_collapseMode="pin"
                 app:theme="@style/ToolBarStyle"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
-
     </com.google.android.material.appbar.AppBarLayout>
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="@dimen/tabLayout_elevation"
                 android:background="@color/colorPrimary"
-                app:tabTextColor="@color/light_bg"
-                app:tabSelectedTextColor="@color/light_bg"
-                app:tabIndicatorColor="@color/colorAccent"/>
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/ep_view_pager"
+                android:elevation="@dimen/tabLayout_elevation"
+                app:tabIndicatorColor="@color/colorAccent"
+                app:tabSelectedTextColor="@color/text_primary"
+                app:tabTextColor="@color/text_primary"/>
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/detailsViewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".ui.DetailActivity" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fbFavourite"
         android:layout_width="wrap_content"
@@ -96,5 +96,7 @@
         app:fabSize="normal"
         app:layout_anchor="@id/app_bar_layout"
         app:layout_anchorGravity="bottom|right|end"
+        app:srcCompat="@drawable/ic_not_favorite"
+        app:tint="@color/colorOnPrimary"
         style="@style/FabStyle"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
