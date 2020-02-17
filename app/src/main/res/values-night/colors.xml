@@ -5,6 +5,9 @@
 
     <color name="windowBg">#191c24</color>
 
+    <color name="bottomNavIconTintChecked">@color/colorOnPrimary</color>
+    <color name="bottomNavIconTint">#99ececec</color> <!--60% of colorOnPrimary-->
+
     <color name="text_secondary">#ececec</color>
 
     <color name="calendarBackgroundColor">#191c24</color>

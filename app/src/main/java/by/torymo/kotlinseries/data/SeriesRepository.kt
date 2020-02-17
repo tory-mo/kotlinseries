@@ -1,6 +1,7 @@
 package by.torymo.kotlinseries.data
 
 import android.app.Application
+import android.content.SharedPreferences
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.preference.PreferenceManager
@@ -19,9 +20,17 @@ import retrofit2.Response
 
 class SeriesRepository(application: Application){
 
-    private val seriesDbRepository = SeriesDbRepository(application)
-    private val seriesPreferences = PreferenceManager.getDefaultSharedPreferences(application)
-    private val seriesRequester = Requester()
+    private val seriesDbRepository: SeriesDbRepository by lazy{
+        SeriesDbRepository(application)
+    }
+
+    private val seriesPreferences: SharedPreferences by lazy{
+        PreferenceManager.getDefaultSharedPreferences(application)
+    }
+
+    private val seriesRequester: Requester by lazy {
+        Requester()
+    }
 
     companion object {
         enum class EpisodeStatus {
@@ -32,7 +41,8 @@ class SeriesRepository(application: Application){
         enum class SeriesType(val type: Int) {
             WATCHLIST(0),
             SEARCH_RESULT(1),
-            AIRING_TODAY(2)
+            AIRING_TODAY(2),
+            POPULAR(3)
         }
 
         private const val PREF_SEEN = "pref_seen"
@@ -124,25 +134,30 @@ class SeriesRepository(application: Application){
         })
     }
 
-    fun getAiringTodaySeries(): LiveData<List<Series>> = seriesDbRepository.getAiringTodaySeries()
+    fun getSeriesByType(type: SeriesType): LiveData<List<Series>> = seriesDbRepository.getSeriesByType(type)
 
-    fun requestAiringTodaySeries(){
-        val call = seriesRequester.airingToday(1)
+    fun requestSeries(page: Int, type: SeriesType){
+
+        val call = when(type) {
+            SeriesType.POPULAR -> seriesRequester.popular(page)
+            else -> seriesRequester.airingToday(page)
+        }
+
         call.enqueue(object: Callback<SearchResponse>{
-            override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
-                if(response.isSuccessful){
-                    seriesDbRepository.clearTemporary(SeriesType.AIRING_TODAY)
-                    val searchResult = response.body()
-                    searchResult?.results?.forEach {
-                        seriesDbRepository.insertOrUpdateSeriesMainInfo(it, SeriesType.AIRING_TODAY)
+                override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
+                    if(response.isSuccessful){
+                        if(page == 1) seriesDbRepository.clearTemporary(type)
+                        val searchResult = response.body()
+                        searchResult?.results?.forEach {
+                            seriesDbRepository.insertOrUpdateSeriesMainInfo(it, type)
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
+                override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
 
-            }
-        })
+                }
+            })
     }
 
     fun getSeriesDetails(mdbId: Long): LiveData<Series> = seriesDbRepository.getSeries(mdbId)

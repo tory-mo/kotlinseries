@@ -20,6 +20,7 @@ import java.lang.reflect.Type
 import java.util.*
 
 class Requester {
+
     private val service: MDBService
 
     companion object {
@@ -90,6 +91,14 @@ class Requester {
         map[TIMEZONE_PARAM] = DateTimeUtils.timezone()
 
         return service.getAiringToday(map)
+    }
+
+    fun popular(page: Int): Call<SearchResponse>{
+        val map = mutableMapOf<String, String>()
+        map[PAGE_PARAM] = page.toString()
+        map[LANGUAGE_PARAM] = getLanguage()
+
+        return service.getPopular(map)
     }
 
     private fun getLanguage(): String{

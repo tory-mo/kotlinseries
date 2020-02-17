@@ -4,13 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import by.torymo.kotlinseries.SeriesApp
+import by.torymo.kotlinseries.data.SeriesRepository
 import by.torymo.kotlinseries.data.db.Series
 
-class AiringTodayViewModel(application: Application): AndroidViewModel(application) {
+class UploadedSeriesViewModel(application: Application): AndroidViewModel(application) {
 
     private val seriesRepository = getApplication<SeriesApp>().getSeriesRepository()
 
-    val seriesList: LiveData<List<Series>> = seriesRepository.getAiringTodaySeries()
-
-
+    fun seriesList(type: SeriesRepository.Companion.SeriesType): LiveData<List<Series>> = seriesRepository.getSeriesByType(type)
 }

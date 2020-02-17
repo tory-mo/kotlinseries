@@ -18,5 +18,4 @@ data class Season(@PrimaryKey var id: Long = 0,
                   @ColumnInfo(name = "overview") var overview: String = "",
                   @ColumnInfo(name = "poster") var poster: String = "",
                   @ColumnInfo(name = "following") var following: Boolean = false
-        //@Ignore @ColumnInfo(name = "cloud") var cloud: String
 )

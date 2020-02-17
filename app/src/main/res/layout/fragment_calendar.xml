@@ -22,7 +22,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:minHeight="?attr/actionBarSize">
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/calendarToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 tools:title="September"

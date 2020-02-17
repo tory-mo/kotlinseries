@@ -10,8 +10,7 @@
         tools:layout="@layout/fragment_calendar" />
     <fragment
         android:id="@+id/bottomSeries"
-        android:name="by.torymo.kotlinseries.ui.fragment.SeriesTabLayoutFragment"
-        tools:layout="@layout/fragment_series_tab" >
+        android:name="by.torymo.kotlinseries.ui.fragment.SeriesTabLayoutFragment">
         <action
             android:id="@+id/action_bottomSeries_to_detailActivity"
             app:destination="@id/detailActivity" />

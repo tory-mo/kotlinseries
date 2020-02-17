@@ -3,8 +3,6 @@ package by.torymo.kotlinseries
 import org.threeten.bp.*
 import org.threeten.bp.format.DateTimeFormatter
 
-
-
 object DateTimeUtils {
 
     private const val dateStrFormat = "dd MMMM yyyy"

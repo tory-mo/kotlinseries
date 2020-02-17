@@ -1,21 +1,26 @@
 package by.torymo.kotlinseries.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import by.torymo.kotlinseries.DateTimeUtils
 import by.torymo.kotlinseries.R
+import by.torymo.kotlinseries.calendar.CalendarView
 import by.torymo.kotlinseries.calendar.Event
 import by.torymo.kotlinseries.data.db.ExtendedEpisode
+import by.torymo.kotlinseries.ui.MainActivity
 import by.torymo.kotlinseries.ui.adapters.EpisodesForDateAdapter
 import by.torymo.kotlinseries.ui.model.CalendarViewModel
 import kotlinx.android.synthetic.main.fragment_calendar.*
 
 import org.threeten.bp.LocalDate
 
-class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener, by.torymo.kotlinseries.calendar.CalendarView.CalendarViewListener, CalendarViewModel.EpisodesCallback{
+class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener,
+        CalendarView.CalendarViewListener,
+        CalendarViewModel.EpisodesCallback,
+        MainActivity.UpdateListener{
 
     private var displayedMonth = DateTimeUtils.now()
     private var dateClicked = DateTimeUtils.now()
@@ -44,15 +49,10 @@ class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener, 
         populateEpisodes(episodes)
     }
 
-    override fun onEpisodesUpdated() {
-        getEpisodesForMonth(displayedMonth)
-        showEpisodesForDay(DateTimeUtils.toMilliseconds(dateClicked))
-    }
-
     override fun onMonthScroll(displayedMonth: LocalDate) {
-        toolbarTitle.text = getString(R.string.format_month_year, displayedMonth.month.name, if (displayedMonth.year != currentYear) displayedMonth.year else "")
         this.displayedMonth = displayedMonth
 
+        toolbarTitle.text = calendarTitle(displayedMonth)
         getEpisodesForMonth(displayedMonth)
     }
 
@@ -63,15 +63,23 @@ class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener, 
         }
     }
 
+    override fun onUpdated() {
+        getEpisodesForMonth(displayedMonth)
+        showEpisodesForDay(DateTimeUtils.toMilliseconds(dateClicked))
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        activity?.let {
+            (it as MainActivity).setListener(this)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
         viewModel = ViewModelProviders.of(this).get(CalendarViewModel::class.java)
         viewModel.setEpisodeListCallback(this)
-        viewModel.updateEpisodes()
-        viewModel.requestAiringToday()
-        episodesAdapter = EpisodesForDateAdapter(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -82,14 +90,7 @@ class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener, 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        toolbarTitle.text = DateTimeUtils.now().month.name
-
-        compactcalendar_view.invalidate()
-        compactcalendar_view.setListener(this)
-
-        getEpisodesForMonth(compactcalendar_view.getCurrentMonth())
-
+        toolbarTitle.text = calendarTitle(displayedMonth)
         rlToolbarTitle.setOnClickListener {
             if(compactcalendar_view.visibility == View.VISIBLE) {
                 compactcalendar_view.visibility = View.GONE
@@ -101,29 +102,38 @@ class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener, 
             }
         }
 
+        episodesAdapter = EpisodesForDateAdapter(this)
         lvEpisodesForDay.adapter = episodesAdapter
+
+        compactcalendar_view.setListener(this)
+        getEpisodesForMonth(displayedMonth)
+        showEpisodesForDay(DateTimeUtils.toMilliseconds(dateClicked))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity).setSupportActionBar(calendarToolbar)
     }
 
     private fun changeSeenTitle(menuItem: MenuItem?){
-
         val seenTitle = if(viewModel.getSeenParam()) R.string.action_all else R.string.action_only_seen
         menuItem?.title = resources.getString(seenTitle)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.calendar_menu, menu)
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        menu.clear()
+        activity?.menuInflater?.inflate(R.menu.calendar_menu, menu)
+
         changeSeenTitle(menu.findItem(R.id.action_only_seen))
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when(item.itemId){
-        R.id.action_update_episodes -> consume{
-            //viewModel.updateEpisodes()
-        }
-        R.id.action_only_seen -> consume{
+        R.id.action_only_seen -> {
             viewModel.changeSeenParam()
             changeSeenTitle(item)
             //getEpisodesForMonth(compactcalendar_view.getCurrentMonth())
+            true
         }
         else -> super.onOptionsItemSelected(item)
     }
@@ -145,11 +155,9 @@ class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener, 
 
     private fun populateEpisodes(episodeList: List<ExtendedEpisode>){
         episodesAdapter?.updateItems(episodeList)
-        Log.d("show 123456", episodeList.size.toString())
     }
 
-    private inline fun consume(f: () -> Unit): Boolean {
-        f()
-        return true
+    private fun calendarTitle(date: LocalDate): String{
+        return getString(R.string.format_month_year, date.month.name.toLowerCase().capitalize(), if (date.year != currentYear) date.year else "")
     }
 }

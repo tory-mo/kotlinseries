@@ -20,12 +20,22 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:minHeight="?attr/actionBarSize">
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/seriesToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 app:layout_collapseMode="pin"
                 android:theme="@style/MainToolbarStyle"
-                app:title="@string/series"/>
+                app:title="@string/series">
+                <TextView
+                    android:id="@+id/toolbarTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+                    android:textColor="@color/text_primary"
+                    android:text="September"/>
+            </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
     <LinearLayout
@@ -40,8 +50,8 @@
             android:background="@color/colorPrimary"
             android:elevation="@dimen/tabLayout_elevation"
             app:tabIndicatorColor="@color/colorAccent"
-            app:tabSelectedTextColor="@color/text_primary"
-            app:tabTextColor="@color/text_primary" />
+            app:tabSelectedTextColor="@color/colorOnPrimary"
+            app:tabTextColor="@color/bottomNavIconTint" />
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/seriesViewPager"
             android:layout_width="match_parent"

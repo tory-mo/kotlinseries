@@ -9,13 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import by.torymo.kotlinseries.R
+import by.torymo.kotlinseries.data.SeriesRepository
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_series_tab.*
 
 class SeriesTabLayoutFragment: Fragment() {
 
     private var fragmentAdapter: SeriesPagerAdapter? = null
-    private val titles = arrayOf(R.string.favourite, R.string.airing_today)
+    private val titles = arrayOf(R.string.favourite, R.string.airing_today, R.string.popular)
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -25,8 +26,8 @@ class SeriesTabLayoutFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        toolbar.title = getString(R.string.series)
+
+        toolbarTitle.text = getString(R.string.series)
 
         activity?.let {
             fragmentAdapter = SeriesPagerAdapter(it)
@@ -38,14 +39,18 @@ class SeriesTabLayoutFragment: Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity).setSupportActionBar(seriesToolbar)
+    }
+
     class SeriesPagerAdapter(fm: FragmentActivity): FragmentStateAdapter(fm){
-
-        private val fragmentsCount = 2
-
-        private val fragments = arrayOf<Fragment>(SeriesFragment(), AiringTodayFragment())
+        private val fragments = arrayOf(SeriesFragment(),
+                AiringTodayFragment.newInstance(SeriesRepository.Companion.SeriesType.AIRING_TODAY),
+                AiringTodayFragment.newInstance(SeriesRepository.Companion.SeriesType.POPULAR))
 
         override fun getItemCount(): Int {
-            return fragmentsCount
+            return fragments.size
         }
 
         override fun createFragment(position: Int): Fragment {

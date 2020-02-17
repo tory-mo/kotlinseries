@@ -11,6 +11,9 @@
     <color name="eye_off">#ececec</color>
     <color name="windowBg">#ffffff</color>
 
+    <color name="bottomNavIconTintChecked">@color/colorOnPrimary</color>
+    <color name="bottomNavIconTint">#99ffffff</color> <!--60% of colorOnPrimary-->
+
     <color name="text_primary">#ffffff</color>
     <color name="text_secondary">#2e2e2e</color>
 

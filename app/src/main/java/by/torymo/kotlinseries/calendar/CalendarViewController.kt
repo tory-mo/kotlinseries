@@ -124,7 +124,7 @@ class CalendarViewController(private var dayPaint: Paint, private val scroller: 
         dayPaint.flags = Paint.ANTI_ALIAS_FLAG
         dayPaint.textSize = textSize.toFloat()
         dayPaint.getTextBounds("31", 0, "31".length, textSizeRect)
-        dayPaint.style = Paint.Style.STROKE
+        dayPaint.style = Paint.Style.FILL
 
         textHeight = textSizeRect.height() * 3
         textWidth = textSizeRect.width() * 2

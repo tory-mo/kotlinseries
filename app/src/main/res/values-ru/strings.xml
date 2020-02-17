@@ -8,6 +8,8 @@
     <string name="overview" translatable="true">Инфо</string>
     <string name="favourite">Избранное</string>
     <string name="airing_today">В эфире сегодня</string>
+    <string name="top_rated">Лучшие</string>
+    <string name="popular">Популярные</string>
 
     <string name="today" translatable="true">Сегодня</string>
 

@@ -24,7 +24,7 @@ class SeriesDbRepository(application: Application) {
     //series
     fun getSeriesList(): List<Series> = seriesDao.getList()
 
-    fun getAiringTodaySeries(): LiveData<List<Series>> = seriesDao.getByType(SeriesRepository.Companion.SeriesType.AIRING_TODAY.type)
+    fun getSeriesByType(type: SeriesRepository.Companion.SeriesType): LiveData<List<Series>> = seriesDao.getByType(type.type)
 
     fun getByName(name: String): LiveData<List<Series>> = if(name.isEmpty()) seriesDao.getAll() else seriesDao.getByName(name)
 
@@ -115,9 +115,11 @@ class SeriesDbRepository(application: Application) {
         val seasonsFromDb = seasonDao.getFollowing(series)
         if(seasonsFromDb.isEmpty()){
             val tmp = seasonDao.getLast(series)
-            tmp.following = true
-            seasonDao.updateFollowing(tmp.id, true)
-            return listOf(tmp)
+            tmp?.let {
+                tmp.following = true
+                seasonDao.updateFollowing(tmp.id, true)
+                return listOf(tmp)
+            }
         }
         return seasonsFromDb
     }

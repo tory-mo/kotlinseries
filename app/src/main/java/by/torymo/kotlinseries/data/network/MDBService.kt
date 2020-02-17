@@ -3,7 +3,6 @@ package by.torymo.kotlinseries.data.network
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
-import by.torymo.kotlinseries.data.db.Series
 import retrofit2.Call
 
 
@@ -98,25 +97,17 @@ interface MDBService {
     fun search(@QueryMap map: Map<String, String>): Call<SearchResponse>
 
 
-
     /*
        Get the most newly created TV show. This is a live response and will continuously change
-       http://api.themoviedb.org/tv/latest?api_key=6ad01c833dba757c5132002b79e99751&language=ru-en
-     */
-    @GET("/3/tv/latest")
-    fun getLatestShows(@QueryMap map: Map<String, String>): Call<List<Series>>
-
-    /*
-       Get the most newly created TV show. This is a live response and will continuously change
-       http://api.themoviedb.org/tv/airing_today?api_key=6ad01c833dba757c5132002b79e99751&language=ru-en&page=1
+       http://api.themoviedb.org/tv/airing_today?api_key=<<api_key>>&language=ru-en&page=1
      */
     @GET("/3/tv/airing_today")
     fun getAiringToday(@QueryMap map: Map<String, String>): Call<SearchResponse>
 
     /*
-       Get the most newly created TV show. This is a live response and will continuously change
-       http://api.themoviedb.org/tv/airing_today?api_key=6ad01c833dba757c5132002b79e99751&language=ru-en&page=1
+       Get a list of the current popular TV shows on TMDb. This list updates daily
+       https://api.themoviedb.org/3/tv/popular?api_key=<<api_key>>&language=en-US&page=1
      */
-    @GET("/3/tv/top_rated")
-    fun getTopRated(@QueryMap map: Map<String, String>): Call<List<Series>>
+    @GET("/3/tv/popular")
+    fun getPopular(@QueryMap map: Map<String, String>): Call<SearchResponse>
 }

@@ -18,7 +18,7 @@ interface SeasonDao {
     fun getFollowing(series: Long): List<Season>
 
     @Query("select * from seasons where series_id = :series order by number desc limit 1")
-    fun getLast(series: Long): Season
+    fun getLast(series: Long): Season?
 
     @Query("update seasons set following = :following where id = :season")
     fun updateFollowing(season: Long, following: Boolean)

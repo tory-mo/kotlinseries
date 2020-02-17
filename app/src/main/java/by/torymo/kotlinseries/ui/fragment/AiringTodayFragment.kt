@@ -10,14 +10,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import by.torymo.kotlinseries.R
+import by.torymo.kotlinseries.data.SeriesRepository
 import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.ui.adapters.SeriesListAdapter
-import by.torymo.kotlinseries.ui.model.AiringTodayViewModel
+import by.torymo.kotlinseries.ui.model.UploadedSeriesViewModel
 import kotlinx.android.synthetic.main.fragment_series.*
+import java.io.Serializable
 
 class AiringTodayFragment: Fragment(), SeriesListAdapter.OnItemClickListener {
 
-    private lateinit var viewModel: AiringTodayViewModel
+    private lateinit var viewModel: UploadedSeriesViewModel
     private lateinit var seriesListAdapter: SeriesListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +28,7 @@ class AiringTodayFragment: Fragment(), SeriesListAdapter.OnItemClickListener {
 
         seriesListAdapter = SeriesListAdapter(this)
 
-        viewModel = ViewModelProviders.of(this).get(AiringTodayViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(UploadedSeriesViewModel::class.java)
 
     }
 
@@ -41,11 +43,13 @@ class AiringTodayFragment: Fragment(), SeriesListAdapter.OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val type = this.arguments?.getSerializable(TYPE_PARAM) as SeriesRepository.Companion.SeriesType?
         lvSeries.adapter = seriesListAdapter
-        viewModel.seriesList.observe(viewLifecycleOwner, Observer { series->
-            seriesListAdapter.setItems(series)
-        })
+        type?.let {
+            viewModel.seriesList(it).observe(viewLifecycleOwner, Observer { series->
+                seriesListAdapter.setItems(series)
+            })
+        }
     }
 
     override fun onItemClick(series: Series, item: View) {
@@ -54,5 +58,17 @@ class AiringTodayFragment: Fragment(), SeriesListAdapter.OnItemClickListener {
 
         val navController = view?.findNavController()
         navController?.navigate(action)
+    }
+
+    companion object {
+        const val TYPE_PARAM = "TYPE_EXTRA"
+
+        fun newInstance(type: SeriesRepository.Companion.SeriesType): Fragment{
+            val fragment = AiringTodayFragment()
+            val args = Bundle()
+            args.putSerializable(TYPE_PARAM, type as Serializable)
+            fragment.arguments = args
+            return fragment
+        }
     }
 }
