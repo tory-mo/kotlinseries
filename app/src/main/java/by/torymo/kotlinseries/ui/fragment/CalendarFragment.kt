@@ -132,7 +132,7 @@ class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener,
         R.id.action_only_seen -> {
             viewModel.changeSeenParam()
             changeSeenTitle(item)
-            //getEpisodesForMonth(compactcalendar_view.getCurrentMonth())
+            getEpisodesForMonth(compactcalendar_view.getCurrentMonth())
             true
         }
         else -> super.onOptionsItemSelected(item)

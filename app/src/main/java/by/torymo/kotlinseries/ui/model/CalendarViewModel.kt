@@ -3,7 +3,6 @@ package by.torymo.kotlinseries.ui.model
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import by.torymo.kotlinseries.SeriesApp
-import by.torymo.kotlinseries.data.SeriesRepository.Companion.EpisodeStatus
 import by.torymo.kotlinseries.data.db.ExtendedEpisode
 
 class CalendarViewModel(application: Application): AndroidViewModel(application) {
@@ -21,12 +20,13 @@ class CalendarViewModel(application: Application): AndroidViewModel(application)
         this.callback = callback
     }
 
-    fun getEpisodeDatesBetweenDates(date1: Long, date2: Long, flag: EpisodeStatus = EpisodeStatus.ALL){
-        callback?.onEpisodesBetweenDatesComplete(seriesRepository.getEpisodeDatesBetweenDates(date1, date2, flag))
+    fun getEpisodeDatesBetweenDates(date1: Long, date2: Long){
+
+        callback?.onEpisodesBetweenDatesComplete(seriesRepository.getEpisodeDatesBetweenDates(date1, date2, seriesRepository.getSeenStatus()))
     }
 
-    fun getEpisodesForDate(date: Long, flag: EpisodeStatus = EpisodeStatus.ALL){
-        callback?.onEpisodesForDateComplete(seriesRepository.getEpisodesForDay(date, flag))
+    fun getEpisodesForDate(date: Long){
+        callback?.onEpisodesForDateComplete(seriesRepository.getEpisodesForDay(date, seriesRepository.getSeenStatus()))
     }
 
     fun changeEpisodeSeen(id: Long, seen: Boolean = false){

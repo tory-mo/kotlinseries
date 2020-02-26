@@ -34,7 +34,7 @@ class SeriesRepository(application: Application){
 
     companion object {
         enum class EpisodeStatus {
-            SEEN, NOT_SEEN, ALL
+            NOT_SEEN, ALL
         }
 
         // watchlist - 0, search result - 1, airing today - 2
@@ -50,6 +50,11 @@ class SeriesRepository(application: Application){
 
     fun getSeenParam(): Boolean {
         return seriesPreferences.getBoolean(PREF_SEEN, false)
+    }
+
+    fun getSeenStatus(): EpisodeStatus{
+        return  if(getSeenParam()) EpisodeStatus.NOT_SEEN
+        else EpisodeStatus.ALL
     }
 
     fun changeSeenParam() {

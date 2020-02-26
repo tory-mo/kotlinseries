@@ -83,7 +83,7 @@ class SeriesDbRepository(application: Application) {
         }else{
             episodeTmp.id = episode.id
             episodeTmp.seen = episode.seen
-            episodeDao.update(episode)
+            episodeDao.update(episodeTmp)
         }
     }
 
