@@ -13,7 +13,10 @@ interface SeriesDao {
     fun getList(): List<Series>
 
     @Query("select * from series where type = :type order by popularity desc")
-    fun getByType(type: Int): LiveData<List<Series>>
+    fun getByTypeOrderByPopularity(type: Int): LiveData<List<Series>>
+
+    @Query("select * from series where type = :type order by name asc")
+    fun getByTypeOrderByName(type: Int): LiveData<List<Series>>
 
     @Query("select * from series where name like '%' || :name  || '%' or original_name like '%' || :name  || '%' order by popularity desc")
     fun getByName(name: String): LiveData<List<Series>>
@@ -44,5 +47,17 @@ interface SeriesDao {
 
     @Query("delete from series where temporary_row = 1 and type = :type")
     fun deleteTemporary(type: Int)
+
+    @Query("delete from series where type_watchlist = 1 and type_airing = 0 and type_search = 0 and type_popular = 0")
+    fun deleteWatchlist()
+
+    @Query("delete from series where type_watchlist = 0 and type_airing = 1 and type_search = 0 and type_popular = 0")
+    fun deleteAiring()
+
+    @Query("delete from series where type_watchlist = 0 and type_airing = 0 and type_search = 1 and type_popular = 0")
+    fun deleteSearch()
+
+    @Query("delete from series where type_watchlist = 0 and type_airing = 0 and type_search = 0 and type_popular = 1")
+    fun deletePopular()
 
 }

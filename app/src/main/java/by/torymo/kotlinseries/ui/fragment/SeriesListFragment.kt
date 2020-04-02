@@ -2,39 +2,32 @@ package by.torymo.kotlinseries.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import by.torymo.kotlinseries.MainNavHostDirections
 import by.torymo.kotlinseries.R
 import by.torymo.kotlinseries.data.SeriesRepository
 import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.ui.adapters.SeriesListAdapter
-import by.torymo.kotlinseries.ui.model.UploadedSeriesViewModel
+import by.torymo.kotlinseries.ui.model.SeriesListViewModel
 import kotlinx.android.synthetic.main.fragment_series.*
 import java.io.Serializable
 
-class AiringTodayFragment: Fragment(), SeriesListAdapter.OnItemClickListener {
+class SeriesListFragment: Fragment(), SeriesListAdapter.OnItemClickListener {
 
-    private lateinit var viewModel: UploadedSeriesViewModel
+    private lateinit var viewModel: SeriesListViewModel
     private lateinit var seriesListAdapter: SeriesListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
 
         seriesListAdapter = SeriesListAdapter(this)
+        viewModel = ViewModelProvider(this).get(SeriesListViewModel::class.java)
 
-        viewModel = ViewModelProviders.of(this).get(UploadedSeriesViewModel::class.java)
-
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-        menu.clear()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -53,7 +46,7 @@ class AiringTodayFragment: Fragment(), SeriesListAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(series: Series, item: View) {
-        val action = SeriesTabLayoutFragmentDirections.actionBottomSeriesToDetailActivity()
+        val action = MainNavHostDirections.toDetails()
         action.setSeriesId(series.id)
 
         val navController = view?.findNavController()
@@ -64,7 +57,7 @@ class AiringTodayFragment: Fragment(), SeriesListAdapter.OnItemClickListener {
         const val TYPE_PARAM = "TYPE_EXTRA"
 
         fun newInstance(type: SeriesRepository.Companion.SeriesType): Fragment{
-            val fragment = AiringTodayFragment()
+            val fragment = SeriesListFragment()
             val args = Bundle()
             args.putSerializable(TYPE_PARAM, type as Serializable)
             fragment.arguments = args

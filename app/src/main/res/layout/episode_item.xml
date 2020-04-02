@@ -7,23 +7,27 @@
     android:clickable="true"
     android:focusable="true"
     android:background="?attr/selectableItemBackground"
-    android:padding="5dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
     android:orientation="vertical">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="72dp"
+            android:layout_width="@dimen/image_width_horizontal"
+            android:layout_height="@dimen/image_width_vertical"
             android:id="@+id/ivPoster"
-            android:scaleType="centerCrop"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_no_photo"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/posterContentDescription"/>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="10dp"
             android:orientation="vertical"
             android:textAlignment="textStart"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -62,7 +66,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_marginEnd="16dp"
             android:layout_centerVertical="true"
             android:src="@drawable/eye_off"
             android:id="@+id/ivSeenIcon"

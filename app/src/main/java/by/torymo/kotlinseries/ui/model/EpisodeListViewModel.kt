@@ -12,13 +12,13 @@ import by.torymo.kotlinseries.data.db.ExtendedEpisode
 
 class EpisodeListViewModel(application: Application): AndroidViewModel(application){
     private val seriesRepository = getApplication<SeriesApp>().getSeriesRepository()
-    private val seriesId = MutableLiveData<Long>()
+    private val seasonId = MutableLiveData<Long>()
 
-    fun getEpisodesByMdbId(mdbId: Long): LiveData<List<ExtendedEpisode>> {
-        seriesId.value = mdbId
+    fun getEpisodesByMdbId(season: Long): LiveData<List<ExtendedEpisode>> {
+        seasonId.value = season
 
-        return  Transformations.switchMap<Long, List<ExtendedEpisode>>(seriesId) { id ->
-            seriesRepository.getEpisodesForSeries(id)
+        return  Transformations.switchMap<Long, List<ExtendedEpisode>>(seasonId) { id ->
+            seriesRepository.getEpisodesForSeason(id)
         }
     }
 

@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorOnPrimary">#ececec</color>
-    <color name="list_bg">#191c24</color>
-
-    <color name="windowBg">#191c24</color>
-
-    <color name="bottomNavIconTintChecked">@color/colorOnPrimary</color>
-    <color name="bottomNavIconTint">#99ececec</color> <!--60% of colorOnPrimary-->
+    <color name="colorBackground">#00000d</color>
+    <color name="colorSurface">#191c24</color>
+    
 
     <color name="text_secondary">#ececec</color>
-
-    <color name="calendarBackgroundColor">#191c24</color>
 </resources>

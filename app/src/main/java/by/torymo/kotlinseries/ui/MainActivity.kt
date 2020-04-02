@@ -2,11 +2,12 @@ package by.torymo.kotlinseries.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import by.torymo.kotlinseries.R
 import by.torymo.kotlinseries.ui.model.MainActivityViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainActivityViewModel.UpdatedCallback {
@@ -29,11 +30,11 @@ class MainActivity : AppCompatActivity(), MainActivityViewModel.UpdatedCallback 
             bottomNavigation.selectedItemId = selectedTab
         }
 
-        val navController = Navigation.findNavController(this, R.id.bottomNavFragment)
-        NavigationUI.setupWithNavController(bottomNavigation,
-                navController)
+        val navView: BottomNavigationView = findViewById(R.id.bottomNavigation)
+        val navController = findNavController(R.id.bottomNavFragment)
+        navView.setupWithNavController(navController)
 
-        val viewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
+        val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         viewModel.setCallback(this)
         viewModel.updateEpisodes()
         viewModel.requestAiringToday(1)

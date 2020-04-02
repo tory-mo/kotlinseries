@@ -24,7 +24,12 @@ class SeriesDbRepository(application: Application) {
     //series
     fun getSeriesList(): List<Series> = seriesDao.getList()
 
-    fun getSeriesByType(type: SeriesRepository.Companion.SeriesType): LiveData<List<Series>> = seriesDao.getByType(type.type)
+    fun getSeriesByType(type: SeriesRepository.Companion.SeriesType): LiveData<List<Series>>{
+        return when(type){
+            SeriesRepository.Companion.SeriesType.WATCHLIST -> seriesDao.getByTypeOrderByName(type.type)
+            else -> seriesDao.getByTypeOrderByPopularity(type.type)
+        }
+    }
 
     fun getByName(name: String): LiveData<List<Series>> = if(name.isEmpty()) seriesDao.getAll() else seriesDao.getByName(name)
 
@@ -32,7 +37,10 @@ class SeriesDbRepository(application: Application) {
 
     fun startFollowingSeries(mdbId: Long) = seriesDao.changeToPersistent(mdbId)
 
-    fun stopFollowingSeries(mdbId: Long) = seriesDao.changeToTemporary(mdbId)
+    fun stopFollowingSeries(mdbId: Long){
+        seriesDao.changeToTemporary(mdbId)
+        seasonDao.updateFollowingBySeries(mdbId, false)
+    }
 
     fun insertOrUpdateSeriesMainInfo(seriesResponse: SeriesDetailsResponse, type: SeriesRepository.Companion.SeriesType = SeriesRepository.Companion.SeriesType.SEARCH_RESULT){
         val existingSeries = seriesDao.getOneSeries(seriesResponse.id.toLong())
@@ -74,6 +82,7 @@ class SeriesDbRepository(application: Application) {
 
     //episodes
     fun getEpisodesBySeries(series: Long): LiveData<List<ExtendedEpisode>> = episodeDao.getEpisodesBySeries(series)
+    fun getEpisodesBySeason(season: Long): LiveData<List<ExtendedEpisode>> = episodeDao.getEpisodesBySeason(season)
 
     fun insertOrUpdateEpisode(series: Long, season: Long, episodeResponse: EpisodeResponse){
         val episode = episodeDao.getEpisodesBySeasonAndNumber(season, episodeResponse.episode_number)

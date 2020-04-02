@@ -5,19 +5,13 @@
     <color name="colorAccent">#f65d5f</color>
     <color name="colorAccentTranslucent">#80f65d5f</color>
     <color name="colorOnPrimary">#ffffff</color>
-
-    <color name="list_bg">@color/colorOnPrimary</color>
+    <color name="colorBackground">#ececec</color>
+    <color name="colorSurface">#ffffff</color>
 
     <color name="eye_off">#ececec</color>
-    <color name="windowBg">#ffffff</color>
 
     <color name="bottomNavIconTintChecked">@color/colorOnPrimary</color>
     <color name="bottomNavIconTint">#99ffffff</color> <!--60% of colorOnPrimary-->
 
-    <color name="text_primary">#ffffff</color>
     <color name="text_secondary">#2e2e2e</color>
-
-    <color name="calendarBackgroundColor">@color/colorOnPrimary</color>
-    <color name="calendarTextColor">@color/text_secondary</color>
-    <color name="calendarHeaderTextColor">@color/text_secondary</color>
 </resources>

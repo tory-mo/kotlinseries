@@ -1,9 +1,7 @@
 package by.torymo.kotlinseries.data.db
 
-
 import androidx.lifecycle.LiveData
 import androidx.room.*
-
 
 @Dao
 interface SeasonDao {
@@ -22,6 +20,9 @@ interface SeasonDao {
 
     @Query("update seasons set following = :following where id = :season")
     fun updateFollowing(season: Long, following: Boolean)
+
+    @Query("update seasons set following = :following where series_id = :mdbId")
+    fun updateFollowingBySeries(mdbId: Long, following: Boolean)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(seasons: List<Season>)

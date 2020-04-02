@@ -25,7 +25,6 @@
                 android:id="@+id/calendarToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                tools:title="September"
                 app:layout_collapseMode="pin"
                 android:theme="@style/MainToolbarStyle">
                 <RelativeLayout
@@ -34,7 +33,6 @@
                     android:layout_height="?attr/actionBarSize"
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
-                    android:orientation="vertical"
                     android:focusable="true">
                     <TextView
                         android:id="@+id/toolbarTitle"
@@ -44,8 +42,8 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-                        tools:text="September"
-                        android:textColor="@color/text_primary"/>
+                        android:textColor="?attr/colorOnPrimary"
+                        tools:text="September"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -69,13 +67,13 @@
                     android:layout_height="250dp"
                     app:compactCalendarTargetHeight="250dp"
                     app:compactCalendarTextSize="12sp"
-                    app:compactCalendarBackgroundColor="@color/calendarBackgroundColor"
-                    app:compactCalendarTextColor="@color/calendarTextColor"
-                    app:compactCalendarHeaderTextColor="@color/calendarHeaderTextColor"
+                    app:compactCalendarBackgroundColor="?attr/colorPrimary"
+                    app:compactCalendarTextColor="?attr/colorOnPrimary"
+                    app:compactCalendarHeaderTextColor="?attr/colorOnPrimary"
                     app:compactCalendarCurrentSelectedDayBackgroundColor="#d2e3fc"
-                    app:compactCalendarCurrentSelectedDayTextColor="@color/colorAccent"
-                    app:compactCalendarCurrentDayTextColor="@color/colorOnPrimary"
-                    app:compactCalendarCurrentDayBackgroundColor="@color/colorAccent"
+                    app:compactCalendarCurrentSelectedDayTextColor="?attr/colorAccent"
+                    app:compactCalendarCurrentDayTextColor="?attr/colorOnPrimary"
+                    app:compactCalendarCurrentDayBackgroundColor="?attr/colorAccent"
                     app:compactCalendarCurrentDayIndicatorStyle="fill_large_indicator"
                     app:compactCalendarEventIndicatorStyle="small_indicator"
                     app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="false"/>
@@ -85,50 +83,32 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="?attr/colorSurface">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/llUpdateProgress"
-                android:orientation="vertical"
-                android:visibility="gone">
-                <ProgressBar
-                    android:id="@+id/pbSeriesUpdateProgress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:indeterminateTint="@color/colorAccent"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tvProgress"/>
-            </LinearLayout>
-
             <TextView
+                android:id="@+id/tvToday"
+                style="@style/OverviewTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:id="@+id/tvToday"
                 android:gravity="center_vertical"
-                android:padding="@dimen/fragment_padding"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingStart="16dp"
                 android:text="@string/today"
                 android:textSize="14sp"
-                style="@style/OverviewTextViewStyle"/>
-            <LinearLayout
+                android:background="@color/colorBackground"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/lvEpisodesForDay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/lvEpisodesForDay"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-            </LinearLayout>
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/episode_item"
+                tools:itemCount="1"
+                android:background="?attr/colorSurface"/>
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

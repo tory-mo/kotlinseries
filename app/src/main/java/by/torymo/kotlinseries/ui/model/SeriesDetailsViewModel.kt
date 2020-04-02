@@ -8,7 +8,7 @@ import androidx.lifecycle.Transformations
 import by.torymo.kotlinseries.SeriesApp
 import by.torymo.kotlinseries.data.db.Season
 import by.torymo.kotlinseries.data.db.Series
-import by.torymo.kotlinseries.ui.DetailActivity.DetailCallback
+import by.torymo.kotlinseries.ui.fragment.SeriesDetailsFragment
 
 class SeriesDetailsViewModel(application: Application): AndroidViewModel(application) {
     private val seriesRepository = getApplication<SeriesApp>().getSeriesRepository()
@@ -22,7 +22,7 @@ class SeriesDetailsViewModel(application: Application): AndroidViewModel(applica
         }
     }
 
-    fun getSeriesDetails(mdbId: Long, callback: DetailCallback){
+    fun getSeriesDetails(mdbId: Long, callback: SeriesDetailsFragment.DetailCallback){
         seriesRepository.requestSeriesDetails(mdbId, callback)
     }
 

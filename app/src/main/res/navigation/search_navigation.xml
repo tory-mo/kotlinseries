@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search_navigation"
+    app:startDestination="@id/searchFragment">
+    <action
+        android:id="@+id/toSearchDetails"
+        app:destination="@+id/detailActivity"
+        app:enterAnim="@anim/fragment_open_enter">
+        <argument
+            android:name="series_id"
+            android:defaultValue='0L'
+            app:argType="long" />
+    </action>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="by.torymo.kotlinseries.ui.fragment.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search"/>
+    <activity
+        android:id="@+id/detailActivity"
+        android:name="by.torymo.kotlinseries.ui.DetailActivity"
+        android:label="activity_detail"
+        tools:layout="@layout/activity_detail"/>
+</navigation>

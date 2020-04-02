@@ -10,7 +10,7 @@
             android:id="@+id/lvSeries"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/list_bg"
             tools:listitem="@layout/series_item"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:background="?attr/colorSurface"/>
 </LinearLayout>

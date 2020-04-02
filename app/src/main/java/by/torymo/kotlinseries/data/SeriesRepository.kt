@@ -11,8 +11,8 @@ import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.data.network.Requester
 import by.torymo.kotlinseries.data.network.SearchResponse
 import by.torymo.kotlinseries.data.network.SeriesDetailsResponse
-import by.torymo.kotlinseries.ui.DetailActivity
-import by.torymo.kotlinseries.ui.fragment.SeriesFragment
+import by.torymo.kotlinseries.ui.fragment.SearchFragment
+import by.torymo.kotlinseries.ui.fragment.SeriesDetailsFragment
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -72,11 +72,12 @@ class SeriesRepository(application: Application){
         return seriesDbRepository.getEpisodeDatesBetweenDates(dateFrom, dateTo, flag)
     }
 
-    fun getEpisodesForSeries(series: Long): LiveData<List<ExtendedEpisode>> = seriesDbRepository.getEpisodesBySeries(series)
+    private fun getEpisodesForSeries(series: Long): LiveData<List<ExtendedEpisode>> = seriesDbRepository.getEpisodesBySeries(series)
+    fun getEpisodesForSeason(season: Long): LiveData<List<ExtendedEpisode>> = seriesDbRepository.getEpisodesBySeason(season)
 
     fun changeEpisodeSeen(id: Long, seen: Boolean = false) = seriesDbRepository.setSeen(id, seen)
 
-    fun search(query: String, page: Int, callback: SeriesFragment.SearchCallback){
+    fun search(query: String, page: Int, callback: SearchFragment.SearchCallback){
         val call = seriesRequester.search(query, page)
 
         call.enqueue(object : Callback<SearchResponse> {
@@ -116,7 +117,7 @@ class SeriesRepository(application: Application){
     }
 
     @WorkerThread
-    fun requestSeriesDetails(mdbId: Long, callback: DetailActivity.DetailCallback){
+    fun requestSeriesDetails(mdbId: Long, callback: SeriesDetailsFragment.DetailCallback){
         val call = seriesRequester.getSeriesDetails(mdbId)
 
         call.enqueue(object: Callback<SeriesDetailsResponse>{

@@ -28,5 +28,11 @@ data class Series(@PrimaryKey @ColumnInfo(name = "id") var id: Long = 0,
                   @ColumnInfo(name = "status") var status: String = "",
 
                   @ColumnInfo(name = "type") var type: Int  = 1, // watchlist - 0, search result - 1, airing today - 2
-                  @ColumnInfo(name = "temporary_row") var temporary: Boolean = false
+                  @ColumnInfo(name = "temporary_row") var temporary: Boolean = false,
+
+
+                  @ColumnInfo(name = "type_watchlist") var watchlist: Boolean = false,
+                  @ColumnInfo(name = "type_search") var search: Boolean = false,
+                  @ColumnInfo(name = "type_airing") var airing: Boolean = false,
+                  @ColumnInfo(name = "type_popular") var popular: Boolean = false
 ): Serializable

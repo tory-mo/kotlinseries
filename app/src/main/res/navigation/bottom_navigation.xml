@@ -4,25 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainNavHost"
     app:startDestination="@id/bottomCalendar">
+    <action
+        android:id="@+id/toDetails"
+        app:destination="@+id/detailActivity"
+        app:enterAnim="@anim/fragment_open_enter">
+        <argument
+            android:name="series_id"
+            android:defaultValue='0L'
+            app:argType="long" />
+    </action>
     <fragment
         android:id="@+id/bottomCalendar"
         android:name="by.torymo.kotlinseries.ui.fragment.CalendarFragment"
         tools:layout="@layout/fragment_calendar" />
     <fragment
         android:id="@+id/bottomSeries"
-        android:name="by.torymo.kotlinseries.ui.fragment.SeriesTabLayoutFragment">
+        android:name="by.torymo.kotlinseries.ui.fragment.SeriesTabLayoutFragment"
+        tools:layout="@layout/fragment_series_tab" >
         <action
-            android:id="@+id/action_bottomSeries_to_detailActivity"
-            app:destination="@id/detailActivity" />
+            android:id="@+id/to_search"
+            app:destination="@id/searchActivity"
+            app:popUpTo="@id/bottomSeries"/>
     </fragment>
+    <activity
+        android:id="@+id/searchActivity"
+        android:name="by.torymo.kotlinseries.ui.SearchActivity"
+        android:label="activity_search"
+        tools:layout="@layout/activity_search" />
     <activity
         android:id="@+id/detailActivity"
         android:name="by.torymo.kotlinseries.ui.DetailActivity"
         android:label="activity_detail"
-        tools:layout="@layout/activity_detail" >
-        <argument
-            android:name="series_id"
-            android:defaultValue='0L'
-            app:argType="long" />
-    </activity>
+        tools:layout="@layout/activity_detail"/>
 </navigation>

@@ -7,31 +7,31 @@
     android:orientation="vertical"
     android:clickable="true"
     android:focusable="true"
+    android:paddingStart="@dimen/horizontal_padding"
+    android:paddingEnd="@dimen/horizontal_padding"
+    android:paddingTop="@dimen/vertical_padding"
+    android:paddingBottom="@dimen/vertical_padding"
     android:background="?attr/selectableItemBackground">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:layout_width="72dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/image_width_vertical"
+            android:layout_height="@dimen/image_width_horizontal"
             android:id="@+id/ivPoster"
-            android:scaleType="centerCrop"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginEnd="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"/>
+            android:contentDescription="@string/posterContentDescription"
+            tools:src="@drawable/ic_no_photo"/>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
             android:orientation="vertical"
-            android:textAlignment="textStart"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cbFollowing"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintEnd_toStartOf="@id/ivFollowing"
             app:layout_constraintStart_toEndOf="@id/ivPoster"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/image_marginEnd">
             <TextView
                 android:id="@+id/tvName"
                 style="@style/OverviewTextViewStyle"
@@ -56,18 +56,18 @@
                 android:textSize="12sp"
                 tools:text="6 episodes" />
         </LinearLayout>
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/cbFollowing"
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:id="@+id/ivFollowing"
+            android:src="@drawable/ic_favorite"
+            android:tint="?attr/colorAccent"
             android:layout_centerVertical="true"
-            android:src="@drawable/eye_off"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:clickable="false"
-            android:focusable="false"/>
-
+            app:layout_constraintEnd_toEndOf="parent"
+            android:clickable="true"
+            android:focusable="true"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <TextView
         android:layout_width="match_parent"

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detail_navigation"
+    app:startDestination="@id/seriesDetailsNav">
+    <fragment
+        android:id="@+id/seriesDetailsNav"
+        android:name="by.torymo.kotlinseries.ui.fragment.SeriesDetailsFragment"
+        android:label="SeriesDetailsFragment"
+        tools:layout="@layout/fragment_series_detail">
+        <action
+            android:id="@+id/toEpisodes"
+            app:destination="@id/episodesFragment"/>
+        <argument
+            android:name="series_id"
+            android:defaultValue='0L'
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/episodesFragment"
+        android:name="by.torymo.kotlinseries.ui.fragment.EpisodesFragment"
+        android:label="EpisodesFragment"
+        tools:layout="@layout/fragment_episodes">
+        <argument
+            android:name="season_id"
+            android:defaultValue='0L'
+            app:argType="long" />
+        <argument
+            android:name="season_name"
+            android:defaultValue='@null'
+            app:argType="string"
+            app:nullable="true"/>
+        <argument
+            android:name="poster"
+            android:defaultValue='@null'
+            app:argType="string"
+            app:nullable="true"/>
+        <argument
+            android:name="series_name"
+            android:defaultValue='@null'
+            app:argType="string"
+            app:nullable="true"/>
+    </fragment>
+</navigation>

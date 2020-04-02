@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import by.torymo.kotlinseries.DateTimeUtils
 import by.torymo.kotlinseries.R
 import by.torymo.kotlinseries.calendar.CalendarView
@@ -16,6 +16,7 @@ import by.torymo.kotlinseries.ui.model.CalendarViewModel
 import kotlinx.android.synthetic.main.fragment_calendar.*
 
 import org.threeten.bp.LocalDate
+import androidx.recyclerview.widget.DividerItemDecoration
 
 class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener,
         CalendarView.CalendarViewListener,
@@ -78,7 +79,7 @@ class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        viewModel = ViewModelProviders.of(this).get(CalendarViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(CalendarViewModel::class.java)
         viewModel.setEpisodeListCallback(this)
     }
 
@@ -105,6 +106,9 @@ class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener,
         episodesAdapter = EpisodesForDateAdapter(this)
         lvEpisodesForDay.adapter = episodesAdapter
 
+        val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        lvEpisodesForDay.addItemDecoration(decoration)
+
         compactcalendar_view.setListener(this)
         getEpisodesForMonth(displayedMonth)
         showEpisodesForDay(DateTimeUtils.toMilliseconds(dateClicked))
@@ -113,6 +117,7 @@ class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener,
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).setSupportActionBar(calendarToolbar)
+
     }
 
     private fun changeSeenTitle(menuItem: MenuItem?){
@@ -120,11 +125,10 @@ class CalendarFragment: Fragment(), EpisodesForDateAdapter.OnItemClickListener,
         menuItem?.title = resources.getString(seenTitle)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
         menu.clear()
-        activity?.menuInflater?.inflate(R.menu.calendar_menu, menu)
-
+        inflater.inflate(R.menu.calendar_menu, menu)
         changeSeenTitle(menu.findItem(R.id.action_only_seen))
     }
 
