@@ -50,7 +50,9 @@ class SeriesDetailsFragment : Fragment(), SeasonsAdapter.OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        seriesId = SeriesDetailsFragmentArgs.fromBundle(activity?.intent?.extras).seriesId
+        activity?.intent?.extras?.let {
+            seriesId = SeriesDetailsFragmentArgs.fromBundle(it).seriesId
+        }
         seasonsAdapter = SeasonsAdapter(this)
     }
 

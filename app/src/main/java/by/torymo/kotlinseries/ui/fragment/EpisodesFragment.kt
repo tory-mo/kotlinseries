@@ -48,30 +48,32 @@ class EpisodesFragment: Fragment(), EpisodeListAdapter.OnItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val args = EpisodesFragmentArgs.fromBundle(arguments)
-
-        val seasonId = args.seasonId
-        val seasonName = args.seasonName
-        val seasonPoster = args.poster
-        val seriesName = args.seriesName
-
-        collapsing_toolbar?.title = seasonName
-        toolbar.title = seasonName
-        tvSeriesName.text = seriesName
-
-        seasonPoster?.let {
-            ivEpisodesHeader.picasso(it)
-        }
-
         lvEpisodes.adapter = episodesListAdapter
         val decoration = DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
         lvEpisodes.addItemDecoration(decoration)
 
-        seasonId.run {
-            if(this == 0L) return
-            viewModel.getEpisodesByMdbId(this).observe(viewLifecycleOwner, Observer<List<ExtendedEpisode>>{ episodes ->
-                episodes?.let { refreshEpisodeList(episodes) }
-            })
+        arguments?.let {
+            val args = EpisodesFragmentArgs.fromBundle(it)
+
+            val seasonId = args.seasonId
+            val seasonName = args.seasonName
+            val seasonPoster = args.poster
+            val seriesName = args.seriesName
+
+            collapsing_toolbar?.title = seasonName
+            toolbar.title = seasonName
+            tvSeriesName.text = seriesName
+
+            seasonPoster?.let {
+                ivEpisodesHeader.picasso(it)
+            }
+
+            seasonId.run {
+                if(this == 0L) return
+                viewModel.getEpisodesByMdbId(this).observe(viewLifecycleOwner, Observer<List<ExtendedEpisode>>{ episodes ->
+                    episodes?.let { refreshEpisodeList(episodes) }
+                })
+            }
         }
     }
 
