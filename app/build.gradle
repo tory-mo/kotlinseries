@@ -9,7 +9,7 @@ ext {
     playCoreVersion = "1.9.0"
     legacySupportVersion = '1.0.0'
     appcompatVersion = '1.2.0'
-<<<<<<< HEAD
+
     constraintLayoutVersion = '2.0.4'
     viewPager2Version = '1.0.0'
     materialVersion = '1.3.0-alpha03'
@@ -17,15 +17,6 @@ ext {
     preferenceVersion = '1.1.1'
     pagingVersion = "3.0.0-alpha09"
     roomVersion = "2.3.0-alpha03"
-=======
-    constraintLayoutVersion = '2.0.1'
-    viewPager2Version = '1.0.0'
-    materialVersion = '1.3.0-alpha02'
-    navigationVersion = "1.0.0"
-    preferenceVersion = '1.1.1'
-    pagingVersion = "2.1.2"
-    roomVersion = "2.2.5"
->>>>>>> baaaf38bad4d6d30533868d7075bf3eaaa36194f
     lifecycleVersion = "2.2.0"
 
     junitVersion = '4.12'
@@ -36,13 +27,10 @@ ext {
     threetenabpVersion = "1.0.5"
     picassoVersion = '2.71828'
 
-<<<<<<< HEAD
     coroutinesVersion = "1.3.7"
-=======
-    coroutinesVersion = "1.3.3"
 
     glideVersion = '3.7.0'
->>>>>>> baaaf38bad4d6d30533868d7075bf3eaaa36194f
+
 }
 
 android {
@@ -94,6 +82,9 @@ dependencies {
 
     //room
     implementation "androidx.room:room-runtime:$roomVersion"
+
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
     kapt "androidx.room:room-compiler:$roomVersion"
 
     //lifecycle
