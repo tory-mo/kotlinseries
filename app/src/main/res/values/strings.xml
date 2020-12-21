@@ -35,6 +35,7 @@
     <string name="format_networks" translatable="true">Networks</string>
     <string name="format_first_date" translatable="true">First release</string>
     <string name="format_last_date" translatable="true">Last release</string>
+    <string name="format_next_episode" translatable="true">Next episode</string>
     <string name="format_seasons" translatable="true">Seasons</string>
     <string name="episode_time_label" translatable="true">Episode time</string>
     <string name="format_episode_time" translatable="true">%1$s min.</string>

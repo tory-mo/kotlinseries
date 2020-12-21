@@ -66,7 +66,7 @@
     </com.google.android.material.appbar.AppBarLayout>
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:fillViewport="true"
         android:background="?attr/colorSurface"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -78,104 +78,46 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="16dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp">
                 <TextView
-                    android:id="@+id/tvOngoingLabel"
-                    style="@style/OverviewTextViewStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:paddingEnd="5dp"
-                    android:text="@string/format_ongoing"
-                    android:textColor="@color/text_secondary" />
-                <TextView
-                    android:id="@+id/tvOngoing"
+                    android:id="@+id/tvInfo"
                     style="@style/OverviewTextViewStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tvOriginalLngLabel"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:paddingBottom="@dimen/row_paddingBottom"
-                    android:gravity="end"
-                    tools:text="@string/format_ongoing_true" />
-                <TextView
-                    android:id="@+id/tvFirstDateLabel"
-                    style="@style/OverviewTextViewStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/tvOngoing"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:paddingEnd="5dp"
-                    android:text="@string/format_first_date"
-                    android:textColor="@color/text_secondary" />
-
-                <TextView
-                    android:id="@+id/tvFirstDate"
-                    style="@style/OverviewTextViewStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/tvOngoing"
-                    app:layout_constraintStart_toEndOf="@id/tvOriginalLngLabel"
-                    app:layout_constraintEnd_toEndOf="parent"
                     android:paddingBottom="@dimen/row_paddingBottom"
-                    android:gravity="end"
-                    tools:text="10 december 2012" />
+                    tools:text="2019 - 2020 | 35m | TV-MA" />
 
                 <TextView
                     android:id="@+id/tvLastDateLabel"
                     style="@style/OverviewTextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/tvFirstDate"
+                    app:layout_constraintTop_toBottomOf="@id/tvInfo"
                     app:layout_constraintStart_toStartOf="parent"
                     android:paddingEnd="5dp"
-                    android:text="@string/format_last_date"
+                    android:text="@string/format_next_episode"
                     android:textColor="@color/text_secondary" />
                 <TextView
                     android:id="@+id/tvLastDate"
                     style="@style/OverviewTextViewStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/tvFirstDate"
-                    app:layout_constraintStart_toEndOf="@id/tvOriginalLngLabel"
+                    app:layout_constraintTop_toBottomOf="@id/tvInfo"
+                    app:layout_constraintStart_toEndOf="@id/tvLastDateLabel"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:paddingBottom="@dimen/row_paddingBottom"
                     android:gravity="end"
                     tools:text="12 december 2018" />
 
                 <TextView
-                    android:id="@+id/tvOriginalLngLabel"
-                    style="@style/OverviewTextViewStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/tvLastDate"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:paddingEnd="5dp"
-                    android:text="@string/format_original_lng"
-                    android:textColor="@color/text_secondary" />
-
-                <TextView
-                    android:id="@+id/tvOriginalLng"
-                    style="@style/OverviewTextViewStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/tvLastDate"
-                    app:layout_constraintStart_toEndOf="@id/tvOriginalLngLabel"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:paddingBottom="@dimen/row_paddingBottom"
-                    android:gravity="end"
-                    tools:text="en" />
-
-                <TextView
                     android:id="@+id/tvNetworksLabel"
                     style="@style/OverviewTextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/tvOriginalLng"
+                    app:layout_constraintTop_toBottomOf="@id/tvLastDate"
                     app:layout_constraintStart_toStartOf="parent"
                     android:paddingEnd="5dp"
                     android:text="@string/format_networks"
@@ -186,8 +128,8 @@
                     style="@style/OverviewTextViewStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/tvOriginalLng"
-                    app:layout_constraintStart_toEndOf="@id/tvOriginalLngLabel"
+                    app:layout_constraintTop_toBottomOf="@id/tvLastDate"
+                    app:layout_constraintStart_toEndOf="@id/tvLastDateLabel"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:paddingBottom="@dimen/row_paddingBottom"
                     android:gravity="end"
@@ -210,36 +152,38 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/tvNetworks"
-                    app:layout_constraintStart_toEndOf="@id/tvOriginalLngLabel"
+                    app:layout_constraintStart_toEndOf="@id/tvLastDateLabel"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:paddingBottom="@dimen/row_paddingBottom"
                     android:gravity="end"
                     tools:text="Crime, Drama, Mystery, Fiction, Action and Adventure" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:id="@+id/vDivider1"
-                    android:background="@color/eye_off"
-                    app:layout_constraintTop_toBottomOf="@id/tvGenres"/>
                 <TextView
                     android:id="@+id/tvOverview"
                     style="@style/OverviewTextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/vDivider1"
+                    app:layout_constraintTop_toBottomOf="@id/tvGenres"
                     android:lineSpacingExtra="7dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="@dimen/row_paddingBottom"
                     android:textColor="@color/text_secondary"
                     tools:text="overview bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla" />
-
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/cast_item"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:background="?attr/colorSurface"
+                    app:layout_constraintTop_toBottomOf="@id/tvOverview"/>
                 <TextView
                     android:id="@+id/tvHomepage"
                     style="@style/OverviewTextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/tvOverview"
+                    app:layout_constraintTop_toBottomOf="@id/rvCast"
                     android:autoLink="web"
                     android:linksClickable="true"
                     android:paddingBottom="@dimen/row_paddingBottom"

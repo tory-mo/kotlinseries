@@ -4,19 +4,16 @@ import android.app.Application
 import android.content.SharedPreferences
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.preference.PreferenceManager
 import by.torymo.kotlinseries.data.db.ExtendedEpisode
 import by.torymo.kotlinseries.data.db.Season
 import by.torymo.kotlinseries.data.db.Series
-import by.torymo.kotlinseries.data.network.Requester
-import by.torymo.kotlinseries.data.network.SearchResponse
-import by.torymo.kotlinseries.data.network.SeriesDetailsResponse
-import by.torymo.kotlinseries.ui.fragment.SearchFragment
-import by.torymo.kotlinseries.ui.fragment.SeriesDetailsFragment
+import by.torymo.kotlinseries.data.network.*
 import kotlinx.coroutines.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.flow.Flow
 
 class SeriesRepository(application: Application){
 
@@ -77,107 +74,62 @@ class SeriesRepository(application: Application){
 
     fun changeEpisodeSeen(id: Long, seen: Boolean = false) = seriesDbRepository.setSeen(id, seen)
 
-    fun search(query: String, page: Int, callback: SearchFragment.SearchCallback){
-        val call = seriesRequester.search(query, page)
-
-        call.enqueue(object : Callback<SearchResponse> {
-            override fun onResponse(call: Call<SearchResponse>?, response: Response<SearchResponse>?) {
-                if (response != null && response.isSuccessful) {
-                    seriesDbRepository.clearTemporary()
-                    val searchResult = response.body()
-                    searchResult?.results?.forEach {
-                        seriesDbRepository.insertOrUpdateSeriesMainInfo(it)
-                    }
-
-                    callback.onSuccess(listOf())
-                } else {
-                    callback.onError(response?.message())
-                }
-            }
-
-            override fun onFailure(call: Call<SearchResponse>?, t: Throwable?) {
-                callback.onError(t?.message)
-            }
-        })
+    fun search(query: String): Flow<PagingData<Series>>{
+        return Pager(
+                config = PagingConfig(pageSize = 20, enablePlaceholders = false),
+                pagingSourceFactory = {SearchPagingSource(query, seriesRequester)}
+        ).flow
     }
 
     fun getSeriesByName(name: String): LiveData<List<Series>> = seriesDbRepository.getByName(name)
 
-    fun seriesFollowingChanged(series: Series){
-        if(series.temporary) {
-            seriesDbRepository.startFollowingSeries(series.id)
-            GlobalScope.launch { // launch a new coroutine in background and continue
-                updateEpisodes(series.id)
+    suspend fun requestSeriesDetails(mdbId: Long): Triple<Series, List<Season>?, List<Cast>?>{
+        val response = seriesRequester.getSeriesDetails(mdbId)
+        val series = SeriesDetailsResponse.toSeries(response)
+
+        val checkSeries = seriesDbRepository.getSeries(mdbId)
+        var seasons: List<Season>? = Seasons.toSeason(series.id, response.seasons)
+        if(checkSeries != null){
+            seriesDbRepository.updateSeriesDetails(response)
+
+            val seasonsT = response.seasons?.let {
+                seriesDbRepository.insertOrUpdateSeasons(mdbId, it)
             }
-
-        }else {
-            seriesDbRepository.stopFollowingSeries(series.id)
-            seriesDbRepository.deleteEpisodesBySeries(series.id)
-        }
-    }
-
-    @WorkerThread
-    fun requestSeriesDetails(mdbId: Long, callback: SeriesDetailsFragment.DetailCallback){
-        val call = seriesRequester.getSeriesDetails(mdbId)
-
-        call.enqueue(object: Callback<SeriesDetailsResponse>{
-            override fun onResponse(call: Call<SeriesDetailsResponse>, response: Response<SeriesDetailsResponse>) {
-                if (response.isSuccessful) {
-                    val seriesDetailsResult = response.body()
-                    seriesDetailsResult?.let {
-                        seriesDbRepository.updateSeriesDetails(it)
-
-                        seriesDbRepository.insertOrUpdateSeasons(mdbId, it.seasons)
-                    }
-                } else {
-                    callback.onError(response.message())
-                }
-            }
-
-            override fun onFailure(call: Call<SeriesDetailsResponse>, t: Throwable) {
-                callback.onError(t.message)
-            }
-        })
-    }
-
-    fun getSeriesByType(type: SeriesType): LiveData<List<Series>> = seriesDbRepository.getSeriesByType(type)
-
-    fun requestSeries(page: Int, type: SeriesType){
-
-        val call = when(type) {
-            SeriesType.POPULAR -> seriesRequester.popular(page)
-            else -> seriesRequester.airingToday(page)
+            seasons = seasonsT ?: seasons
         }
 
-        call.enqueue(object: Callback<SearchResponse>{
-                override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
-                    if(response.isSuccessful){
-                        if(page == 1) seriesDbRepository.clearTemporary(type)
-                        val searchResult = response.body()
-                        searchResult?.results?.forEach {
-                            seriesDbRepository.insertOrUpdateSeriesMainInfo(it, type)
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-
-                }
-            })
+        return Triple(series, seasons, response.aggregate_credits?.cast)
     }
 
-    fun getSeriesDetails(mdbId: Long): LiveData<Series> = seriesDbRepository.getSeries(mdbId)
+    fun getSeries(type: SeriesType): Flow<PagingData<Series>>{
+        var pageSize = 20
+        val pagingSource = when(type) {
+            SeriesType.WATCHLIST -> {
+                pageSize = 100
+                FavouritePagingSource(seriesDbRepository)
+            }
+            SeriesType.POPULAR -> PopularPagingSource(seriesRequester)
+            else -> MdbPagingSource(seriesRequester)
+        }
 
-    fun clearSearchResult() = seriesDbRepository.clearTemporary()
+        return Pager(
+                config = PagingConfig(pageSize = pageSize, enablePlaceholders = false),
+                pagingSourceFactory = {pagingSource}
+        ).flow
+    }
+
+    fun getSeriesDetails(mdbId: Long): LiveData<Series> = seriesDbRepository.getSeriesLiveData(mdbId)
+    fun getSeries(mdbId: Long): Series? = seriesDbRepository.getSeries(mdbId)
+
 
     @WorkerThread
     fun updateEpisodes(): Boolean{
         val seriesList = seriesDbRepository.getSeriesList()
 
         var updated = 0
-        for(series: Series in seriesList){
+        /*for(series: Series in seriesList){
             if(!series.temporary) updated += updateEpisodes(series.id)
-        }
+        }*/
 
         return updated > 0
     }
@@ -210,5 +162,16 @@ class SeriesRepository(application: Application){
             }
         else
             seriesDbRepository.deleteEpisodesBySeason(season.id)
+    }
+
+    fun seriesFollowingChanged(series: Series, follow: Boolean){
+        if(follow){
+            seriesDbRepository.addSeries(series)
+            GlobalScope.launch { // launch a new coroutine in background and continue
+                updateEpisodes(series.id)
+            }
+        }else{
+            seriesDbRepository.deleteSeries(series.id)
+        }
     }
 }

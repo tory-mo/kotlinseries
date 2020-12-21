@@ -12,9 +12,6 @@ import kotlinx.coroutines.withContext
 class MainActivityViewModel(application: Application): AndroidViewModel(application) {
     private val seriesRepository = getApplication<SeriesApp>().getSeriesRepository()
 
-    fun requestAiringToday(page: Int) = seriesRepository.requestSeries(page, SeriesRepository.Companion.SeriesType.AIRING_TODAY)
-    fun requestPopularSeries(page: Int) = seriesRepository.requestSeries(page, SeriesRepository.Companion.SeriesType.POPULAR)
-
     fun updateEpisodes(){
         GlobalScope.launch {
             val res = seriesRepository.updateEpisodes()

@@ -6,6 +6,7 @@ import org.threeten.bp.format.DateTimeFormatter
 object DateTimeUtils {
 
     private const val dateStrFormat = "dd MMMM yyyy"
+    private const val yearStrFormat = "yyyy"
 
     fun now(): LocalDate{
         return LocalDate.now()
@@ -29,6 +30,10 @@ object DateTimeUtils {
 
     fun format(date: Long, format: String = dateStrFormat): String{
         return toLocalDateTime(date).format(DateTimeFormatter.ofPattern(format))
+    }
+
+    fun formatYear(date: Long): String{
+        return format(date, yearStrFormat)
     }
 
     fun timezone(): String{

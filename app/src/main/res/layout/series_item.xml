@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/series_item_height"
+    android:layout_height="wrap_content"
     android:paddingStart="@dimen/horizontal_padding"
     android:paddingEnd="@dimen/horizontal_padding"
     android:paddingTop="@dimen/vertical_padding"
@@ -28,17 +28,30 @@
         android:textSize="@dimen/header_textSize"
         tools:text="Header header header header header" />
     <TextView
+        android:id="@+id/tvVoteAvg"
+        style="@style/OverviewTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_rating_label"
+        android:textStyle="bold"
+        android:textColor="@color/colorOnPrimary"
+        android:textSize="12sp"
+        android:layout_marginStart="-3dp"
+        android:gravity="center"
+        android:paddingEnd="10dp"
+        android:paddingStart="8dp"
+        android:paddingBottom="1dp"
+        tools:text="10"
+        android:shadowColor="@color/colorPrimary"/>
+    <TextView
         android:id="@+id/tvDate"
         style="@style/OverviewTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvName"
-        android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/ivPoster"
         android:ellipsize="end"
-        android:gravity="bottom"
         android:maxLines="4"
-        android:textSize="@dimen/overview_textSize"
         tools:text="overview bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla" />
 </RelativeLayout>
 

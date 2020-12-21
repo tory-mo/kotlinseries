@@ -30,18 +30,9 @@
             </SearchView>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-    <LinearLayout
+    <include
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/coordinator_layout"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/lvSeries"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/series_item"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:background="?attr/colorSurface"/>
-    </LinearLayout>
+        layout="@layout/fragment_series"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -5,10 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import by.torymo.kotlinseries.DateTimeUtils
@@ -16,9 +17,11 @@ import by.torymo.kotlinseries.R
 import by.torymo.kotlinseries.data.db.Season
 import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.picasso
+import by.torymo.kotlinseries.ui.adapters.CastAdapter
 import by.torymo.kotlinseries.ui.adapters.SeasonsAdapter
 import by.torymo.kotlinseries.ui.model.SeriesDetailsViewModel
 import kotlinx.android.synthetic.main.fragment_series_detail.*
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class SeriesDetailsFragment : Fragment(), SeasonsAdapter.OnItemClickListener {
@@ -27,14 +30,16 @@ class SeriesDetailsFragment : Fragment(), SeasonsAdapter.OnItemClickListener {
 
     private var seriesId: Long = 0
     private var currSeries: Series? = null
+    private var following: Boolean = false
 
     private var seasonsAdapter: SeasonsAdapter? = null
+    private lateinit var castAdapter: CastAdapter
 
     override fun onItemClick(season: Season, item: View) {
         val action = SeriesDetailsFragmentDirections.toEpisodes()
-        action.setPoster(season.poster)
-        action.setSeasonId(season.id)
-        action.setSeasonName(season.name)
+        action.poster = season.poster
+        action.seasonId = season.id
+        action.seasonName = season.name
         currSeries?.let {
             action.setSeriesName(it.name)
         }
@@ -43,15 +48,17 @@ class SeriesDetailsFragment : Fragment(), SeasonsAdapter.OnItemClickListener {
     }
 
     override fun onItemMenuClick(season: Season, item: View) {
-        val tmpSeries = currSeries
-        viewModel.changeSeasonFollowing(season, if(tmpSeries == null) false else !tmpSeries.temporary)
+        viewModel.changeSeasonFollowing(season, !following)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        seriesId = SeriesDetailsFragmentArgs.fromBundle(activity?.intent?.extras).seriesId
+        activity?.intent?.extras?.let {
+            seriesId = SeriesDetailsFragmentArgs.fromBundle(it).seriesId
+        }
         seasonsAdapter = SeasonsAdapter(this)
+        castAdapter = CastAdapter()
     }
 
     override fun onResume() {
@@ -80,18 +87,31 @@ class SeriesDetailsFragment : Fragment(), SeasonsAdapter.OnItemClickListener {
                 refreshSeries(series)
             }
         })
-        viewModel.getSeriesDetails(seriesId, object : DetailCallback {
-            override fun onError(message: String?) {
-                Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
+
+        lifecycleScope.launch {
+           val (series, seasons, cast) = viewModel.getSeriesDetails(seriesId)
+            refreshSeries(series)
+
+            cast?.let {
+                castAdapter.setItems(it)
             }
-        })
+
+            seasons?.let {
+                updateSeason(it, following)
+            }
+
+            val checkedSeries = viewModel.checkFollowing(seriesId)
+            if(checkedSeries != null) following = true
+        }
+
         viewModel.getSeasons(seriesId).observe(viewLifecycleOwner, Observer<List<Season>> {
             it?.let {
                 val tmpSeries = currSeries
-                updateSeason(it, if(tmpSeries != null) !tmpSeries.temporary else false)
+                updateSeason(it, following)
             }
         })
 
+        rvCast.adapter = castAdapter
         rvSeasons.adapter = seasonsAdapter
         val decoration = DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
         rvSeasons.addItemDecoration(decoration)
@@ -102,18 +122,28 @@ class SeriesDetailsFragment : Fragment(), SeasonsAdapter.OnItemClickListener {
     }
 
     private fun fillInData(series: Series){
-        tvOngoing?.text = getString(if(series.inProduction)R.string.format_ongoing_true else R.string.format_ongoing_false)
-        tvFirstDate?.text = DateTimeUtils.format(series.firstAirDate)
+        var info = DateTimeUtils.formatYear(series.firstAirDate)
+        info += if(series.inProduction) " - ..." else if(DateTimeUtils.formatYear(series.lastAirDate) != info) " - " + DateTimeUtils.formatYear(series.lastAirDate) else ""
+        info += if(series.episodeRunTime > 0) " | " + series.episodeRunTime.toString() + "m" else ""
+        info += if(series.certification.isNotEmpty()) " | " + series.certification else ""
+        tvInfo.text = info
+
         tvGenres?.text = series.genres
-        if(series.lastAirDate > 0)
-            tvLastDate?.text = DateTimeUtils.format(series.lastAirDate)
+        if(series.nextEpisodeDate > 0) {
+            tvLastDate?.text = DateTimeUtils.format(series.nextEpisodeDate)
+            tvLastDate?.visibility = View.VISIBLE
+            tvLastDateLabel?.visibility = View.VISIBLE
+        }else{
+            tvLastDate?.visibility = View.GONE
+            tvLastDateLabel?.visibility = View.GONE
+        }
         tvNetworks?.text = series.networks
 
         val ln = resources.getStringArray(R.array.lang)
         val currLn = ln.filter{
             val json = JSONObject(it)
             json.getString("code") == series.originalLanguage}
-        tvOriginalLng?.text = if(currLn.isEmpty()) series.originalLanguage else JSONObject(currLn[0]).getString("name")
+        //tvOriginalLng?.text = if(currLn.isEmpty()) series.originalLanguage else JSONObject(currLn[0]).getString("name")
         //series.popularity
         //series.voteAverage
         //series.voteCount
@@ -144,7 +174,7 @@ class SeriesDetailsFragment : Fragment(), SeasonsAdapter.OnItemClickListener {
     }
 
     private fun updateSeason(seasons: List<Season>, persistentSeries: Boolean){
-        seasonsAdapter?.setItems(seasons, persistentSeries)
+        seasonsAdapter?.setItems(seasons.reversed(), persistentSeries)
     }
 
     private fun refreshSeries(series: Series){
@@ -152,7 +182,9 @@ class SeriesDetailsFragment : Fragment(), SeasonsAdapter.OnItemClickListener {
 
         fillInData(series)
 
-        fbFavourite.setImageDrawable(activity?.getDrawable(if(series.temporary) R.drawable.ic_not_favorite else R.drawable.ic_favorite))
+        context?.let {
+            fbFavourite.setImageDrawable(ContextCompat.getDrawable(it, if(following) R.drawable.ic_favorite else R.drawable.ic_not_favorite))
+        }
 
         collapsing_toolbar?.title = series.name
         //title = series.name
@@ -164,13 +196,13 @@ class SeriesDetailsFragment : Fragment(), SeasonsAdapter.OnItemClickListener {
     private fun favouriteStatusChanged(){
         val series = currSeries ?: return
 
-        viewModel.seriesFollowingStatusChanged(series)
-        updateSeason(series.temporary)
-        fbFavourite.setImageDrawable(activity?.getDrawable(if(!series.temporary) R.drawable.ic_not_favorite else R.drawable.ic_favorite))
-    }
+        following = !following
 
-    interface DetailCallback{
-        fun onError(message: String?)
-    }
+        viewModel.seriesFollowingStatusChanged(series, following)
+        updateSeason(following)
+        context?.let {
+            fbFavourite.setImageDrawable(ContextCompat.getDrawable(it, if(following) R.drawable.ic_favorite else R.drawable.ic_not_favorite))
+        }
 
+    }
 }

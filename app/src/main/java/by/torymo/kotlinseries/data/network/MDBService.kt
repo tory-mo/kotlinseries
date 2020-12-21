@@ -38,7 +38,7 @@ interface MDBService {
         }
      */
     @GET("/3/tv/{mdbId}")
-    fun getSeriesDetails(@Path("mdbId") mdbId: Long, @QueryMap map: Map<String, String>): Call<SeriesDetailsResponse>
+    suspend fun getSeriesDetails(@Path("mdbId") mdbId: Long, @QueryMap map: Map<String, String>): SeriesDetailsResponse
 
     /*
         https://developers.themoviedb.org/3/tv-episodes/get-tv-episode-details
@@ -94,20 +94,19 @@ interface MDBService {
         }
      */
     @GET("/3/search/tv")
-    fun search(@QueryMap map: Map<String, String>): Call<SearchResponse>
-
+    suspend fun search(@QueryMap map: Map<String, String>): SearchResponse
 
     /*
        Get the most newly created TV show. This is a live response and will continuously change
        http://api.themoviedb.org/tv/airing_today?api_key=<<api_key>>&language=ru-en&page=1
      */
     @GET("/3/tv/airing_today")
-    fun getAiringToday(@QueryMap map: Map<String, String>): Call<SearchResponse>
+    suspend fun getAiringToday(@QueryMap map: Map<String, String>): SearchResponse
 
     /*
        Get a list of the current popular TV shows on TMDb. This list updates daily
        https://api.themoviedb.org/3/tv/popular?api_key=<<api_key>>&language=en-US&page=1
      */
     @GET("/3/tv/popular")
-    fun getPopular(@QueryMap map: Map<String, String>): Call<SearchResponse>
+    suspend fun getPopular(@QueryMap map: Map<String, String>): SearchResponse
 }

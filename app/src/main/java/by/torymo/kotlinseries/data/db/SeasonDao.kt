@@ -15,6 +15,9 @@ interface SeasonDao {
     @Query("select * from seasons where series_id = :series and following = 1 order by number desc")
     fun getFollowing(series: Long): List<Season>
 
+    @Query("select * from seasons where series_id = :series")
+    fun getList(series: Long): List<Season>
+
     @Query("select * from seasons where series_id = :series order by number desc limit 1")
     fun getLast(series: Long): Season?
 
@@ -29,5 +32,11 @@ interface SeasonDao {
 
     @Update
     fun update(seasons: List<Season>)
+
+    @Delete
+    fun delete(seasons: List<Season>)
+
+    @Query("delete from seasons where series_id = :series")
+    fun delete(series: Long)
 
 }

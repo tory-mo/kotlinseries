@@ -25,6 +25,7 @@
     <string name="format_networks" translatable="true">Телесеть</string>
     <string name="format_first_date" translatable="true">Первый выпуск</string>
     <string name="format_last_date" translatable="true">Последнии выпуск</string>
+    <string name="format_next_episode" translatable="true">Следующая серия</string>
     <string name="format_seasons" translatable="true">Сезонов</string>
     <string name="episode_time_label" translatable="true">Продолжительность</string>
     <string name="format_episode_time" translatable="true">%1$s мин.</string>

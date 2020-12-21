@@ -22,31 +22,28 @@ class SeriesDbRepository(application: Application) {
     }
 
     //series
+
+    fun addSeries(series: Series) = seriesDao.insert(series)
+
+    fun deleteSeries(series: Long){
+        episodeDao.deleteBySeries(series)
+        seasonDao.delete(series)
+        seriesDao.delete(series)
+    }
+
     fun getSeriesList(): List<Series> = seriesDao.getList()
 
-    fun getSeriesByType(type: SeriesRepository.Companion.SeriesType): LiveData<List<Series>>{
-        return when(type){
-            SeriesRepository.Companion.SeriesType.WATCHLIST -> seriesDao.getByTypeOrderByName(type.type)
-            else -> seriesDao.getByTypeOrderByPopularity(type.type)
-        }
+    fun getSeriesByType(): List<Series>{
+        return seriesDao.getList()
     }
 
     fun getByName(name: String): LiveData<List<Series>> = if(name.isEmpty()) seriesDao.getAll() else seriesDao.getByName(name)
 
-    fun clearTemporary(type: SeriesRepository.Companion.SeriesType = SeriesRepository.Companion.SeriesType.SEARCH_RESULT) = seriesDao.deleteTemporary(type.type)
 
-    fun startFollowingSeries(mdbId: Long) = seriesDao.changeToPersistent(mdbId)
-
-    fun stopFollowingSeries(mdbId: Long){
-        seriesDao.changeToTemporary(mdbId)
-        seasonDao.updateFollowingBySeries(mdbId, false)
-    }
-
-    fun insertOrUpdateSeriesMainInfo(seriesResponse: SeriesDetailsResponse, type: SeriesRepository.Companion.SeriesType = SeriesRepository.Companion.SeriesType.SEARCH_RESULT){
-        val existingSeries = seriesDao.getOneSeries(seriesResponse.id.toLong())
+    fun insertOrUpdateSeriesMainInfo(seriesResponse: SeriesDetailsResponse){
+        val existingSeries = seriesDao.getSeries(seriesResponse.id.toLong())
         if(existingSeries == null) {
-            val tmpSeries = seriesResponse.toSeries()
-            tmpSeries.type = type.type
+            val tmpSeries = SeriesDetailsResponse.toSeries(seriesResponse)
             seriesDao.insert(tmpSeries)
         }else{
             seriesDao.updateMain(mdbId = seriesResponse.id.toLong(),
@@ -64,21 +61,20 @@ class SeriesDbRepository(application: Application) {
     }
 
     fun updateSeriesDetails(seriesResponse: SeriesDetailsResponse){
-        val existingSeries = seriesDao.getOneSeries(seriesResponse.id.toLong()) ?: return
+        val existingSeries = seriesDao.getSeries(seriesResponse.id.toLong()) ?: return
 
-        val tmpSeries = seriesResponse.toSeries()
-        tmpSeries.temporary = existingSeries.temporary
-        tmpSeries.type = existingSeries.type
+        val tmpSeries = SeriesDetailsResponse.toSeries(seriesResponse)
 
-        val genres = seriesResponse.genres.map { genre ->  genre.name }.toString()
+        val genres = seriesResponse.genres?.joinToString { genre ->  genre.name } ?: ""
         tmpSeries.genres = if(genres.isEmpty()) tmpSeries.genres else genres.substring(1, genres.length-1)
-        val networks = seriesResponse.networks.map { network ->  network.name }.toString()
+        val networks = seriesResponse.networks?.joinToString { network ->  network.name } ?: ""
         tmpSeries.networks = if(networks.isEmpty()) tmpSeries.networks else networks.substring(1, networks.length-1)
 
         seriesDao.update(tmpSeries)
     }
 
-    fun getSeries(mdbId: Long): LiveData<Series> = seriesDao.getSeries(mdbId)
+    fun getSeriesLiveData(mdbId: Long): LiveData<Series> = seriesDao.getSeriesLiveData(mdbId)
+    fun getSeries(mdbId: Long): Series? = seriesDao.getSeries(mdbId)
 
     //episodes
     fun getEpisodesBySeries(series: Long): LiveData<List<ExtendedEpisode>> = episodeDao.getEpisodesBySeries(series)
@@ -117,6 +113,7 @@ class SeriesDbRepository(application: Application) {
 
     //seasons
 
+    fun deleteSeasons(series: Long) = seasonDao.delete(series)
     fun getSeasons(series: Long): LiveData<List<Season>> = seasonDao.get(series)
 
     @WorkerThread
@@ -133,23 +130,35 @@ class SeriesDbRepository(application: Application) {
         return seasonsFromDb
     }
 
-    @WorkerThread
-    fun insertOrUpdateSeasons(series: Long, seasonsResponse: List<Seasons>){
+    fun insertOrUpdateSeasons(series: Long, seasonsResponse: List<Seasons>): List<Season>{
         val insertSeasons = mutableListOf<Season>()
         val updateSeasons = mutableListOf<Season>()
 
+        var existedSeasons = seasonDao.getList(series)
+
         for(season: Seasons in seasonsResponse){
             val tmp = season.toDbSeason(series)
-            val inDb = seasonDao.getById(tmp.id)
+            val inDb = existedSeasons.find {it.id == tmp.id }
             if(inDb == null)
                 insertSeasons.add(tmp)
             else {
                 tmp.following = inDb.following
                 updateSeasons.add(tmp)
+                existedSeasons = existedSeasons.filter { it.id != tmp.id }
             }
         }
+
+        for(season: Season in existedSeasons){
+            if(season.following){
+                val instead = insertSeasons.find { it.number == season.number }
+                if(instead != null) insertSeasons.find { it.number == season.number }?.following = true
+            }
+        }
+        if(existedSeasons.isNotEmpty()) seasonDao.delete(existedSeasons)
         if(insertSeasons.isNotEmpty()) seasonDao.insert(insertSeasons)
         if(updateSeasons.isNotEmpty()) seasonDao.update(updateSeasons)
+
+        return insertSeasons.plus(updateSeasons)
     }
 
     @WorkerThread

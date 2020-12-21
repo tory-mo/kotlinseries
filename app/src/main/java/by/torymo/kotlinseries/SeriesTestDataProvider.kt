@@ -18,6 +18,9 @@ class SeriesTestDataProvider {
                     "Arrow",
                     "Still in prison, Oliver faces his biggest challenge yet",
                     1286668800000,
+                    1286668800000,
+                    1286668800000,
+                    30,
                     "/mo0FP1GxOFZT4UDde7RFDz5APXF.jpg",
                     "en",
                     "/mo0FP1GxOFZT4UDde7RFDz5APXF.jpg",
@@ -27,12 +30,11 @@ class SeriesTestDataProvider {
                     "Crime",
                     "http://www.cwtv.com/shows/arrow",
                     true,
-                    1286668800000,
+
                     "The CW",
                     7,
                     "Returning Series",
-                    0,
-                    false
+                    "TV-MA"
                     ))
             return series
         }

@@ -12,7 +12,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
@@ -57,10 +56,10 @@ class Requester {
         service = retrofit.create(MDBService::class.java)
     }
 
-    fun getSeriesDetails(mdbId: Long): Call<SeriesDetailsResponse>{
+    suspend fun getSeriesDetails(mdbId: Long): SeriesDetailsResponse{
         val map = mutableMapOf<String, String>()
         map[LANGUAGE_PARAM] = getLanguage()
-        map[APPEND_TO_RESPONSE_PARAM] = ""
+        map[APPEND_TO_RESPONSE_PARAM] = "content_ratings,aggregate_credits"
 
         return service.getSeriesDetails(mdbId, map)
     }
@@ -74,7 +73,7 @@ class Requester {
         return call.execute().body()
     }
 
-    fun search(query: String, page: Int): Call<SearchResponse>{
+    suspend fun search(query: String, page: Int): SearchResponse{
         val map = mutableMapOf<String, String>()
         map[PAGE_PARAM] = page.toString()
         map[QUERY_PARAM] = query
@@ -84,7 +83,7 @@ class Requester {
         return service.search(map)
     }
 
-    fun airingToday(page: Int): Call<SearchResponse>{
+    suspend fun airingToday(page: Int): SearchResponse{
         val map = mutableMapOf<String, String>()
         map[PAGE_PARAM] = page.toString()
         map[LANGUAGE_PARAM] = getLanguage()
@@ -93,7 +92,7 @@ class Requester {
         return service.getAiringToday(map)
     }
 
-    fun popular(page: Int): Call<SearchResponse>{
+    suspend fun popular(page: Int): SearchResponse{
         val map = mutableMapOf<String, String>()
         map[PAGE_PARAM] = page.toString()
         map[LANGUAGE_PARAM] = getLanguage()
@@ -156,7 +155,7 @@ class DateTypeDeserializer : JsonDeserializer<Long>{
 class ApiKeyInterceptor: Interceptor{
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalR = chain.request()
-        val originalH = originalR.url()
+        val originalH = originalR.url
         val url = originalH.newBuilder()
                 .addQueryParameter(APPKEY_PARAM, BuildConfig.MOVIE_DB_API_KEY)
                 .build()
@@ -169,9 +168,9 @@ class ErrorInterceptor: Interceptor{
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalR = chain.request()
         val response = chain.proceed(originalR)
-        return if (response.code() == 200) response
+        return if (response.code == 200) response
         else{
-            Log.e(javaClass.name, response.code().toString())
+            Log.e(javaClass.name, response.code.toString())
 
             response
         }

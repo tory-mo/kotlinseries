@@ -8,6 +8,8 @@ import androidx.lifecycle.Transformations
 import by.torymo.kotlinseries.SeriesApp
 import by.torymo.kotlinseries.data.db.Season
 import by.torymo.kotlinseries.data.db.Series
+import by.torymo.kotlinseries.data.network.Cast
+import by.torymo.kotlinseries.data.network.Seasons
 import by.torymo.kotlinseries.ui.fragment.SeriesDetailsFragment
 
 class SeriesDetailsViewModel(application: Application): AndroidViewModel(application) {
@@ -22,12 +24,16 @@ class SeriesDetailsViewModel(application: Application): AndroidViewModel(applica
         }
     }
 
-    fun getSeriesDetails(mdbId: Long, callback: SeriesDetailsFragment.DetailCallback){
-        seriesRepository.requestSeriesDetails(mdbId, callback)
+    suspend fun getSeriesDetails(mdbId: Long): Triple<Series, List<Season>?, List<Cast>?>{
+        return seriesRepository.requestSeriesDetails(mdbId)
     }
 
-    fun seriesFollowingStatusChanged(series: Series){
-        seriesRepository.seriesFollowingChanged(series)
+    suspend fun checkFollowing(mdbId: Long): Series?{
+        return seriesRepository.getSeries(mdbId)
+    }
+
+    fun seriesFollowingStatusChanged(series: Series, follow: Boolean){
+        seriesRepository.seriesFollowingChanged(series, follow)
     }
 
     fun getSeasons(series: Long): LiveData<List<Season>>{
