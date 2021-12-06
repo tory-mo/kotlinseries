@@ -8,19 +8,18 @@ ext {
     // App dependencies
     playCoreVersion = "1.9.0"
     legacySupportVersion = '1.0.0'
-    appcompatVersion = '1.2.0'
-
-    constraintLayoutVersion = '2.0.4'
+    appcompatVersion = '1.3.1'
+    constraintLayoutVersion = '2.1.2'
     viewPager2Version = '1.0.0'
-    materialVersion = '1.3.0-alpha03'
+    materialVersion = '1.4.0'
     navigationVersion = "1.0.0"
     preferenceVersion = '1.1.1'
-    pagingVersion = "3.0.0-alpha09"
-    roomVersion = "2.3.0-alpha03"
+    pagingVersion = "3.0.1"
+    roomVersion = "2.3.0"
     lifecycleVersion = "2.2.0"
 
-    junitVersion = '4.12'
-    espressoVersion = '3.3.0'
+    junitVersion = '4.13.2'
+    espressoVersion = '3.4.0'
 
     okhttpVersion = '4.0.0' //OkHttp 3.13+ requires minSdkVersion 21+
     retrofitVersion = '2.7.2'
@@ -28,9 +27,6 @@ ext {
     picassoVersion = '2.71828'
 
     coroutinesVersion = "1.3.7"
-
-    glideVersion = '3.7.0'
-
 }
 
 android {
@@ -65,6 +61,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
@@ -76,22 +75,20 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "androidx.viewpager2:viewpager2:$viewPager2Version"
 
-    implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
-    implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "androidx.preference:preference:$preferenceVersion"
+    //implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
+    //implementation "androidx.appcompat:appcompat:$appcompatVersion"
+    implementation "androidx.preference:preference-ktx:$preferenceVersion"
 
     //room
     implementation "androidx.room:room-runtime:$roomVersion"
-
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
+    //implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "androidx.room:room-compiler:$roomVersion"
 
     //lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
 
     //paging
-    implementation "androidx.paging:paging-runtime:$pagingVersion" // use -ktx for Kotlin
+    implementation "androidx.paging:paging-runtime-ktx:$pagingVersion" // use -ktx for Kotlin
 
     //navigation
     implementation "android.arch.navigation:navigation-fragment-ktx:$navigationVersion"
@@ -104,7 +101,7 @@ dependencies {
 
     implementation "com.squareup.picasso:picasso:$picassoVersion"
 
-    //courutines
+    //coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 

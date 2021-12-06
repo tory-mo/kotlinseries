@@ -1,6 +1,7 @@
 package by.torymo.kotlinseries.data
 
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import by.torymo.kotlinseries.data.db.Series
 import by.torymo.kotlinseries.data.network.Requester
 import by.torymo.kotlinseries.data.network.SeriesDetailsResponse
@@ -24,5 +25,9 @@ class MdbPagingSource(private val requester: Requester):PagingSource<Int, Series
         }catch (exception: HttpException){
             LoadResult.Error(exception)
         }
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, Series>): Int? {
+        return state.anchorPosition
     }
 }

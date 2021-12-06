@@ -1,6 +1,7 @@
 package by.torymo.kotlinseries.data
 
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import by.torymo.kotlinseries.data.db.Series
 import retrofit2.HttpException
 import java.io.IOException
@@ -21,5 +22,9 @@ class FavouritePagingSource (private val dbRepository: SeriesDbRepository): Pagi
         }catch (exception: HttpException){
             LoadResult.Error(exception)
         }
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, Series>): Int? {
+        return state.anchorPosition
     }
 }

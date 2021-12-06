@@ -6,8 +6,7 @@
     app:startDestination="@id/searchFragment">
     <action
         android:id="@+id/toSearchDetails"
-        app:destination="@+id/detailActivity"
-        app:enterAnim="@anim/fragment_open_enter">
+        app:destination="@+id/detailActivity">
         <argument
             android:name="series_id"
             android:defaultValue='0L'

@@ -61,7 +61,7 @@
             android:layout_height="24dp"
             android:id="@+id/ivFollowing"
             android:src="@drawable/ic_favorite"
-            android:tint="?attr/colorAccent"
+            app:tint="?attr/colorAccent"
             android:layout_centerVertical="true"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
